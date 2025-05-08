@@ -18,11 +18,15 @@ public class Professor {
     @Column(name = "professor_id")
     private Long id;
 
+    private String pid; //교수 학번
     private String name;
     private String email;
     private String department;
     private String password;
-    private String phone_number;
+    private String phoneNumber;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User user;
 
     @OneToMany(mappedBy = "professor")
     private List<Notice> notices = new ArrayList<>();
