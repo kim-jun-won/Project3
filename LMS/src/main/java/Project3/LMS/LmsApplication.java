@@ -1,4 +1,4 @@
-package Project3.LMS.domain;
+package Project3.LMS;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
