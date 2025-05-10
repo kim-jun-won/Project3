@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface SyllabusRepository extends JpaRepository<Syllabus, Long> {
     Optional<Syllabus> findByCourseId(Long courseId);
-
 }

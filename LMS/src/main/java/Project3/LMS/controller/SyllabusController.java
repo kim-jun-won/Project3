@@ -4,11 +4,9 @@ import Project3.LMS.domain.Course;
 import Project3.LMS.domain.Professor;
 import Project3.LMS.domain.Student;
 import Project3.LMS.domain.Syllabus;
-import Project3.LMS.repostiory.SyllabusRepository;
 import Project3.LMS.service.CourseService;
 import Project3.LMS.service.SyllabusService;
 import jakarta.servlet.http.HttpSession;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,7 +49,7 @@ public class SyllabusController {
     }
 
     /**
-     * 강의계획서 등록 처리
+     * 교수용 강의계획서 등록 처리
      */
     @PostMapping("/syllabus/professor/new")
     public String create(@RequestParam Long courseId, @RequestParam String content, HttpSession session) {
@@ -66,7 +64,7 @@ public class SyllabusController {
     }
 
     /**
-     * 강의계획서 수정 폼
+     * 교수용 강의계획서 수정 폼
      */
     @GetMapping("/syllabus/professor/{courseId}/edit")
     public String editForm(@PathVariable Long courseId, HttpSession session, Model model) {
@@ -83,7 +81,7 @@ public class SyllabusController {
     }
 
     /**
-     * 강의계획서 수정 처리
+     * 교수용 강의계획서 수정 처리
      */
     @PostMapping("/syllabus/professor/{courseId}/edit")
     public String edit(@PathVariable Long courseId, @RequestParam String content, HttpSession session) {
@@ -98,7 +96,7 @@ public class SyllabusController {
     }
 
     /**
-     * 강의계획서 삭제 처리
+     * 교수용 강의계획서 삭제 처리
      */
     @PostMapping("/syllabus/professor/{courseId}/delete")
     public String delete(@PathVariable Long courseId, HttpSession session) {
