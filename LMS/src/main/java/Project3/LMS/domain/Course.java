@@ -42,9 +42,52 @@ public class Course {
     @OneToMany(mappedBy = "course")
     private List<Notice> notices = new ArrayList<>();
 
+
     /**
-     *     createCourse 함수 구현
-     *     양방향 연관관계에 대해 설정
-     *     ex)professor.getCourses().add(course)
+     *     연관관계 메소드
      */
+    public void setProfessor(Professor professor) {
+        this.professor = professor;
+        professor.getCourses().add(this);
+    }
+
+    public void setSyllabus(Syllabus syllabus) {
+        this.syllabus = syllabus;
+        syllabus.setCourse(this);
+    }
+
+    public void addTimetable(Timetable timetable) {
+        timetables.add(timetable);
+        timetable.setCourse(this);
+    }
+
+    public void addEnrollment(Enrollment enrollment) {
+        enrollments.add(enrollment);
+        enrollment.setCourse(this);
+    }
+
+    public void addAssignment(Assignment assignment) {
+        assignments.add(assignment);
+        assignment.setCourse(this);
+    }
+
+    public void addNotice(Notice notice) {
+        notices.add(notice);
+        notice.setCourse(this);
+    }
+
+    /**
+     *     생성 메소드
+     */
+    public static Course createCourse(String courseName, int credits, Professor professor) {
+        Course course = new Course();
+        course.setCourseName(courseName);
+        course.setCredits(credits);
+        course.setProfessor(professor);
+
+        return course;
+
+    }
+
+
 }
