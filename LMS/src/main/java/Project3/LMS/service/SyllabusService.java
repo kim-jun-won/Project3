@@ -29,7 +29,6 @@ public class SyllabusService {
                 .orElseThrow(()-> new IllegalArgumentException("Invalid course ID"));
 
         Syllabus syllabus = new Syllabus();
-        syllabus.setId(courseId);
         syllabus.setCourse(course);
         syllabus.setContent(content);
 
@@ -39,25 +38,43 @@ public class SyllabusService {
     /**
      * 수정
      * */
-    public void updateSyllabus(Long syllabusId, String content){
-        Syllabus syllabus = syllabusRepository.findById(syllabusId)
-                .orElseThrow(()->new IllegalArgumentException("Invalid syllabus ID"));
+    public void updateSyllabusByCourseId(Long courseId, String content) {
+        Course course = courseRepository.findById(courseId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid course ID"));
 
-        syllabus.setContent(content);
+        Syllabus syllabus = course.getSyllabus();
+        if (syllabus == null) {
+            throw new IllegalStateException("해당 과목에 강의계획서가 없습니다.");
+        }
+
+        syllabus.setContent(content); // 안전하게 업데이트
     }
 
     /**
      * 삭제
      * */
-    public void deleteSyllabus(Long syllabusId){
-        syllabusRepository.deleteById(syllabusId);
+    public void deleteSyllabus(Long syllabusId) {
+        Syllabus syllabus = syllabusRepository.findById(syllabusId)
+                .orElseThrow(() -> new RuntimeException("Syllabus not found"));
+
+        Course course = syllabus.getCourse();
+
+        if (course != null) {
+            course.setSyllabus(null);   // 연결 해제
+            syllabus.setCourse(null);
+            courseRepository.save(course);
+        }
+
+        syllabusRepository.delete(syllabus); // 실제 삭제
     }
+
 
     /**
      * 특정과목에 대한 강의계획서 조회
      * */
     public Syllabus getSyllabusbyCourseId(Long courseId){
-        return syllabusRepository.findByCourseId(courseId);
+        return syllabusRepository.findByCourseId(courseId)
+                .orElseThrow(()->new IllegalArgumentException("해당강의계획서가 존재하지 않습니다."));
     }
 
     /**

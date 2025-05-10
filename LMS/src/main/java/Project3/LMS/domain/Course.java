@@ -27,7 +27,7 @@ public class Course {
     @JoinColumn(name = "professor_id",nullable = false)
     private Professor professor;
 
-    @OneToOne(mappedBy = "course", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "course",orphanRemoval = true, cascade = CascadeType.ALL)
     private Syllabus syllabus;
 
     @OneToMany(mappedBy = "course")
@@ -41,6 +41,8 @@ public class Course {
 
     @OneToMany(mappedBy = "course")
     private List<Notice> notices = new ArrayList<>();
+
+
 
     /**
      *     createCourse 함수 구현

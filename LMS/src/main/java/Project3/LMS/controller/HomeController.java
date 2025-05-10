@@ -34,10 +34,9 @@ public class HomeController {
 
         //로그인된 세션이 학생
         if(loginMember instanceof Student) {
-
             Student student = (Student) loginMember;
             model.addAttribute("welcomeMessage", student.getName() + "님 환영합니다!");
-            model.addAttribute("studentId", student.getId());
+            model.addAttribute("student",student);
 
             /**
              * timetable service를 호출.
@@ -60,6 +59,7 @@ public class HomeController {
         else if(loginMember instanceof Professor) {
             Professor professor = (Professor) loginMember;
             model.addAttribute("welcomeMessage", professor.getName() + "님 환영합니다!");
+            model.addAttribute("professor",professor);
             model.addAttribute("professorId", professor.getId());
         }
 

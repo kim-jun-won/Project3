@@ -1,10 +1,7 @@
 package Project3.LMS;
 
 import Project3.LMS.domain.*;
-import Project3.LMS.repostiory.ProfessorRepository;
-import Project3.LMS.repostiory.StudentRepository;
-import Project3.LMS.repostiory.TimetableRepository;
-import Project3.LMS.repostiory.UserRepository;
+import Project3.LMS.repostiory.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Subgraph;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +18,14 @@ public class InitTestData {
     private final StudentRepository studentRepo;
     private final ProfessorRepository professorRepo;
     private final TimetableRepository timetableRepository;
+    private final EnrollmentRepository enrollmentRepository;
     private final EntityManager em;
 
+    // Bean + CommandRunner -> 시작 시 한번 실행하는 메서드
     @Bean
     public CommandLineRunner initTestDataRunner() {
         return new InitDataRunner(
-                userRepository, studentRepo, professorRepo, timetableRepository, em
+                userRepository, studentRepo, professorRepo, timetableRepository, enrollmentRepository, em
         );
     }
 
@@ -37,6 +36,7 @@ public class InitTestData {
         private final StudentRepository studentRepo;
         private final ProfessorRepository professorRepo;
         private final TimetableRepository timetableRepository;
+        private final EnrollmentRepository enrollmentRepository;
         private final EntityManager em;
 
         @Override
@@ -101,31 +101,79 @@ public class InitTestData {
             course2.setProfessor(professor);
             em.persist(course2);
 
+            Course course3 = new Course();
+            course3.setCourseName("운영체제");
+            course3.setProfessor(professor);
+            em.persist(course3);
+
             /** 4. 강의계획서 등록 */
             Syllabus syllabus = new Syllabus();
-            syllabus.setId(course.getId()); // Course와 1:1 매핑 시 ID 같게 설정
             syllabus.setCourse(course);
             syllabus.setContent("이 과목은 자료구조와 알고리즘의 기본 개념을 학습합니다.");
             em.persist(syllabus);
 
             Syllabus syllabus1 = new Syllabus();
-            syllabus1.setId(course1.getId());
             syllabus1.setCourse(course1);
             syllabus1.setContent("이 과목은 선형대수학을 학습합니다.");
             em.persist(syllabus1);
 
             Syllabus syllabus2 = new Syllabus();
-            syllabus2.setId(course2.getId());
             syllabus2.setCourse(course2);
             syllabus2.setContent("이 과목을 소프트웨어 방법론을 학습합니다.");
             em.persist(syllabus2);
 
+            /** 4. 타임테이블 등록 */
             Timetable tt = new Timetable();
             tt.setStudent(student);
             tt.setCourse(course);
             tt.setDay("화");
             tt.setTime(3);
             timetableRepository.save(tt);
+
+            // 수강과목: 선형대수학
+            Timetable tt1 = new Timetable();
+            tt1.setStudent(student);
+            tt1.setCourse(course1);
+            tt1.setDay("수");
+            tt1.setTime(2);
+            timetableRepository.save(tt1);
+
+            // 수강과목: 소프트웨어공학
+            Timetable tt2 = new Timetable();
+            tt2.setStudent(student);
+            tt2.setCourse(course2);
+            tt2.setDay("목");
+            tt2.setTime(1);
+            timetableRepository.save(tt2);
+
+            // 수강과목: 운영체제 (강의계획서 없음)
+            Timetable tt3 = new Timetable();
+            tt3.setStudent(student);
+            tt3.setCourse(course3);
+            tt3.setDay("금");
+            tt3.setTime(4);
+            timetableRepository.save(tt3);
+
+            /** 수강신청과목 저장*/
+            Enrollment enroll1 = new Enrollment();
+            enroll1.setStudent(student);
+            enroll1.setCourse(course); // 자료구조
+            enrollmentRepository.save(enroll1);
+
+            Enrollment enroll2 = new Enrollment();
+            enroll2.setStudent(student);
+            enroll2.setCourse(course1); // 선형대수학
+            enrollmentRepository.save(enroll2);
+
+            Enrollment enroll3 = new Enrollment();
+            enroll3.setStudent(student);
+            enroll3.setCourse(course2); // 소프트웨어공학
+            enrollmentRepository.save(enroll3);
+
+            Enrollment enroll4 = new Enrollment();
+            enroll4.setStudent(student);
+            enroll4.setCourse(course3); // 소프트웨어공학
+            enrollmentRepository.save(enroll4);
         }
     }
 }
