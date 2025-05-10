@@ -1,6 +1,7 @@
-package Project3.LMS.repository;
+﻿package Project3.LMS.repository;
 
 import Project3.LMS.domain.Course;
+import Project3.LMS.repository.CourseSearch;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
