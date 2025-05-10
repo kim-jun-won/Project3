@@ -79,13 +79,9 @@ public class Course {
     /**
      *     생성 메소드
      */
-<<<<<<< Updated upstream
+
     public static Course createCourse(String courseName, int credits, Professor professor) {
-        Course course = new Course();
-=======
-    public static Project3.LMS.domain.Course createCourse(String courseName, int credits, Professor professor) {
-        Project3.LMS.domain.Course course = new Project3.LMS.domain.Course();
->>>>>>> Stashed changes
+        Course course = new Project3.LMS.domain.Course();
         course.setCourseName(courseName);
         course.setCredits(credits);
         course.setProfessor(professor);

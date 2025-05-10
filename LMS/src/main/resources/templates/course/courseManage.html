@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의 관리</title>
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; margin: 20px; }
+        .search-section, .button-section { margin-bottom: 20px; }
+        .course-table { width: 100%; border-collapse: collapse; }
+        .course-table th, .course-table td {
+            border: 1px solid #ccc; padding: 10px; text-align: center;
+        }
+        .no-course { text-align: center; margin-top: 20px; color: #555; }
+    </style>
+</head>
+<body>
+
+<h2>강의 관리</h2>
+
+<!-- 검색 영역 -->
+<div class="search-section">
+    <form th:action="@{/course-manage}" method="get">
+        <label>강의명: <input type="text" name="courseName" th:value="${courseSearch.courseName}"/></label>
+        <label>교수명: <input type="text" name="professorName" th:value="${courseSearch.professorName}"/></label>
+        <button type="submit">검색</button>
+    </form>
+</div>
+
+<!-- 버튼 영역 -->
+<div class="button-section">
+    <button onclick="location.href='/course-manage/new'">강의 등록</button>
+</div>
+
+<!-- 강의 목록 -->
+<div th:if="${#lists.isEmpty(courses)}" class="no-course">
+    현재 등록된 강의가 없습니다.
+</div>
+
+<form th:action="@{/course-manage/delete}" method="post" th:if="${!#lists.isEmpty(courses)}">
+    <table class="course-table">
+        <thead>
+        <tr>
+            <th>선택</th>
+            <th>ID</th>
+            <th>강의명</th>
+            <th>학점</th>
+            <th>교수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="course : ${courses}">
+            <td><input type="radio" name="courseId" th:value="${course.id}"/></td>
+            <td th:text="${course.id}"></td>
+            <td th:text="${course.courseName}"></td>
+            <td th:text="${course.credits}"></td>
+            <td th:text="${course.professor.name}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <button type="submit">강의 삭제</button>
+</form>
+
+</body>
+</html>

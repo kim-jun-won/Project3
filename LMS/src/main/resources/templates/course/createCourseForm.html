@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의 등록</title>
+</head>
+<body>
+
+<h2>강의 등록</h2>
+
+<form th:action="@{/course-manage/new}" th:object="${courseForm}" method="post">
+    <div>
+        <label for="courseName">강의 이름</label>
+        <input type="text" th:field="*{courseName}" id="courseName" required />
+    </div>
+
+    <div>
+        <label for="professorId">교수 선택</label>
+        <select th:field="*{professorId}" id="professorId" required>
+            <option th:each="professor : ${professors}"
+                    th:value="${professor.id}"
+                    th:text="${professor.name}">
+            </option>
+        </select>
+    </div>
+
+    <div>
+        <label for="credits">학점</label>
+        <input type="number" th:field="*{credits}" id="credits" min="1" max="5" required />
+    </div>
+
+    <div>
+        <button type="submit">등록</button>
+        <a th:href="@{/course-manage}">뒤로가기</a>
+    </div>
+</form>
+
+</body>
+</html>

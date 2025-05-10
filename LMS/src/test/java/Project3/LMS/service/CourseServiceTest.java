@@ -1,7 +1,9 @@
 package Project3.LMS.service;
 
 import Project3.LMS.domain.Course;
-import Project3.LMS.repository.CourseRepository;
+import Project3.LMS.domain.Professor;
+import Project3.LMS.repostiory.CourseRepository;
+import Project3.LMS.repostiory.ProfessorRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +19,21 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CourseServiceTest {
 
     @Autowired CourseService courseService;
-    @Autowired CourseRepository courseRepository;
+    @Autowired
+    ProfessorRepository professorRepository;
+
 
     @Test
-    public void 강의등록() throws Exception{
+    public void registerCourseTest() throws Exception{
         //given
+        Professor professor = new Professor();
+        professor.setName("강현민");
+        professorRepository.save(professor);
+
         Course course = new Course();
         course.setCourseName("운영체제");
+        course.setCredits(3);
+        course.setProfessor(professor);
 
         //when
         Long saveId = courseService.registerCourse(course);

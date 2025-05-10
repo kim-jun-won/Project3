@@ -1,14 +1,13 @@
-<<<<<<< Updated upstream
-﻿package Project3.LMS.service;
-=======
 package Project3.LMS.service;
->>>>>>> Stashed changes
+
 
 import Project3.LMS.domain.Course;
+import Project3.LMS.repostiory.CourseRepository;
+import Project3.LMS.repostiory.CourseSearch;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import Project3.LMS.repository.CourseRepository;
+
 
 import java.util.List;
 
@@ -17,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseService {
 
-    CourseRepository courseRepository;
+    private final CourseRepository courseRepository;
 
     //==강의 등록==//
     @Transactional
@@ -43,5 +42,10 @@ public class CourseService {
     public void deleteCourse(Long courseId) {
         Course course = courseRepository.findOne(courseId);
         courseRepository.delete(course);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Course> findCourses(CourseSearch courseSearch) {
+        return courseRepository.findAll(courseSearch); // 여기서 repository 메서드를 호출
     }
 }

@@ -1,4 +1,4 @@
-﻿package Project3.LMS.repository;
+package Project3.LMS.repostiory;
 
 import lombok.Data;
 
