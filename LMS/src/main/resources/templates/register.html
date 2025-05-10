@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>광운대학교 KLAS 회원가입</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #121212;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .register-container {
+            background-color: #3a3a3a;
+            padding: 50px 30px;
+            border-radius: 16px;
+            width: 400px;
+            color: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+            text-align: center;
+        }
+
+        .title-text {
+            font-family: 'Cinzel', serif;
+            font-size: 26px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 40px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 13px 20px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 30px;
+            font-size: 15px;
+            background-color: #e0e0e0;
+            color: #000;
+            outline: none;
+            box-sizing: border-box;
+            transition: box-shadow 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            box-shadow: 0 0 0 2px #a00000;
+        }
+
+        select {
+            appearance: none;
+        }
+
+        ::placeholder {
+            color: #777;
+        }
+
+        .register-btn {
+            width: 100%;
+            padding: 13px;
+            background-color: #a00000;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s ease;
+        }
+
+        .register-btn:hover {
+            background-color: #880000;
+        }
+
+        .error-message {
+            background-color: white;
+            color: red;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .error-message::before {
+            content: '●';
+            color: red;
+            font-size: 14px;
+        }
+
+        .success-message {
+            background-color: white;
+            color: green;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .privacy-link {
+            margin-top: 25px;
+            font-size: 13px;
+            color: #ccc;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <div class="title-text">회원가입</div>
+
+    <form th:action="@{/register}" th:object="${userDTO}" method="post">
+        <input type="text" th:field="*{uid}" placeholder="학번" required />
+        <div th:if="${#fields.hasErrors('uid')}" th:errors="*{uid}" class="error-message"></div>
+
+        <input type="text" th:field="*{name}" placeholder="이름" required />
+        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="error-message"></div>
+
+        <input type="password" th:field="*{password}" placeholder="비밀번호" required />
+        <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error-message"></div>
+
+        <input type="text" th:field="*{email}" placeholder="이메일" required />
+        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error-message"></div>
+
+        <input type="text" th:field="*{department}" placeholder="학과" required />
+        <div th:if="${#fields.hasErrors('department')}" th:errors="*{department}" class="error-message"></div>
+
+        <input type="text" th:field="*{phoneNumber}" placeholder="전화번호" required />
+        <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" class="error-message"></div>
+
+        <select th:field="*{userType}" required>
+            <option value="">신분을 선택하세요</option>
+            <option value="STUDENT">학생</option>
+            <option value="PROFESSOR">교수</option>
+        </select>
+        <div th:if="${#fields.hasErrors('userType')}" th:errors="*{userType}" class="error-message"></div>
+
+        <button type="submit" class="register-btn">회원가입</button>
+    </form>
+
+    <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+    <div th:if="${sucessRegister}" class="success-message" th:text="${sucessRegister}"></div>
+
+    <div class="privacy-link">개인정보처리방침</div>
+</div>
+</body>
+</html>

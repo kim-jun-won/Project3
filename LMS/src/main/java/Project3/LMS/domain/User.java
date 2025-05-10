@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 회원가입 공토처리 로직
+ * 회원가입 공통처리 로직
  * 회원 가입 후 ENUM TYPE을 보고 해당 TYPE에 맞는 정보 저장
  * ex) type=student =>  stduent=copy(user)
  */
@@ -16,6 +16,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(nullable = false)
+    private String uid;
 
     @Column(nullable = false)
     private String name;
