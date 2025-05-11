@@ -27,21 +27,20 @@ public class Course {
     @JoinColumn(name = "professor_id",nullable = false)
     private Professor professor;
 
-    @OneToOne(mappedBy = "course", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private Syllabus syllabus;
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Timetable> timetables = new ArrayList<>();
 
-    @OneToMany(mappedBy = "course")
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Enrollment> enrollments = new ArrayList<>();
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Assignment> assignments = new ArrayList<>();
-
-    @OneToMany(mappedBy = "course")
     private List<Notice> notices = new ArrayList<>();
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Assignment> assignments = new ArrayList<>();
 
     /**
      *     연관관계 메소드
@@ -81,7 +80,7 @@ public class Course {
      */
 
     public static Course createCourse(String courseName, int credits, Professor professor) {
-        Course course = new Project3.LMS.domain.Course();
+        Course course = new Course();
         course.setCourseName(courseName);
         course.setCredits(credits);
         course.setProfessor(professor);

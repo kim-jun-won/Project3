@@ -30,7 +30,7 @@ public class CourseRepository {
         String jpql = "SELECT c FROM Course c WHERE 1=1";
 
         if (courseSearch.getCourseName() != null && !courseSearch.getCourseName().isEmpty()) {
-            jpql += " AND c.name LIKE :courseName";
+            jpql += " AND c.courseName LIKE :courseName";
         }
 
         if (courseSearch.getProfessorName() != null && !courseSearch.getProfessorName().isEmpty()) {

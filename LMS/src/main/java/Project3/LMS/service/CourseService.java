@@ -39,12 +39,12 @@ public class CourseService {
     }
 
     //==강의 삭제==//
+    @Transactional
     public void deleteCourse(Long courseId) {
         Course course = courseRepository.findOne(courseId);
         courseRepository.delete(course);
     }
 
-    @Transactional(readOnly = true)
     public List<Course> findCourses(CourseSearch courseSearch) {
         return courseRepository.findAll(courseSearch); // 여기서 repository 메서드를 호출
     }
