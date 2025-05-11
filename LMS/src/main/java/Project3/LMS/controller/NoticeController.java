@@ -30,7 +30,7 @@ public class NoticeController {
         List<Notice> noticeList = noticeService.getProfessorNotices(courseList);
 
         model.addAttribute("notices", noticeList);
-            return "notice/professorList";
+            return "notice/adminNoticeList";
     }
 
     /**
@@ -155,12 +155,103 @@ public class NoticeController {
     @GetMapping("/notice/admin/list")
     public String listAdminNotices(HttpSession session, Model model) {
         Admin admin = (Admin) session.getAttribute("loginMember");
-        if (admin == null) return "redirect:/login";
+        if (admin == null){
+            System.out.println("관리자가 null값입니다.");
+            return "redirect:/login";
+        }
 
         List<Notice> noticeList = noticeService.findAdminNotices();
 
         model.addAttribute("notices", noticeList);
         return "notice/adminNoticeList";
+    }
+
+    /**
+     * 관리자용 - 공지사항 등록 폼
+     */
+    @GetMapping("/notice/admin/new")
+    public String showAdminCreateForm(HttpSession session, Model model) {
+        Admin admin = (Admin) session.getAttribute("loginMember");
+        if (admin == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("noticeForm", new NoticeForm());
+        return "notice/adminNoticeForm";
+    }
+
+    /**
+     * 관리자용 - 공지사항 등록 처리
+     */
+    @PostMapping("/notice/admin/new")
+    public String createAdminNotice(@ModelAttribute NoticeForm form, HttpSession session) {
+        Admin admin = (Admin) session.getAttribute("loginMember");
+        if (admin == null) return "redirect:/login";
+
+        noticeService.createByAdmin(admin, form.getTitle(), form.getContent());
+        return "redirect:/notice/admin/list";
+    }
+
+    /**
+     * 관리자용 - 공지사항 수정 폼
+     */
+    @GetMapping("/notice/admin/edit/{noticeId}")
+    public String showAdminEditForm(@PathVariable Long noticeId, HttpSession session, Model model) {
+        Admin admin = (Admin) session.getAttribute("loginMember");
+        if (admin == null) return "redirect:/login";
+
+        Notice notice = noticeService.getNoticeById(noticeId);
+        if (!notice.getAdmin().getId().equals(admin.getId())) {
+            return "redirect:/notice/admin/list";
+        }
+
+        NoticeForm form = new NoticeForm();
+        form.setNoticeId(notice.getId());
+        form.setTitle(notice.getTitle());
+        form.setContent(notice.getContent());
+
+        model.addAttribute("noticeForm", form);
+        model.addAttribute("isEdit", true);
+
+        return "notice/noticeAdminForm";
+    }
+
+    /**
+     * 관리자용 - 공지사항 수정 처리
+     */
+    @PostMapping("/notice/admin/edit")
+    public String updateAdminNotice(@ModelAttribute NoticeForm form, HttpSession session) {
+        Admin admin = (Admin) session.getAttribute("loginMember");
+        if (admin == null) return "redirect:/login";
+
+        noticeService.updateNoticeByAdmin(form.getNoticeId(), admin, form.getTitle(), form.getContent());
+        return "redirect:/notice/admin/list";
+    }
+
+    /**
+     * 관리자용 - 공지사항 삭제
+     */
+    @PostMapping("/notice/admin/delete/{noticeId}")
+    public String deleteAdminNotice(@PathVariable Long noticeId, HttpSession session) {
+        Admin admin = (Admin) session.getAttribute("loginMember");
+        if (admin == null) return "redirect:/login";
+
+        noticeService.deleteNoticeByAdmin(noticeId, admin);
+        return "redirect:/notice/admin/list";
+    }
+
+    /**
+     * 공지사항 상세 보기
+     */
+    @GetMapping("/notice/admin/view/{id}")
+    public String viewAdminNotice(@PathVariable Long id, HttpSession session, Model model) {
+        Object loginMember = session.getAttribute("loginMember");
+        if (loginMember == null) return "redirect:/login";
+
+        Notice notice = noticeService.getNoticeById(id);
+        model.addAttribute("notice", notice);
+
+        return "notice/adminNoticeView";
     }
 
 }

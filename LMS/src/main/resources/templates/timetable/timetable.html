@@ -143,6 +143,10 @@
 <div class="container">
   <h2>시간표 구성</h2>
 
+  <div th:if="${errorMessage}" style="color: red; margin-bottom: 10px;">
+    <p th:text="${errorMessage}"></p>
+  </div>
+
   <form class="timetable-form" th:action="@{/timetable/add}" method="post">
     <label>요일:
       <select name="day">

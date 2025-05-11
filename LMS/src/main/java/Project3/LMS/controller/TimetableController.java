@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,17 +61,25 @@ public class TimetableController {
         return "timetable/timetable.html";
     }
 
+    /***
+     * Timetable add Post 요청
+     */
     @PostMapping("/timetable/add")
     public String addTimetable(@RequestParam String day,
                                @RequestParam int time,
                                @RequestParam Long courseId,
-                               HttpSession session) {
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
         Student loginStudent = (Student) session.getAttribute("loginMember");
         if (loginStudent == null) {
             return "redirect:/login"; // 로그인 안 된 경우 처리
         }
 
-        timetableService.addTimetable(loginStudent, day, time, courseId);
+        try{
+            timetableService.addTimetable(loginStudent, day, time, courseId);
+        }catch(IllegalStateException | IllegalArgumentException e){
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
         return "redirect:/timetable";
     }
 

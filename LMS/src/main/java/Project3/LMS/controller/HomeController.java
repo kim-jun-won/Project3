@@ -80,6 +80,8 @@ public class HomeController {
             model.addAttribute("welcomeMessage", professor.getName() + "님 환영합니다!");
             model.addAttribute("professor",professor);
             model.addAttribute("professorId", professor.getId());
+
+
         }
 
         //관리자일 경우
@@ -87,9 +89,18 @@ public class HomeController {
             model.addAttribute("welcomeMessage", "관리자님 환영합니다!");
         }
 
+        /**
+         * 관리자 공지사항 목록전송
+         * */
+        List<Notice> adminNotices = noticeService.findAdminNotices(); // 관리자 작성 공지
+        model.addAttribute("adminNotices", adminNotices);
+
         return "home";
     }
 
+    /**
+     * 학생이 특정과목 공지사항 클릭했을 때 공지사항 내용 보여주는 부분
+     * */
     @GetMapping("/notice/student/course")
     public String studentCourseNotice(@RequestParam Long courseId, HttpSession session, Model model) {
         Student student = (Student) session.getAttribute("loginMember");
@@ -107,4 +118,7 @@ public class HomeController {
 
         return "notice/studentCourseNoticeList";
     }
+
+
+
 }
