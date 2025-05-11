@@ -69,12 +69,11 @@ public class CourseController {
     // 강의 삭제
     @PostMapping("/delete")
     public String deleteCourse(@RequestParam(value = "courseId", required = false) Long courseId) {
-        System.out.println("넘어온 courseId = " + courseId); // 로그 찍기
 
         if (courseId != null) {
             courseService.deleteCourse(courseId);
         } else {
-            System.out.println("선택된 강의 없음!");
+            System.out.println("선택된 강의가 없습니다.");
         }
 
         return "redirect:/course-manage";

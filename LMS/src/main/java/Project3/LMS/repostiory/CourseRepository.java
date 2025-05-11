@@ -56,4 +56,8 @@ public class CourseRepository {
                 .setParameter("courseName", courseName)
                 .getResultList();
     }
+
+    public Course findById(Long courseId){
+        return em.find(Course.class, courseId);
+    }
 }

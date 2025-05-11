@@ -2,6 +2,7 @@ package Project3.LMS.init;
 
 import Project3.LMS.domain.Course;
 import Project3.LMS.domain.Professor;
+import Project3.LMS.domain.Student;
 import Project3.LMS.repostiory.CourseRepository;
 import Project3.LMS.repostiory.ProfessorRepository;
 import jakarta.annotation.PostConstruct;
@@ -29,6 +30,12 @@ public class InitData {
         private final EntityManager em;
 
         public void insertDummyData() {
+
+            // 학생
+            Student student = new Student();
+            student.setDepartment("컴퓨터공학");
+            student.setEmail("rkddk7165@naver.com");
+
             // 교수 3명
             Professor prof1 = new Professor();
             prof1.setName("강현민");

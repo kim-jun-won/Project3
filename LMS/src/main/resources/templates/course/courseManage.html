@@ -36,13 +36,29 @@
         .danger-btn:hover {
             background-color: #d93636;
         }
+        .home-btn {
+            color: white;
+            background-color: #3b003b;
+            border: 1px solid white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .home-btn:hover {
+            background-color: #5a005a;
+        }
     </style>
 </head>
 <body>
 
 <!-- 상단바 -->
 <div class="navbar">
-    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <div style="display: flex; align-items: center; gap: 15px;">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <a href="/home" class="home-btn">홈으로</a>
+    </div>
     <div>
         <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
         <form th:action="@{/logout}" method="get" style="display: inline;">

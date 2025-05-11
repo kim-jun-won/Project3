@@ -31,6 +31,8 @@ public class HomeController {
             model.addAttribute("welcomeMessage", student.getName() + "님 환영합니다!");
 
 
+            session.setAttribute("studentId", student.getId()); // 수강신청을 위해서 추가
+
             /**
              * timetable service를 호출.
              * 세션에 있는 학생을 가지고 있는 timetable 객체 모두 출력
