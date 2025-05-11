@@ -7,10 +7,13 @@ import Project3.LMS.domain.Timetable;
 import Project3.LMS.repostiory.StudentRepository;
 import Project3.LMS.repostiory.TimetableRepository;
 import Project3.LMS.service.TimetableService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.util.HashMap;
@@ -50,10 +53,39 @@ public class TimetableController {
         }
 
         // 5. 화면에 데이터 전달
+        model.addAttribute("courses", timetableService.getAllCourses());
         model.addAttribute("timetableMap", timetableMap);
         model.addAttribute("welcomeMessage", student.getName() + "님의 시간표");
 
         return "timetable/timetable.html";
+    }
+
+    @PostMapping("/timetable/add")
+    public String addTimetable(@RequestParam String day,
+                               @RequestParam int time,
+                               @RequestParam Long courseId,
+                               HttpSession session) {
+        Student loginStudent = (Student) session.getAttribute("loginMember");
+        if (loginStudent == null) {
+            return "redirect:/login"; // 로그인 안 된 경우 처리
+        }
+
+        timetableService.addTimetable(loginStudent, day, time, courseId);
+        return "redirect:/timetable";
+    }
+
+    /**
+     * 시간표 삭제 기능
+     */
+    @PostMapping("/timetable/delete")
+    public String deleteTimetable(@RequestParam String day,
+                                  @RequestParam int time,
+                                  HttpSession session) {
+        Student student = (Student) session.getAttribute("loginMember");
+        if (student == null) return "redirect:/login";
+
+        timetableService.deleteByStudentAndDayAndTime(student, day, time);
+        return "redirect:/timetable";
     }
 
 }

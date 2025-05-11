@@ -7,9 +7,9 @@
   <style>
     body {
         font-family: 'Noto Sans KR', sans-serif;
+        background-color: #f5f5f5;
         margin: 0;
         padding: 0;
-        background-color: #f5f5f5;
     }
 
     .navbar {
@@ -19,14 +19,6 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-    }
-
-    .hamburger {
-        font-size: 26px;
-        cursor: pointer;
-        background: none;
-        border: none;
-        color: white;
     }
 
     .logout-btn {
@@ -57,26 +49,11 @@
 
     .sidebar .close-btn {
         background-color: #ff4d4d;
-        border: none;
         color: white;
         padding: 10px 15px;
         border-radius: 5px;
+        border: none;
         cursor: pointer;
-        margin-bottom: 20px;
-    }
-
-    .sidebar h3 {
-        margin-bottom: 20px;
-    }
-
-    .sidebar ul {
-        list-style: none;
-        padding-left: 15px;
-    }
-
-    .sidebar ul li {
-        margin-bottom: 8px;
-        font-size: 14px;
     }
 
     .container {
@@ -105,12 +82,6 @@
         background-color: #e5e5e5;
     }
 
-    .course-box {
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 1.4;
-    }
-
     .timetable-form {
         margin-bottom: 20px;
         padding: 10px;
@@ -124,51 +95,54 @@
         padding: 6px;
     }
 
-    .delete-btn {
-        margin-top: 5px;
-        font-size: 12px;
-        background-color: #ff4d4d;
-        border: none;
-        border-radius: 4px;
-        color: white;
-        padding: 2px 6px;
-        cursor: pointer;
+    .course-container {
+        position: relative;
+        display: inline-block;
+        padding-right: 18px;
     }
+
+    .delete-form {
+        position: absolute;
+        top: -4px;
+        right: -2px;
+        display: none;
+    }
+
+    .course-container:hover .delete-form {
+        display: inline;
+    }
+
+    .delete-x {
+        background: none;
+        border: none;
+        color: #d93636;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .color-0 { background-color: #fcb1ec; }
+    .color-1 { background-color: #d9b3ff; }
+    .color-2 { background-color: #ffdd99; }
+    .color-3 { background-color: #a3d5d3; }
+    .color-4 { background-color: #a4e29d; }
+    .color-5 { background-color: #ffd6d6; }
+    .color-6 { background-color: #d6e0ff; }
+    .color-7 { background-color: #f6f6b2; }
   </style>
 </head>
 <body>
 
-<!-- 상단바 -->
 <div class="navbar">
-  <button class="hamburger" onclick="toggleSidebar()">☰</button>
-  <div>
-    <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
-    <form th:action="@{/logout}" method="get" style="display: inline;">
-      <button class="logout-btn">Logout</button>
-    </form>
-  </div>
+  <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
+  <form th:action="@{/logout}" method="get" style="display: inline;">
+    <button class="logout-btn">Logout</button>
+  </form>
 </div>
 
-<!-- 사이드바 -->
-<div id="sidebar" class="sidebar">
-  <button class="close-btn" onclick="toggleSidebar()">닫기</button>
-  <h3>기능 목록</h3>
-  <strong>학생</strong>
-  <ul>
-    <li><a href="/timetable">시간표 구성</a></li>
-    <li><a href="/grades">성적 확인</a></li>
-    <li><a href="/syllabus">강의 계획서 조회</a></li>
-    <li><a href="/content">온라인 콘텐츠 수강</a></li>
-    <li><a href="/enroll">수강신청</a></li>
-    <li><a href="/mypage">개인정보 조회 및 수정</a></li>
-  </ul>
-</div>
-
-<!-- 본문 -->
 <div class="container">
   <h2>시간표 구성</h2>
 
-  <!-- 추가 폼 -->
   <form class="timetable-form" th:action="@{/timetable/add}" method="post">
     <label>요일:
       <select name="day">
@@ -191,7 +165,6 @@
     <button type="submit">추가</button>
   </form>
 
-  <!-- 시간표 테이블 -->
   <table>
     <thead>
     <tr>
@@ -204,27 +177,72 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="i : ${#numbers.sequence(1,6)}">
-      <td th:text="${i}">1</td>
-      <td>
-        <div class="course-box" th:text="${timetableMap['월'][i]} ?: ''"></div>
-        <!-- 삭제 폼 생략 가능 -->
+    <tr th:each="i : ${#numbers.sequence(1, 6)}" th:with="idx=${i}">
+      <td th:text="${idx}">1</td>
+
+      <td class="timetable-cell" th:if="${timetableMap['월'][idx] != null}">
+        <div class="course-container">
+          <span th:text="${timetableMap['월'][idx]}"></span>
+          <form th:action="@{/timetable/delete}" method="post" class="delete-form">
+            <input type="hidden" name="day" value="월" />
+            <input type="hidden" name="time" th:value="${idx}" />
+            <button type="submit" class="delete-x">×</button>
+          </form>
+        </div>
       </td>
-      <td>
-        <div class="course-box" th:text="${timetableMap['화'][i]} ?: ''"></div>
+      <td th:if="${timetableMap['월'][idx] == null}"></td>
+
+      <!-- 반복적으로 화~금 동일하게 구성 -->
+      <td class="timetable-cell" th:if="${timetableMap['화'][idx] != null}">
+        <div class="course-container">
+          <span th:text="${timetableMap['화'][idx]}"></span>
+          <form th:action="@{/timetable/delete}" method="post" class="delete-form">
+            <input type="hidden" name="day" value="화" />
+            <input type="hidden" name="time" th:value="${idx}" />
+            <button type="submit" class="delete-x">×</button>
+          </form>
+        </div>
       </td>
-      <td>
-        <div class="course-box" th:text="${timetableMap['수'][i]} ?: ''"></div>
+      <td th:if="${timetableMap['화'][idx] == null}"></td>
+
+      <td class="timetable-cell" th:if="${timetableMap['수'][idx] != null}">
+        <div class="course-container">
+          <span th:text="${timetableMap['수'][idx]}"></span>
+          <form th:action="@{/timetable/delete}" method="post" class="delete-form">
+            <input type="hidden" name="day" value="수" />
+            <input type="hidden" name="time" th:value="${idx}" />
+            <button type="submit" class="delete-x">×</button>
+          </form>
+        </div>
       </td>
-      <td>
-        <div class="course-box" th:text="${timetableMap['목'][i]} ?: ''"></div>
+      <td th:if="${timetableMap['수'][idx] == null}"></td>
+
+      <td class="timetable-cell" th:if="${timetableMap['목'][idx] != null}">
+        <div class="course-container">
+          <span th:text="${timetableMap['목'][idx]}"></span>
+          <form th:action="@{/timetable/delete}" method="post" class="delete-form">
+            <input type="hidden" name="day" value="목" />
+            <input type="hidden" name="time" th:value="${idx}" />
+            <button type="submit" class="delete-x">×</button>
+          </form>
+        </div>
       </td>
-      <td>
-        <div class="course-box" th:text="${timetableMap['금'][i]} ?: ''"></div>
+      <td th:if="${timetableMap['목'][idx] == null}"></td>
+
+      <td class="timetable-cell" th:if="${timetableMap['금'][idx] != null}">
+        <div class="course-container">
+          <span th:text="${timetableMap['금'][idx]}"></span>
+          <form th:action="@{/timetable/delete}" method="post" class="delete-form">
+            <input type="hidden" name="day" value="금" />
+            <input type="hidden" name="time" th:value="${idx}" />
+            <button type="submit" class="delete-x">×</button>
+          </form>
+        </div>
       </td>
+      <td th:if="${timetableMap['금'][idx] == null}"></td>
+
     </tr>
     </tbody>
-
   </table>
 </div>
 
@@ -232,6 +250,26 @@
   function toggleSidebar() {
     document.getElementById("sidebar").classList.toggle("active");
   }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const cells = document.querySelectorAll(".timetable-cell");
+    const colorMap = {};
+    let colorIndex = 0;
+    const totalColors = 8;
+
+    cells.forEach(cell => {
+      const text = cell.innerText.trim();
+      if (text !== '') {
+        const courseName = text.split("(")[0].trim();
+        if (!colorMap[courseName]) {
+          colorMap[courseName] = colorIndex % totalColors;
+          colorIndex++;
+        }
+        const assignedColor = colorMap[courseName];
+        cell.classList.add(`color-${assignedColor}`);
+      }
+    });
+  });
 </script>
 
 </body>

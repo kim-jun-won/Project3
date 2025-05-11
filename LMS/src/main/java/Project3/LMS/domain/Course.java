@@ -43,10 +43,10 @@ public class Course {
     private List<Notice> notices = new ArrayList<>();
 
 
-
     /**
      *     createCourse 함수 구현
      *     양방향 연관관계에 대해 설정
      *     ex)professor.getCourses().add(course)
      */
+
 }

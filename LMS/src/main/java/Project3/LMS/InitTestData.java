@@ -59,7 +59,6 @@ public class InitTestData {
             user.setPhoneNumber("010-2425-4974");
             userRepository.save(user);
 
-
             Student student = new Student();
             student.setName(user.getName());
             student.setSid(user.getUid());
@@ -127,6 +126,8 @@ public class InitTestData {
             em.persist(syllabus2);
 
             /** 4. 타임테이블 등록 */
+
+            // 자료구조
             Timetable tt = new Timetable();
             tt.setStudent(student);
             tt.setCourse(course);

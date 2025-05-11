@@ -94,4 +94,8 @@ public class NoticeService {
         return noticeRepository.findById(noticeId)
                 .orElseThrow(()->new IllegalArgumentException("해당공지사항이 존재하지 않습니다."));
     }
+
+    public List<Notice> findNoticesByCourse(Course course) {
+        return noticeRepository.findByCourse(course);
+    }
 }

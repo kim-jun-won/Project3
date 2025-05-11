@@ -11,4 +11,6 @@ public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
 
     // 특정 학생이 수강 중인 모든 과목 조회
     List<Enrollment> findByStudentId(Long studentId);
+
+    boolean existsByStudentIdAndCourseId(Long id, Long courseId);
 }

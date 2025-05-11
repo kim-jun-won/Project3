@@ -11,5 +11,7 @@ import java.util.List;
 // 더 복잡한 쿼리는 @Query이용
 @Repository
 public interface TimetableRepository extends JpaRepository<Timetable,Long> {
-    List<Timetable> findByStudent(Student student);
+    List<Timetable> findByStudentId(Long id);
+
+    Timetable findByStudentAndDayAndTime(Student student, String day, int time);
 }

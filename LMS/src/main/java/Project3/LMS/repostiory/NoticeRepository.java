@@ -27,4 +27,9 @@ public interface NoticeRepository extends JpaRepository<Notice, Long> {
      * 관리자 : 시스템 공지사항
      */
     List<Notice> findByWriterType(NoticeWriterType noticeWriterType);
+
+    /**
+     * 홈화면에서의 학생이 수강중인 과목의 공지사항 찾기 위해
+     *  */
+    List<Notice> findByCourse(Course course);
 }
