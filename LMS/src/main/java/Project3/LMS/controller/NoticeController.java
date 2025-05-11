@@ -135,6 +135,21 @@ public class NoticeController {
     }
 
     /**
+     * 학생: 공지사항 상세보기
+     */
+    @GetMapping("/notice/view/{id}")
+    public String viewNotice(@PathVariable Long id, HttpSession session, Model model) {
+        Student student = (Student) session.getAttribute("loginMember");
+        if (student == null) return "redirect:/login";
+
+        Notice notice = noticeService.getNoticeById(id);
+
+        // 선택한 공지가 학생의 수강 과목인지 검증할 수도 있음 (보안 강화용)
+        model.addAttribute("notice", notice);
+        return "notice/noticeview";
+    }
+
+    /**
      * 관리자: 시스템 공지사항 리스트 조회
      */
     @GetMapping("/notice/admin/list")

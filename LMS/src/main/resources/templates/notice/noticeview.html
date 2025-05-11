@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>공지사항 상세보기</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      padding: 40px;
+      background-color: #f8f8f8;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #3b003b;
+      margin-bottom: 10px;
+    }
+
+    .meta {
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .content {
+      white-space: pre-wrap;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .back-btn {
+      margin-top: 30px;
+      padding: 8px 16px;
+      background-color: #888;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2 th:text="${notice.title}">공지 제목</h2>
+
+  <div class="meta">
+    <strong>과목:</strong> <span th:text="${notice.course.courseName}">자료구조</span> |
+    <strong>작성일:</strong> <span th:text="${#temporals.format(notice.date, 'yyyy-MM-dd')}">2025-05-11</span>
+  </div>
+
+  <div class="content" th:text="${notice.content}">
+    공지사항 본문 내용
+  </div>
+
+  <form th:action="@{/notice/student/list}" method="get">
+    <button type="submit" class="back-btn">공지 목록으로</button>
+  </form>
+</div>
+
+</body>
+</html>

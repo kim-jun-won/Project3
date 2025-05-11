@@ -10,6 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Configuration
 @RequiredArgsConstructor
 public class InitTestData {
@@ -19,13 +21,14 @@ public class InitTestData {
     private final ProfessorRepository professorRepo;
     private final TimetableRepository timetableRepository;
     private final EnrollmentRepository enrollmentRepository;
+    private final NoticeRepository noticeRepository;
     private final EntityManager em;
 
     // Bean + CommandRunner -> 시작 시 한번 실행하는 메서드
     @Bean
     public CommandLineRunner initTestDataRunner() {
         return new InitDataRunner(
-                userRepository, studentRepo, professorRepo, timetableRepository, enrollmentRepository, em
+                userRepository, studentRepo, professorRepo, timetableRepository, enrollmentRepository, noticeRepository,em
         );
     }
 
@@ -37,6 +40,7 @@ public class InitTestData {
         private final ProfessorRepository professorRepo;
         private final TimetableRepository timetableRepository;
         private final EnrollmentRepository enrollmentRepository;
+        private final NoticeRepository noticeRepository;
         private final EntityManager em;
 
         @Override
@@ -174,6 +178,19 @@ public class InitTestData {
             enroll4.setStudent(student);
             enroll4.setCourse(course3); // 소프트웨어공학
             enrollmentRepository.save(enroll4);
+
+
+            /**
+             * 공지사항 추가
+             */
+            Notice notice = new Notice();
+            notice.setDate(LocalDateTime.now());
+            notice.setWriterType(NoticeWriterType.PROFESSOR);
+            notice.setProfessor(professor);
+            notice.setCourse(course1);
+            notice.setTitle("휴강안내");
+            notice.setContent("교수 개인 사정으로 휴강합니다.");
+            noticeRepository.save(notice);
         }
     }
 }
