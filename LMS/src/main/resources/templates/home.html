@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>광운대학교 KLAS 메인</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #3b003b;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hamburger {
+            font-size: 26px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+        }
+
+        .logout-btn {
+            padding: 6px 12px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background-color: #d93636;
+        }
+
+        /* 사이드바 기본 스타일 */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;  /* 사이드바를 숨긴 상태 */
+            width: 250px;
+            height: 100%;
+            background-color: #f9f9f9;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        /* 사이드바가 열렸을 때 */
+        .sidebar.active {
+            left: 0; /* 사이드바가 오른쪽으로 슬라이드 */
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding-left: 15px;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .sidebar .close-btn {
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #ff4d4d;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .close-btn:hover {
+            background-color: #d93636;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 40px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            height: 70px;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: #ddd;
+        }
+
+        .course-section {
+            margin-bottom: 20px;
+        }
+
+        .course-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .course-row span {
+            font-weight: 600;
+        }
+
+        .course-row .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .course-row .btn-group button {
+            padding: 5px 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        .course-row .btn-group button:hover {
+            background-color: #0056b3;
+        }
+
+        .no-course {
+            text-align: center;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .no-notice {
+            text-align: center;
+            font-size: 16px;
+            color: #555;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div class="navbar">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <div>
+        <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
+        <form th:action="@{/logout}" method="get" style="display: inline;">
+            <button class="logout-btn" style="margin-left: 15px;">Logout</button>
+        </form>
+    </div>
+</div>
+
+<!-- 사이드 메뉴 -->
+<div id="sidebar" class="sidebar">
+    <!-- 닫기 버튼 (사이드바 안에 배치) -->
+    <button class="close-btn" onclick="toggleSidebar()">닫기</button>
+
+    <h3>기능 목록</h3>
+
+    <strong>학생</strong>
+    <ul>
+        <li><a href="/timetable">시간표 구성</a></li>
+        <li><a href="/grades">성적 확인</a></li>
+        <li><a href="/syllabus">강의 계획서 조회</a></li>
+        <li><a href="/content">온라인 콘텐츠 수강</a></li>
+        <li><a href="/enroll">수강신청</a></li>
+        <li><a href="/mypage">개인정보 조회 및 수정</a></li>
+    </ul>
+
+    <strong>교수</strong>
+    <ul>
+        <li><a href="/grade-input">성적 입력</a></li>
+        <li><a href="/lecture-upload">온라인 강의 업로드</a></li>
+        <li><a href="/notice-write">공지사항 작성</a></li>
+        <li><a href="/syllabus-manage">강의 계획서 등록/수정/삭제</a></li>
+        <li><a href="/attendance">수강 학생 관리</a></li>
+        <li><a href="/course-notice">과목 공지사항 작성</a></li>
+    </ul>
+
+    <strong>관리자</strong>
+    <ul>
+        <li><a href="/enroll-schedule">수강신청 날짜 설정/삭제</a></li>
+        <li><a href="/grade-period">성적 입력기간 설정/수정/삭제</a></li>
+        <li><a href="/professors">교수 정보 확인</a></li>
+        <li><a href="/students">학생 정보 확인</a></li>
+        <li><a href="/course-manage">강의 등록/삭제</a></li>
+    </ul>
+</div>
+
+<!-- 본문 콘텐츠 -->
+<div class="container">
+
+    <!-- 시간표 테이블 -->
+    <table>
+        <thead>
+        <tr>
+            <th>교시</th>
+            <th>월</th>
+            <th>화</th>
+            <th>수</th>
+            <th>목</th>
+            <th>금</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="i : ${#numbers.sequence(1, 6)}">
+            <td th:text="${i}">1</td>
+            <td></td> <!-- 월 -->
+            <td></td> <!-- 화 -->
+            <td></td> <!-- 수 -->
+            <td></td> <!-- 목 -->
+            <td></td> <!-- 금 -->
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- 수강 과목 리스트 -->
+    <div class="course-section">
+        <div th:if="${courses != null and !#lists.isEmpty(courses)}">
+            <div class="course-row" th:each="course : ${courses}">
+                <span th:text="${course.name}">과목명</span>
+                <div class="btn-group">
+                    <button>공지사항</button>
+                    <button>자료실</button>
+                </div>
+            </div>
+        </div>
+        <div th:if="${courses == null or #lists.isEmpty(courses)}" class="no-course">
+            수강 중인 과목이 없습니다.
+        </div>
+    </div>
+
+    <!-- 관리자 공지사항 -->
+    <div class="notice-section">
+        <h3>광운대학교 공지사항</h3>
+        <div th:if="${adminNotices != null and !#lists.isEmpty(adminNotices)}">
+            <ul>
+                <li th:each="notice : ${adminNotices}" th:text="${notice.title}">공지사항 제목</li>
+            </ul>
+        </div>
+        <div th:if="${adminNotices == null or #lists.isEmpty(adminNotices)}" class="no-notice">
+            광운대학교 공지사항이 없습니다.
+        </div>
+    </div>
+
+</div>
+
+<!-- JavaScript -->
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("active");
+    }
+</script>
+
+</body>
+</html>
