@@ -30,7 +30,7 @@ public class NoticeController {
         List<Notice> noticeList = noticeService.getProfessorNotices(courseList);
 
         model.addAttribute("notices", noticeList);
-            return "notice/adminNoticeList";
+            return "notice/professorList";
     }
 
     /**
@@ -138,7 +138,7 @@ public class NoticeController {
      * 학생: 공지사항 상세보기
      */
     @GetMapping("/notice/view/{id}")
-    public String viewNotice(@PathVariable Long id, HttpSession session, Model model) {
+    public String viewNotice(@PathVariable(name = "id") Long id, HttpSession session, Model model) {
         Student student = (Student) session.getAttribute("loginMember");
         if (student == null) return "redirect:/login";
 
@@ -196,7 +196,7 @@ public class NoticeController {
      * 관리자용 - 공지사항 수정 폼
      */
     @GetMapping("/notice/admin/edit/{noticeId}")
-    public String showAdminEditForm(@PathVariable Long noticeId, HttpSession session, Model model) {
+    public String showAdminEditForm(@PathVariable("noticeId") Long noticeId, HttpSession session, Model model) {
         Admin admin = (Admin) session.getAttribute("loginMember");
         if (admin == null) return "redirect:/login";
 
@@ -232,7 +232,7 @@ public class NoticeController {
      * 관리자용 - 공지사항 삭제
      */
     @PostMapping("/notice/admin/delete/{noticeId}")
-    public String deleteAdminNotice(@PathVariable Long noticeId, HttpSession session) {
+    public String deleteAdminNotice(@PathVariable("noticeId") Long noticeId, HttpSession session) {
         Admin admin = (Admin) session.getAttribute("loginMember");
         if (admin == null) return "redirect:/login";
 
@@ -244,7 +244,7 @@ public class NoticeController {
      * 공지사항 상세 보기
      */
     @GetMapping("/notice/admin/view/{id}")
-    public String viewAdminNotice(@PathVariable Long id, HttpSession session, Model model) {
+    public String viewAdminNotice(@PathVariable("id") Long id, HttpSession session, Model model) {
         Object loginMember = session.getAttribute("loginMember");
         if (loginMember == null) return "redirect:/login";
 

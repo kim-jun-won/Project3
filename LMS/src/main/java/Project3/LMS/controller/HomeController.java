@@ -104,11 +104,11 @@ public class HomeController {
      * 학생이 특정과목 공지사항 클릭했을 때 공지사항 내용 보여주는 부분
      * */
     @GetMapping("/notice/student/course")
-    public String studentCourseNotice(@RequestParam Long courseId, HttpSession session, Model model) {
+    public String studentCourseNotice(@RequestParam(name = "courseId") Long courseId, HttpSession session, Model model) {
         Student student = (Student) session.getAttribute("loginMember");
         if (student == null) return "redirect:/login";
 
-        Course course = courseService.getCourse(courseId);
+        Course course = courseService.findbyCourseId(courseId);
 
         // 수강 중인지 확인 (보안용)
         boolean enrolled = enrollmentRepository.existsByStudentIdAndCourseId(student.getId(), courseId);

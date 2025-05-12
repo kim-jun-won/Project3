@@ -60,4 +60,13 @@ public class CourseRepository {
     public Course findById(Long courseId){
         return em.find(Course.class, courseId);
     }
+
+    public List<Course> getCoursesByProfessor(Long professorId) {
+        return em.createQuery(
+                        "SELECT c FROM Course c WHERE c.professor.id = :professorId", Course.class)
+                .setParameter("professorId", professorId)
+                .getResultList();
+    }
+
+
 }

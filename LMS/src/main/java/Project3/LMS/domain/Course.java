@@ -27,11 +27,8 @@ public class Course {
     @JoinColumn(name = "professor_id",nullable = false)
     private Professor professor;
 
-<<<<<<< HEAD
     @OneToOne(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-=======
-    @OneToOne(mappedBy = "course",orphanRemoval = true, cascade = CascadeType.ALL)
->>>>>>> junwon
+
     private Syllabus syllabus;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -83,8 +80,6 @@ public class Course {
     /**
      *     생성 메소드
      */
-
-<<<<<<< HEAD
     public static Course createCourse(String courseName, int credits, Professor professor) {
         Course course = new Course();
         course.setCourseName(courseName);
@@ -94,9 +89,5 @@ public class Course {
         return course;
 
     }
-
-
 }
-=======
-}
->>>>>>> junwon
+

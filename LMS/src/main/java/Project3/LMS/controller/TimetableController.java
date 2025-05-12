@@ -65,9 +65,9 @@ public class TimetableController {
      * Timetable add Post 요청
      */
     @PostMapping("/timetable/add")
-    public String addTimetable(@RequestParam String day,
-                               @RequestParam int time,
-                               @RequestParam Long courseId,
+    public String addTimetable(@RequestParam(name = "day") String day,
+                               @RequestParam(name = "time") int time,
+                               @RequestParam(name = "courseId") Long courseId,
                                HttpSession session,
                                RedirectAttributes redirectAttributes) {
         Student loginStudent = (Student) session.getAttribute("loginMember");
@@ -87,8 +87,8 @@ public class TimetableController {
      * 시간표 삭제 기능
      */
     @PostMapping("/timetable/delete")
-    public String deleteTimetable(@RequestParam String day,
-                                  @RequestParam int time,
+    public String deleteTimetable(@RequestParam(name = "day") String day,
+                                  @RequestParam("time") int time,
                                   HttpSession session) {
         Student student = (Student) session.getAttribute("loginMember");
         if (student == null) return "redirect:/login";

@@ -37,7 +37,7 @@ public class SyllabusController {
      * 교수용 강의계획서 등록 폼
      */
     @GetMapping("/syllabus/professor/new")
-    public String createForm(@RequestParam Long courseId, HttpSession session, Model model) {
+    public String createForm(@RequestParam("courseId") Long courseId, HttpSession session, Model model) {
         Professor professor = (Professor) session.getAttribute("loginMember");
         Course course = courseService.getCourse(courseId);
         if (!course.getProfessor().getId().equals(professor.getId())) {
@@ -52,7 +52,7 @@ public class SyllabusController {
      * 교수용 강의계획서 등록 처리
      */
     @PostMapping("/syllabus/professor/new")
-    public String create(@RequestParam Long courseId, @RequestParam String content, HttpSession session) {
+    public String create(@RequestParam("courseId") Long courseId, @RequestParam("content") String content, HttpSession session) {
         Professor professor = (Professor) session.getAttribute("loginMember");
         Course course = courseService.getCourse(courseId);
         if (!course.getProfessor().getId().equals(professor.getId())) {
@@ -67,7 +67,7 @@ public class SyllabusController {
      * 교수용 강의계획서 수정 폼
      */
     @GetMapping("/syllabus/professor/{courseId}/edit")
-    public String editForm(@PathVariable Long courseId, HttpSession session, Model model) {
+    public String editForm(@PathVariable("courseId") Long courseId, HttpSession session, Model model) {
         Professor professor = (Professor) session.getAttribute("loginMember");
         Course course = courseService.getCourse(courseId);
         if (!course.getProfessor().getId().equals(professor.getId())) {
@@ -84,7 +84,7 @@ public class SyllabusController {
      * 교수용 강의계획서 수정 처리
      */
     @PostMapping("/syllabus/professor/{courseId}/edit")
-    public String edit(@PathVariable Long courseId, @RequestParam String content, HttpSession session) {
+    public String edit(@PathVariable("courseId") Long courseId, @RequestParam("content") String content, HttpSession session) {
         Professor professor = (Professor) session.getAttribute("loginMember");
         Course course = courseService.getCourse(courseId);
         if (!course.getProfessor().getId().equals(professor.getId())) {
@@ -99,7 +99,7 @@ public class SyllabusController {
      * 교수용 강의계획서 삭제 처리
      */
     @PostMapping("/syllabus/professor/{courseId}/delete")
-    public String delete(@PathVariable Long courseId, HttpSession session) {
+    public String delete(@PathVariable("courseId") Long courseId, HttpSession session) {
         Professor professor = (Professor) session.getAttribute("loginMember");
         Course course = courseService.getCourse(courseId);
         if (!course.getProfessor().getId().equals(professor.getId())) {
@@ -128,7 +128,7 @@ public class SyllabusController {
      * 학생용 강의계획서 상세
      */
     @GetMapping("/syllabus/student/{courseId}")
-    public String viewSyllabus(@PathVariable Long courseId, Model model) {
+    public String viewSyllabus(@PathVariable("courseId") Long courseId, Model model) {
         Syllabus syllabus = syllabusService.getSyllabusbyCourseId(courseId);
         model.addAttribute("syllabus", syllabus);
         return "syllabus/viewSyllabus";

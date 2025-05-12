@@ -25,9 +25,10 @@ public class Syllabus {
      * 연관관계 편의 메서드
      * */
     public void setCourse(Course course) {
+        // 양방향 연관관계 설정을 수동으로 처리
         this.course = course;
-        if (course != null) {
-            course.setSyllabus(this); // 안전하게 호출
+        if (course != null && course.getSyllabus() != this) {
+            course.setSyllabus(this);
         }
     }
 }
