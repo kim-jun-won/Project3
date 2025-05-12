@@ -5,6 +5,7 @@ import Project3.LMS.domain.Notice;
 import Project3.LMS.domain.NoticeWriterType;
 import Project3.LMS.domain.Professor;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
