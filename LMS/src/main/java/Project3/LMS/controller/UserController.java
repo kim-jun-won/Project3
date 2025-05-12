@@ -132,7 +132,4 @@ public class UserController {
         return "redirect:/login?logout=true";    // 로그인 페이지로 리디렉션하면서 logout=true 전달
     }
 
-
-
-
 }
