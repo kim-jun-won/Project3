@@ -92,6 +92,7 @@ public class InitTestData {
             Course course = new Course();
             course.setCourseName("자료구조");
             course.setProfessor(professor);
+
             em.persist(course); // 트랜잭션 안에서 안전하게 실행됨
 
             Course course1 = new Course();

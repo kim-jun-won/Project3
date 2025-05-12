@@ -25,8 +25,8 @@ public class SyllabusService {
      * 등록
      * */
     public void createSyllabus(Long courseId, String content){
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(()-> new IllegalArgumentException("Invalid course ID"));
+        Course course = courseRepository.findById(courseId);
+                //.orElseThrow(()-> new IllegalArgumentException("Invalid course ID"));
 
         Syllabus syllabus = new Syllabus();
         syllabus.setCourse(course);
@@ -39,8 +39,8 @@ public class SyllabusService {
      * 수정
      * */
     public void updateSyllabusByCourseId(Long courseId, String content) {
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid course ID"));
+        Course course = courseRepository.findById(courseId);
+                //.orElseThrow(() -> new IllegalArgumentException("Invalid course ID"));
 
         Syllabus syllabus = course.getSyllabus();
         if (syllabus == null) {

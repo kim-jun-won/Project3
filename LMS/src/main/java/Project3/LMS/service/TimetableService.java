@@ -4,6 +4,7 @@ import Project3.LMS.domain.Course;
 import Project3.LMS.domain.Student;
 import Project3.LMS.domain.Timetable;
 import Project3.LMS.repostiory.CourseRepository;
+import Project3.LMS.repostiory.CourseSearch;
 import Project3.LMS.repostiory.TimetableRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -31,7 +32,7 @@ public class TimetableService {
      * Timetable add를 위해 모든 과목 조회
      * */
     public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+        return courseRepository.findAll(new CourseSearch());
     }
 
     /***
@@ -40,8 +41,7 @@ public class TimetableService {
     public void addTimetable(Student student, String day, int time, Long courseId)
     {
         // 과목조회
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(()->new IllegalArgumentException("과목을 찾을 수 없습니다."));
+        Course course = courseRepository.findById(courseId);
 
         // 중복 시간표 조회 방지
         Timetable existing = timetableRepository.findByStudentAndDayAndTime(student,day,time);

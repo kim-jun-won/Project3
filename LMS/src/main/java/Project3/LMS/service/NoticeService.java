@@ -24,8 +24,8 @@ public class NoticeService {
      * 교수 : 공지사항 등록
      * */
     public void createByProfessor(Long courseId, Professor professor, String title, String content){
-        Course course = courseRepository.findById(courseId)
-                .orElseThrow(()-> new IllegalArgumentException("Course not found"));
+        Course course = courseRepository.findById(courseId);
+
 
         Notice notice = new Notice();
         notice.setCourse(course);

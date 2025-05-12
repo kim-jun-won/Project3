@@ -108,7 +108,7 @@ public class HomeController {
         Student student = (Student) session.getAttribute("loginMember");
         if (student == null) return "redirect:/login";
 
-        Course course = courseService.getCourse(courseId);
+        Course course = courseService.findbyCourseId(courseId);
 
         // 수강 중인지 확인 (보안용)
         boolean enrolled = enrollmentRepository.existsByStudentIdAndCourseId(student.getId(), courseId);
