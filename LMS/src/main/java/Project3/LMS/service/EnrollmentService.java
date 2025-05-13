@@ -60,4 +60,13 @@ public class EnrollmentService {
         return enrollmentRepository.findByStudentId(studentId);
     }
 
+    /**
+     *성적 부여 메서드
+     */
+    @Transactional
+    public void assignGrade(Enrollment enrollment, String grade) {
+        enrollment.setGrade(grade);
+        enrollmentRepository.save(enrollment);
+    }
+
 }

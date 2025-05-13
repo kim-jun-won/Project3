@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class OnlineLecture {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;

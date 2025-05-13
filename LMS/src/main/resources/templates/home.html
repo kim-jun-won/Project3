@@ -185,7 +185,7 @@
     </style>
 </head>
 <body>
-
+<input type="hidden" id="userRole" th:value="${userRole}" />
 <!-- 상단바 -->
 <div class="navbar">
     <button class="hamburger" onclick="toggleSidebar()">☰</button>
@@ -198,50 +198,7 @@
 </div>
 
 <!-- 사이드 메뉴 -->
-<div id="sidebar" class="sidebar">
-    <!-- 닫기 버튼 (사이드바 안에 배치) -->
-    <button class="close-btn" onclick="toggleSidebar()">닫기</button>
-
-    <h3>기능 목록</h3>
-
-    <strong>학생</strong>
-    <ul>
-        <li><a href="/timetable">시간표 구성</a></li>
-        <li><a href="/grades">성적 확인</a></li>
-        <li th:if="${student != null}">
-            <a href="/notice/student/list">강의공지사항 조회</a>
-        </li>
-        <li th:if="${student != null}">
-            <a href="/syllabus/student/list">강의계획서 조회</a>
-        </li>
-        <li><a href="/content">온라인 콘텐츠 수강</a></li>
-        <li><a href="/enroll">수강신청</a></li>
-        <li><a href="/mypage">개인정보 조회 및 수정</a></li>
-    </ul>
-
-    <strong>교수</strong>
-    <ul>
-        <li><a href="/grade-input">성적 입력</a></li>
-        <li><a href="/online-lecture">온라인 강의 업로드</a></li>
-        <li th:if="${professor != null}">
-            <a href="/notice/professor/list">과목 공지사항 관리</a>
-        </li>
-        <li th:if="${professor != null}">
-            <a href="/syllabus/professor/list">강의계획서 등록/수정/삭제</a>
-        </li>
-        <li><a href="/attendance">수강 학생 관리</a></li>
-    </ul>
-
-    <strong>관리자</strong>
-    <ul>
-        <li><a href="/enroll-schedule">수강신청 날짜 설정/삭제</a></li>
-        <li><a href="/grade-period">성적 입력기간 설정/수정/삭제</a></li>
-        <li><a href="/notice/admin/list">학교 공지사항 작성</a></li>
-        <li><a href="/professors">교수 정보 확인</a></li>
-        <li><a href="/students">학생 정보 확인</a></li>
-        <li><a href="/course-manage">강의 등록/삭제</a></li>
-    </ul>
-</div>
+<div th:replace="fragments/sidebar :: sidebar"></div>
 
 <!-- 본문 콘텐츠 -->
 <div class="container">
@@ -316,35 +273,14 @@
 
 </div>
 
-<!-- JavaScript -->
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
 <script>
-    function toggleSidebar() {
-        document.getElementById("sidebar").classList.toggle("active");
-    }
-        document.addEventListener("DOMContentLoaded", function () {
-        const cells = document.querySelectorAll(".timetable-cell");
-        const colorMap = {};
-        let colorIndex = 0;
-        const totalColors = 8;
-
-        cells.forEach(cell => {
-            const text = cell.innerText.trim();
-            if (text !== '') {
-                // 과목명만 추출 (시간, 교수 제거)
-                const courseName = text.split("(")[0].trim();
-
-                if (!colorMap[courseName]) {
-                    colorMap[courseName] = colorIndex % totalColors;
-                    colorIndex++;
-                }
-
-                const assignedColor = colorMap[courseName];
-                cell.classList.add(`color-${assignedColor}`);
-            }
-        });
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof initializeSidebarEvents === 'function') {
+        initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+      }
     });
-
 </script>
-
 </body>
 </html>

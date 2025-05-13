@@ -43,7 +43,7 @@ public class OnlineLectureController {
 
     //URL 입력 폼으로 이동
     @GetMapping("/course/{courseId}/online-lecture/new")
-    public String createRegisterOnlineLectureForm(@PathVariable Long courseId, Model model) {
+    public String createRegisterOnlineLectureForm(@PathVariable("courseId") Long courseId, Model model) {
         Course course = courseService.findbyCourseId(courseId);
         model.addAttribute("course", course);
         model.addAttribute("onlineLectures", course.getOnlineLectures());
@@ -53,7 +53,7 @@ public class OnlineLectureController {
 
     //URl 저장
     @PostMapping("/course/{courseId}/online-lecture")
-    public String registerOnlineLecture(@PathVariable Long courseId,
+    public String registerOnlineLecture(@PathVariable("courseId") Long courseId,
                                         @ModelAttribute OnlineLectureDTO onlineLectureDTO) {
         onlineLectureService.addOnlineLecture(onlineLectureDTO, courseId);
         return "redirect:/course/" + courseId + "/online-lecture/new";
@@ -75,10 +75,25 @@ public class OnlineLectureController {
 
     //특정 강의의 온라인 강의 목록 조회 및 시청
     @GetMapping("/content/{courseId}/online-lectures")
-    public String createOnlineLectureListView(@PathVariable Long courseId, Model model) {
+    public String createOnlineLectureListView(@PathVariable("courseId") Long courseId, Model model) {
         Course course = courseService.findbyCourseId(courseId);
         model.addAttribute("course", course);
         model.addAttribute("onlineLectures", course.getOnlineLectures());
         return "course/onlineLectureList";
     }
+
+    @GetMapping("/course/{id}/online-lecture/{url:.+}")
+    public String redirectToExternal(@PathVariable("id") Long id,
+                                     @PathVariable("url") String url) {
+        // url = "youtube.com" 이 들어옴
+        return "redirect:https://" + url;
+    }
+
+    @GetMapping("/content/{id}/{url:.+}")
+    public String redirectToExternal1(@PathVariable("id") Long id,
+                                     @PathVariable("url") String url) {
+        // url = "youtube.com" 이 들어옴
+        return "redirect:https://" + url;
+    }
+
 }
