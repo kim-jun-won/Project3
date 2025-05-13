@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
         ],
         professor: [
             "/enroll/attendance",
-            "/lecture-upload",
+            "/online-lecture",
             "/notice/professor",
             "/syllabus/professor"
         ],
