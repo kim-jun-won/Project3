@@ -110,7 +110,7 @@ public class NoticeController {
      * 교수용 - 공지사항 삭제
      * */
     @PostMapping("/notice/professor/delete/{noticeId}")
-    public String deleteNotice(@PathVariable Long noticeId, HttpSession session) {
+    public String deleteNotice(@PathVariable("noticeId") Long noticeId, HttpSession session) {
         Professor professor = (Professor) session.getAttribute("loginMember");
         if (professor == null) return "redirect:/login";
 

@@ -74,6 +74,7 @@ public class HomeController {
                     .distinct()
                     .toList();
             model.addAttribute("courses", courses);
+            model.addAttribute("userRole", "student");
         }
 
         //로그인된 세션이 교수
@@ -82,6 +83,7 @@ public class HomeController {
             model.addAttribute("welcomeMessage", professor.getName() + "님 환영합니다!");
             model.addAttribute("professor",professor);
             model.addAttribute("professorId", professor.getId());
+            model.addAttribute("userRole", "professor");
 
 
         }
@@ -89,6 +91,7 @@ public class HomeController {
         //관리자일 경우
         else{
             model.addAttribute("welcomeMessage", "관리자님 환영합니다!");
+            model.addAttribute("userRole", "admin");
         }
 
         /**
