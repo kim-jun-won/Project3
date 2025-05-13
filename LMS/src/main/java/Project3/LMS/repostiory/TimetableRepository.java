@@ -22,4 +22,6 @@ public interface TimetableRepository extends JpaRepository<Timetable,Long> {
      */
     @Query("SELECT t FROM Timetable t WHERE t.course.professor.id = :professorId")
     List<Timetable> findByProfessorId(@Param("professorId") Long professorId);
+
+    List<Timetable> findByCourseId(Long id);
 }

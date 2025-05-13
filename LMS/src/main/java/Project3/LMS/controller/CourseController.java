@@ -2,12 +2,18 @@ package Project3.LMS.controller;
 
 import Project3.LMS.CourseForm;
 import Project3.LMS.domain.Course;
+import Project3.LMS.domain.Enrollment;
 import Project3.LMS.domain.Professor;
+import Project3.LMS.domain.Student;
+import Project3.LMS.repostiory.CourseRepository;
 import Project3.LMS.repostiory.CourseSearch;
+import Project3.LMS.repostiory.EnrollmentRepository;
 import Project3.LMS.repostiory.ProfessorRepository;
 import Project3.LMS.service.CourseService;
+import Project3.LMS.service.EnrollmentService;
 import Project3.LMS.service.ProfessorService;
 import jakarta.persistence.EntityManager;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,17 +23,19 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/course-manage")
 public class CourseController {
 
     private final CourseService courseService;
     private final ProfessorService professorService;
     private final ProfessorRepository professorRepository;
+    private final CourseRepository courseRepository;
+    private final EnrollmentService enrollmentService;
+    private final EnrollmentRepository enrollmentRepository;
     EntityManager em;
 
 
     // 강의 목록 조회
-    @GetMapping
+    @GetMapping("/course-manage")
     public String courseManage(@ModelAttribute("courseSearch") CourseSearch courseSearch, Model model) {
         List<Course> courses = courseService.findCourses(courseSearch);
         model.addAttribute("courses", courses);
@@ -35,7 +43,7 @@ public class CourseController {
     }
 
     // 강의 등록 폼으로 이동
-    @GetMapping("/new")
+    @GetMapping("/course-manage/new")
     public String createForm(Model model) {
         List<Professor> professors = professorService.findAll();
 
@@ -45,7 +53,7 @@ public class CourseController {
     }
 
     // 강의 등록 처리
-    @PostMapping("/new")
+    @PostMapping("/course-manage/new")
     public String create(@ModelAttribute("courseForm") CourseForm form,
                          Model model) {
 
@@ -67,7 +75,7 @@ public class CourseController {
     }
 
     // 강의 삭제
-    @PostMapping("/delete")
+    @PostMapping("/course-manage/delete")
     public String deleteCourse(@RequestParam(value = "courseId", required = false) Long courseId) {
 
         if (courseId != null) {
@@ -78,7 +86,6 @@ public class CourseController {
 
         return "redirect:/course-manage";
     }
-
 
 
 }

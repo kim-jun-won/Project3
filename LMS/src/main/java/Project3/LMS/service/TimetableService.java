@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -59,6 +60,7 @@ public class TimetableService {
         timetableRepository.save(timetable);
     }
 
+
     /**
      * 시간표 삭제
      */
@@ -70,9 +72,22 @@ public class TimetableService {
     }
 
     /**
+     * 과목을 전달하면 해당 과목을 수강하는 학생을 뽑는 함수
+     */
+    public List<Student> getStudentsByCourse(Course course) {
+        List<Timetable> timetables = timetableRepository.findByCourseId(course.getId());
+        return timetables.stream()
+                .map(Timetable::getStudent)
+                .distinct()
+                .collect(Collectors.toList());
+    }
+
+    /**
      * 교수에 따른 Timetable 전달해줌
      */
     public List<Timetable> getProfessorTimetable(Long professorId) {
         return timetableRepository.findByProfessorId(professorId);
     }
+
+
 }

@@ -185,9 +185,7 @@
     </style>
 </head>
 <body>
-
 <input type="hidden" id="userRole" th:value="${userRole}" />
-
 <!-- 상단바 -->
 <div class="navbar">
     <button class="hamburger" onclick="toggleSidebar()">☰</button>
@@ -199,7 +197,7 @@
     </div>
 </div>
 
-<!-- 사이드바 -->
+<!-- 사이드 메뉴 -->
 <div th:replace="fragments/sidebar :: sidebar"></div>
 
 <!-- 본문 콘텐츠 -->
@@ -221,28 +219,18 @@
             <tbody>
             <tr th:each="i : ${#numbers.sequence(1, 6)}" th:with="idx=${i}">
                 <td th:text="${idx}">1</td>
-                <td class="timetable-cell"
-                    th:utext="${timetableMap['월'][idx] != null ? #strings.replace(timetableMap['월'][idx], '::', '<br/><small>') + '</small>' : ''}">
-                </td>
-                <td class="timetable-cell"
-                    th:utext="${timetableMap['화'][idx] != null ? #strings.replace(timetableMap['화'][idx], '::', '<br/><small>') + '</small>' : ''}">
-                </td>
-                <td class="timetable-cell"
-                    th:utext="${timetableMap['수'][idx] != null ? #strings.replace(timetableMap['수'][idx], '::', '<br/><small>') + '</small>' : ''}">
-                </td>
-                <td class="timetable-cell"
-                    th:utext="${timetableMap['목'][idx] != null ? #strings.replace(timetableMap['목'][idx], '::', '<br/><small>') + '</small>' : ''}">
-                </td>
-                <td class="timetable-cell"
-                    th:utext="${timetableMap['금'][idx] != null ? #strings.replace(timetableMap['금'][idx], '::', '<br/><small>') + '</small>' : ''}">
-                </td>
+                <td class="timetable-cell" th:text="${timetableMap['월'][idx] != null ? timetableMap['월'][idx] : ''}"></td>
+                <td class="timetable-cell" th:text="${timetableMap['화'][idx] != null ? timetableMap['화'][idx] : ''}"></td>
+                <td class="timetable-cell" th:text="${timetableMap['수'][idx] != null ? timetableMap['수'][idx] : ''}"></td>
+                <td class="timetable-cell" th:text="${timetableMap['목'][idx] != null ? timetableMap['목'][idx] : ''}"></td>
+                <td class="timetable-cell" th:text="${timetableMap['금'][idx] != null ? timetableMap['금'][idx] : ''}"></td>
             </tr>
             </tbody>
         </table>
     </div>
 
     <!-- 수강 과목 리스트 -->
-    <div class="course-section" th:if="${student != null or professor != null}">
+    <div class="course-section">
         <div th:if="${courses != null and !#lists.isEmpty(courses)}">
             <div class="course-row" th:each="course : ${courses}">
                 <span th:text="${course.courseName}">과목명</span>

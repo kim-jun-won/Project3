@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>수강 과목 정보</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            padding: 30px;
+        }
+
+        h2 {
+            color: #3b003b;
+            text-align: center;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            margin: auto;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #3b003b;
+            color: white;
+        }
+
+        td {
+            background-color: #fff;
+        }
+
+        .alert {
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .home-link {
+            display: inline-block;
+            text-decoration: none;
+            color: #888;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+
+        .home-link:hover {
+            color: #555;
+        }
+
+        table {
+            margin-top: 30px;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #3b003b;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2a002a;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 왼쪽 상단에 홈으로 가기 링크 추가 -->
+    <a th:href="@{/home}" class="home-link">홈으로 가기</a>
+
+    <h2>수강 과목정보/성적</h2>
+
+    <!-- 수강 중인 과목이 없을 경우 메시지 출력 -->
+    <div th:if="${message != null}" class="alert">
+        <p th:text="${message}"></p>
+    </div>
+
+    <!-- 과목 정보 출력 테이블 -->
+    <table>
+        <thead>
+        <tr>
+            <th>과목 이름</th>
+            <th>학점</th>
+            <th>교수</th>
+            <th>성적</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- 학생이 수강 중인 각 과목 출력 -->
+        <tr th:each="enrollment : ${studentEnrollList}">
+            <td th:text="${enrollment.course.courseName}">과목 이름</td> <!-- 과목 이름 -->
+            <td th:text="${enrollment.course.credits != null ? enrollment.course.credits : '미입력'}">학점</td> <!-- 학점 -->
+            <td th:text="${enrollment.course.professor.name}">교수</td> <!-- 교수명 -->
+            <td th:text="${enrollment.grade != null ? enrollment.grade : '미입력'}">성적</td> <!-- 성적 -->
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
