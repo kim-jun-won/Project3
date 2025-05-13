@@ -101,20 +101,29 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            table-layout : fixed;
             margin-bottom: 40px;
         }
 
         th, td {
             border: 1px solid #ccc;
-            height: 70px;
+            height: 80px;
             text-align: center;
             vertical-align: middle;
+            padding : 8px;
+            word-break: break-word;
         }
 
         th {
             background-color: #ddd;
+            font-weight: bold;
         }
 
+        td {
+            background-color: #fff;
+            font-size: 14px;
+            line-height: 1.5;
+        }
         .course-section {
             margin-bottom: 20px;
         }
@@ -165,10 +174,18 @@
             margin-top: 20px;
         }
 
+        .color-0 { background-color: #fcb1ec; }
+        .color-1 { background-color: #d9b3ff; }
+        .color-2 { background-color: #ffdd99; }
+        .color-3 { background-color: #a3d5d3; }
+        .color-4 { background-color: #a4e29d; }
+        .color-5 { background-color: #ffd6d6; }
+        .color-6 { background-color: #d6e0ff; }
+        .color-7 { background-color: #f6f6b2; }
     </style>
 </head>
 <body>
-
+<input type="hidden" id="userRole" th:value="${userRole}" />
 <!-- 상단바 -->
 <div class="navbar">
     <button class="hamburger" onclick="toggleSidebar()">☰</button>
@@ -189,68 +206,73 @@
 
     <strong>학생</strong>
     <ul>
-        <li><a href="/timetable">시간표 구성</a></li>
-        <li><a href="/grades">성적 확인</a></li>
-        <li><a href="/syllabus">강의 계획서 조회</a></li>
-        <li><a href="/content">온라인 콘텐츠 수강</a></li>
-        <li><a href="/enroll">수강신청</a></li>
-        <li><a href="/mypage">개인정보 조회 및 수정</a></li>
+        <li><a href="/timetable" class="secure-link" onclick="return false;">시간표 구성</a></li>
+        <li><a href="/enroll/gradeCheck" class="secure-link" onclick="return false;">수강 성적 조회</a></li>
+        <li><a href="/notice/student/list" class="secure-link" onclick="return false;">강의공지사항 조회</a></li>
+        <li><a href="/syllabus/student/list" class="secure-link" onclick="return false;">강의계획서 조회</a></li>
+        <li><a href="/content" class="secure-link" onclick="return false;">온라인 콘텐츠 수강</a></li>
+        <li><a href="/enroll" class="secure-link" onclick="return false;">수강신청</a></li>
+        <li><a href="/mypage" class="secure-link" onclick="return false;">개인정보 조회 및 수정</a></li>
     </ul>
 
     <strong>교수</strong>
     <ul>
-        <li><a href="/grade-input">성적 입력</a></li>
-        <li><a href="/lecture-upload">온라인 강의 업로드</a></li>
-        <li><a href="/notice-write">공지사항 작성</a></li>
-        <li><a href="/syllabus-manage">강의 계획서 등록/수정/삭제</a></li>
-        <li><a href="/attendance">수강 학생 관리</a></li>
-        <li><a href="/course-notice">과목 공지사항 작성</a></li>
+        <li><a href="/enroll/attendance" class="secure-link" onclick="return false;">성적입력</a></li>
+        <li><a href="/lecture-upload" class="secure-link" onclick="return false;">온라인 강의 업로드</a></li>
+        <li><a href="/notice/professor/list" class="secure-link" onclick="return false;">과목 공지사항 관리</a></li>
+        <li><a href="/syllabus/professor/list" class="secure-link" onclick="return false;">강의계획서 등록/수정/삭제</a></li>
     </ul>
 
     <strong>관리자</strong>
     <ul>
-        <li><a href="/enroll-schedule">수강신청 날짜 설정/삭제</a></li>
-        <li><a href="/grade-period">성적 입력기간 설정/수정/삭제</a></li>
-        <li><a href="/professors">교수 정보 확인</a></li>
-        <li><a href="/students">학생 정보 확인</a></li>
-        <li><a href="/course-manage">강의 등록/삭제</a></li>
+        <li><a href="/enroll-schedule" class="secure-link" onclick="return false;">수강신청 날짜 설정/삭제</a></li>
+        <li><a href="/grade-period" class="secure-link" onclick="return false;">성적 입력기간 설정/수정/삭제</a></li>
+        <li><a href="/notice/admin/list" class="secure-link" onclick="return false;">학교 공지사항 작성</a></li>
+        <li><a href="/professors" class="secure-link" onclick="return false;">교수 정보 확인</a></li>
+        <li><a href="/students" class="secure-link" onclick="return false;">학생 정보 확인</a></li>
+        <li><a href="/course-manage" class="secure-link" onclick="return false;">강의 등록/삭제</a></li>
     </ul>
 </div>
+
 
 <!-- 본문 콘텐츠 -->
 <div class="container">
 
     <!-- 시간표 테이블 -->
-    <table>
-        <thead>
-        <tr>
-            <th>교시</th>
-            <th>월</th>
-            <th>화</th>
-            <th>수</th>
-            <th>목</th>
-            <th>금</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="i : ${#numbers.sequence(1, 6)}">
-            <td th:text="${i}">1</td>
-            <td></td> <!-- 월 -->
-            <td></td> <!-- 화 -->
-            <td></td> <!-- 수 -->
-            <td></td> <!-- 목 -->
-            <td></td> <!-- 금 -->
-        </tr>
-        </tbody>
-    </table>
+    <div th:if="${timetableMap != null}">
+        <table>
+            <thead>
+            <tr>
+                <th>교시</th>
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="i : ${#numbers.sequence(1, 6)}" th:with="idx=${i}">
+                <td th:text="${idx}">1</td>
+                <td class="timetable-cell" th:text="${timetableMap['월'][idx] != null ? timetableMap['월'][idx] : ''}"></td>
+                <td class="timetable-cell" th:text="${timetableMap['화'][idx] != null ? timetableMap['화'][idx] : ''}"></td>
+                <td class="timetable-cell" th:text="${timetableMap['수'][idx] != null ? timetableMap['수'][idx] : ''}"></td>
+                <td class="timetable-cell" th:text="${timetableMap['목'][idx] != null ? timetableMap['목'][idx] : ''}"></td>
+                <td class="timetable-cell" th:text="${timetableMap['금'][idx] != null ? timetableMap['금'][idx] : ''}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
     <!-- 수강 과목 리스트 -->
     <div class="course-section">
         <div th:if="${courses != null and !#lists.isEmpty(courses)}">
             <div class="course-row" th:each="course : ${courses}">
-                <span th:text="${course.name}">과목명</span>
+                <span th:text="${course.courseName}">과목명</span>
                 <div class="btn-group">
-                    <button>공지사항</button>
+                    <a th:href="@{/notice/student/course(courseId=${course.id})}">
+                        <button type="button">공지사항</button>
+                    </a>
                     <button>자료실</button>
                 </div>
             </div>
@@ -261,26 +283,123 @@
     </div>
 
     <!-- 관리자 공지사항 -->
-    <div class="notice-section">
-        <h3>광운대학교 공지사항</h3>
+    <div class="course-section">
+        <h3>📢 광운대학교 공지사항</h3>
+
         <div th:if="${adminNotices != null and !#lists.isEmpty(adminNotices)}">
-            <ul>
-                <li th:each="notice : ${adminNotices}" th:text="${notice.title}">공지사항 제목</li>
-            </ul>
+            <div class="course-row" th:each="notice : ${adminNotices}">
+            <span>
+                <a th:href="@{/notice/admin/view/{id}(id=${notice.id})}"
+                   th:text="${notice.title}"
+                   style="text-decoration: none; color: #3b003b;"></a>
+            </span>
+                <div class="btn-group">
+                <span th:text="${#temporals.format(notice.date, 'yyyy-MM-dd')}"
+                      style="font-size: 13px; color: #666;"></span>
+                </div>
+            </div>
         </div>
+
         <div th:if="${adminNotices == null or #lists.isEmpty(adminNotices)}" class="no-notice">
             광운대학교 공지사항이 없습니다.
         </div>
     </div>
 
+
 </div>
+
 
 <!-- JavaScript -->
 <script>
     function toggleSidebar() {
         document.getElementById("sidebar").classList.toggle("active");
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // 시간표 셀에 색상 부여
+        const cells = document.querySelectorAll(".timetable-cell");
+        const colorMap = {};
+        let colorIndex = 0;
+        const totalColors = 8;
+
+        cells.forEach(cell => {
+            const text = cell.innerText.trim();
+            if (text !== '') {
+                const courseName = text.split("(")[0].trim();
+                if (!colorMap[courseName]) {
+                    colorMap[courseName] = colorIndex % totalColors;
+                    colorIndex++;
+                }
+                const assignedColor = colorMap[courseName];
+                cell.classList.add(`color-${assignedColor}`);
+            }
+        });
+
+        // ✅ 역할 정의
+        const role = document.getElementById("userRole")?.value || "guest";
+        const accessMap = {
+            student: [
+                "/timetable",
+                "/grades",
+                "/notice/student",
+                "/syllabus/student",
+                "/content",
+                "/mypage",
+                "/enroll",
+                "/enroll/gradeCheck"
+                // ❌ "/enroll/attendance"는 절대 넣지 않음
+            ],
+            professor: [
+                "/enroll/attendance",
+                "/lecture-upload",
+                "/notice/professor",
+                "/syllabus/professor"
+            ],
+            admin: [
+                "/enroll-schedule",
+                "/grade-period",
+                "/notice/admin",
+                "/professors",
+                "/students",
+                "/course-manage"
+            ]
+        };
+
+        // ✅ 링크 클릭 제어
+        const sidebarLinks = document.querySelectorAll(".sidebar a");
+        sidebarLinks.forEach(link => {
+            const href = link.getAttribute("href");
+            link.setAttribute("data-href", href); // 원본 저장
+            link.setAttribute("href", "javascript:void(0);"); // 자동 이동 막기
+
+            link.addEventListener("click", function () {
+                const dest = link.getAttribute("data-href").replace(/\/+$/, ""); // 끝 '/' 제거
+                const allowedPaths = accessMap[role] || [];
+
+                // ✅ 정확히 일치하거나 하위 경로만 허용
+                const hasAccess = allowedPaths.some(path => {
+                    if (path === "/enroll") {
+                        // 🔒 enroll은 무조건 정확히 같아야만 허용
+                        return dest === "/enroll";
+                    } else {
+                        // 나머지는 같거나 하위 경로도 허용
+                        return dest === path || dest.startsWith(path + "/");
+                    }
+                });
+
+                if (!hasAccess) {
+                    alert("권한이 없습니다.");
+                    window.location.href = "/home";
+                } else {
+                    window.location.href = dest;
+                }
+            });
+        });
+    });
 </script>
+
+
+
 
 </body>
 </html>

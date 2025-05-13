@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -22,6 +23,7 @@ public class InitAdmin {
     private final AdminRepository adminRepository;
 
     @Bean
+    @Transactional
     public CommandLineRunner initAdminData() {
         return args -> {
             // 이미 관리자 유저가 존재하면 생성하지 않음
@@ -39,16 +41,16 @@ public class InitAdmin {
             adminUser.setPhoneNumber("010-0000-0000");
             adminUser.setUserType(UserType.ADMIN);
 
+
             // 2. Admin 생성
             Admin admin = new Admin();
-            admin.setAid("A001");
+            admin.setAid(adminUser.getUid());
             admin.setName(adminUser.getName());
             admin.setEmail(adminUser.getEmail());
             admin.setDepartment(adminUser.getDepartment());
             admin.setPassword(adminUser.getPassword());
             admin.setPhoneNumber(adminUser.getPhoneNumber());
             admin.setUser(adminUser);
-
             adminRepository.save(admin);
         };
     }

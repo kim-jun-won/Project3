@@ -1,5 +1,6 @@
 package Project3.LMS.domain;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${isEdit} ? '공지사항 수정' : '공지사항 작성'">공지사항 작성</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      padding: 30px;
+      background-color: #f9f9f9;
+    }
+
+    h2 {
+      color: #3b003b;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 600px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #3b003b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #5c005c;
+    }
+  </style>
+</head>
+<body>
+
+<h2 th:text="${isEdit} ? '공지사항 수정' : '공지사항 작성'">공지사항 작성</h2>
+
+<form th:action="@{${isEdit} ? '/notice/professor/edit' : '/notice/professor/new'}"
+      th:object="${noticeForm}" method="post">
+
+  <!-- 공지 ID (수정 시 hidden) -->
+  <input type="hidden" th:if="${isEdit}" th:field="*{noticeId}"/>
+
+  <label for="course">과목</label>
+
+  <!-- 수정 모드 -->
+  <div th:if="${isEdit}">
+    <input type="text" th:value="${selectedCourse.courseName}" readonly />
+    <input type="hidden" th:field="*{courseId}" />
+  </div>
+
+  <!-- 등록 모드: 과목 선택 -->
+  <div th:unless="${isEdit}">
+    <select th:field="*{courseId}" id="course" required>
+      <option value="" disabled selected>과목을 선택하세요</option>
+      <option th:each="course : ${courses}"
+              th:value="${course.id}"
+              th:text="${course.courseName}">
+      </option>
+    </select>
+  </div>
+
+  <!-- 제목 -->
+  <label for="title">제목</label>
+  <input type="text" th:field="*{title}" id="title" required/>
+
+  <!-- 내용 -->
+  <label for="content">내용</label>
+  <textarea th:field="*{content}" id="content" rows="8" required></textarea>
+
+  <button type="submit" th:text="${isEdit} ? '수정하기' : '작성하기'">작성하기</button>
+</form>
+
+<!-- 홈으로 가기 버튼 -->
+<form th:action="@{/home}" method="get" style="margin-top: 10px;">
+  <button type="submit"
+          style="padding: 8px 16px; background-color: #888; color: white; border: none; border-radius: 5px; cursor: pointer;">
+    홈으로 가기
+  </button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>강의계획서 등록</title>
+  <style>
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #f9f9f9;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .form-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin: 12px 0 6px;
+        font-weight: bold;
+    }
+
+    textarea, button {
+        width: 100%;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 14px;
+    }
+
+    textarea {
+        height: 150px;
+    }
+
+    button {
+        margin-top: 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    .readonly-field {
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        padding: 8px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="form-container">
+  <h2>강의계획서 등록</h2>
+
+  <form th:action="@{/syllabus/professor/new}" method="post">
+    <!-- 과목 ID는 전송 필요 -->
+    <input type="hidden" name="courseId" th:value="${course.id}" />
+
+    <!-- 과목명 출력 -->
+    <label>과목명</label>
+    <div class="readonly-field" th:text="${course.courseName}">과목명 표시</div>
+
+    <!-- 강의계획서 내용 입력 -->
+    <label for="content">강의계획서 내용</label>
+    <textarea id="content" name="content" placeholder="내용을 입력하세요" required></textarea>
+
+    <button type="submit">등록</button>
+  </form>
+</div>
+
+</body>
+</html>
