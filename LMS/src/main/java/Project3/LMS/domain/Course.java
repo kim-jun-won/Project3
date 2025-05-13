@@ -43,6 +43,10 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Assignment> assignments = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List <OnlineLecture> onlineLectures = new ArrayList<>();
+
     /**
      *     연관관계 메소드
      */
@@ -74,6 +78,12 @@ public class Course {
     public void addNotice(Notice notice) {
         notices.add(notice);
         notice.setCourse(this);
+    }
+
+    public void addOnlineLecture(OnlineLecture onlineLecture) {
+        onlineLectures.add(onlineLecture);
+        onlineLecture.setCourse(this);
+
     }
 
 
