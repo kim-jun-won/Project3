@@ -206,42 +206,34 @@
 
     <strong>학생</strong>
     <ul>
-        <li><a href="/timetable">시간표 구성</a></li>
-        <li><a href="/grades">성적 확인</a></li>
-        <li th:if="${student != null}">
-            <a href="/notice/student/list">강의공지사항 조회</a>
-        </li>
-        <li th:if="${student != null}">
-            <a href="/syllabus/student/list">강의계획서 조회</a>
-        </li>
-        <li><a href="/content">온라인 콘텐츠 수강</a></li>
-        <li><a href="/enroll">수강신청</a></li>
-        <li><a href="/mypage">개인정보 조회 및 수정</a></li>
+        <li><a href="/timetable" class="secure-link" onclick="return false;">시간표 구성</a></li>
+        <li><a href="/enroll/gradeCheck" class="secure-link" onclick="return false;">수강 성적 조회</a></li>
+        <li><a href="/notice/student/list" class="secure-link" onclick="return false;">강의공지사항 조회</a></li>
+        <li><a href="/syllabus/student/list" class="secure-link" onclick="return false;">강의계획서 조회</a></li>
+        <li><a href="/content" class="secure-link" onclick="return false;">온라인 콘텐츠 수강</a></li>
+        <li><a href="/enroll" class="secure-link" onclick="return false;">수강신청</a></li>
+        <li><a href="/mypage" class="secure-link" onclick="return false;">개인정보 조회 및 수정</a></li>
     </ul>
 
     <strong>교수</strong>
     <ul>
-        <li><a href="/grade-input">성적 입력</a></li>
-        <li><a href="/lecture-upload">온라인 강의 업로드</a></li>
-        <li th:if="${professor != null}">
-            <a href="/notice/professor/list">과목 공지사항 관리</a>
-        </li>
-        <li th:if="${professor != null}">
-            <a href="/syllabus/professor/list">강의계획서 등록/수정/삭제</a>
-        </li>
-        <li><a href="/attendance">수강 학생 관리</a></li>
+        <li><a href="/enroll/attendance" class="secure-link" onclick="return false;">성적입력</a></li>
+        <li><a href="/online-lecture" class="secure-link" onclick="return false;">온라인 강의 업로드</a></li>
+        <li><a href="/notice/professor/list" class="secure-link" onclick="return false;">과목 공지사항 관리</a></li>
+        <li><a href="/syllabus/professor/list" class="secure-link" onclick="return false;">강의계획서 등록/수정/삭제</a></li>
     </ul>
 
     <strong>관리자</strong>
     <ul>
-        <li><a href="/enroll-schedule">수강신청 날짜 설정/삭제</a></li>
-        <li><a href="/grade-period">성적 입력기간 설정/수정/삭제</a></li>
-        <li><a href="/notice/admin/list">학교 공지사항 작성</a></li>
-        <li><a href="/professors">교수 정보 확인</a></li>
-        <li><a href="/students">학생 정보 확인</a></li>
-        <li><a href="/course-manage">강의 등록/삭제</a></li>
+        <li><a href="/enroll-schedule" class="secure-link" onclick="return false;">수강신청 날짜 설정/삭제</a></li>
+        <li><a href="/grade-period" class="secure-link" onclick="return false;">성적 입력기간 설정/수정/삭제</a></li>
+        <li><a href="/notice/admin/list" class="secure-link" onclick="return false;">학교 공지사항 작성</a></li>
+        <li><a href="/professors" class="secure-link" onclick="return false;">교수 정보 확인</a></li>
+        <li><a href="/students" class="secure-link" onclick="return false;">학생 정보 확인</a></li>
+        <li><a href="/course-manage" class="secure-link" onclick="return false;">강의 등록/삭제</a></li>
     </ul>
 </div>
+
 
 <!-- 본문 콘텐츠 -->
 <div class="container">
@@ -316,12 +308,15 @@
 
 </div>
 
+
 <!-- JavaScript -->
 <script>
     function toggleSidebar() {
         document.getElementById("sidebar").classList.toggle("active");
     }
-        document.addEventListener("DOMContentLoaded", function () {
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // 시간표 셀에 색상 부여
         const cells = document.querySelectorAll(".timetable-cell");
         const colorMap = {};
         let colorIndex = 0;
@@ -330,20 +325,77 @@
         cells.forEach(cell => {
             const text = cell.innerText.trim();
             if (text !== '') {
-                // 과목명만 추출 (시간, 교수 제거)
                 const courseName = text.split("(")[0].trim();
-
                 if (!colorMap[courseName]) {
                     colorMap[courseName] = colorIndex % totalColors;
                     colorIndex++;
                 }
-
                 const assignedColor = colorMap[courseName];
                 cell.classList.add(`color-${assignedColor}`);
             }
         });
-    });
 
+        // ✅ 역할 정의
+        const role = document.getElementById("userRole")?.value || "guest";
+        const accessMap = {
+            student: [
+                "/timetable",
+                "/grades",
+                "/notice/student",
+                "/syllabus/student",
+                "/content",
+                "/mypage",
+                "/enroll",
+                "/enroll/gradeCheck"
+                // ❌ "/enroll/attendance"는 절대 넣지 않음
+            ],
+            professor: [
+                "/enroll/attendance",
+                "/online-lecture",
+                "/notice/professor",
+                "/syllabus/professor"
+            ],
+            admin: [
+                "/enroll-schedule",
+                "/grade-period",
+                "/notice/admin",
+                "/professors",
+                "/students",
+                "/course-manage"
+            ]
+        };
+
+        // ✅ 링크 클릭 제어
+        const sidebarLinks = document.querySelectorAll(".sidebar a");
+        sidebarLinks.forEach(link => {
+            const href = link.getAttribute("href");
+            link.setAttribute("data-href", href); // 원본 저장
+            link.setAttribute("href", "javascript:void(0);"); // 자동 이동 막기
+
+            link.addEventListener("click", function () {
+                const dest = link.getAttribute("data-href").replace(/\/+$/, ""); // 끝 '/' 제거
+                const allowedPaths = accessMap[role] || [];
+
+                // ✅ 정확히 일치하거나 하위 경로만 허용
+                const hasAccess = allowedPaths.some(path => {
+                    if (path === "/enroll") {
+                        // 🔒 enroll은 무조건 정확히 같아야만 허용
+                        return dest === "/enroll";
+                    } else {
+                        // 나머지는 같거나 하위 경로도 허용
+                        return dest === path || dest.startsWith(path + "/");
+                    }
+                });
+
+                if (!hasAccess) {
+                    alert("권한이 없습니다.");
+                    window.location.href = "/home";
+                } else {
+                    window.location.href = dest;
+                }
+            });
+        });
+    });
 </script>
 
 </body>
