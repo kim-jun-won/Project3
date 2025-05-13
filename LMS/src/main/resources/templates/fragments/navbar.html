@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+</head>
+<body>
+<div class="navbar" th:fragment="topbar" style="display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background-color: #3b003b; color: white;">
+
+  <!-- 왼쪽 영역: 햄버거 + 홈 -->
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <button class="hamburger" onclick="toggleSidebar()" style="font-size: 26px; cursor: pointer; background: none; border: none; color: white;">☰</button>
+    <a href="/home" class="home-btn" style="color: white; background-color: #3b003b; border: 1px solid white; padding: 6px 12px; text-decoration: none; border-radius: 5px; font-size: 14px;">홈으로</a>
+  </div>
+
+  <!-- 오른쪽 영역: 환영 메시지 + 로그아웃 -->
+  <div style="display: flex; align-items: center; gap: 15px;">
+    <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
+    <form th:action="@{/logout}" method="get" style="display: inline;">
+      <button class="logout-btn" style="padding: 6px 12px; background-color: #ff4d4d; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Logout</button>
+    </form>
+  </div>
+
+</div>
+</body>
+</html>
+

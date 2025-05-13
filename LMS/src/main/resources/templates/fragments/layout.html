@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>광운대학교 KLAS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar {
+        background-color: #3b003b;
+        color: white;
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .hamburger {
+        font-size: 26px;
+        cursor: pointer;
+        background: none;
+        border: none;
+        color: white;
+    }
+
+    .logout-btn {
+        padding: 6px 12px;
+        background-color: #ff4d4d;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .logout-btn:hover {
+        background-color: #d93636;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: 20px auto;
+        padding: 0 20px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div class="navbar">
+  <button class="hamburger" onclick="toggleSidebar()">☰</button>
+  <div>
+    <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
+    <form th:action="@{/logout}" method="get" style="display: inline;">
+      <button class="logout-btn" style="margin-left: 15px;">Logout</button>
+    </form>
+  </div>
+</div>
+
+<!-- 사이드바 삽입 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- 본문 삽입 -->
+<div class="container" th:fragment="layout">
+  <div th:insert="~{::content}"></div>
+</div>
+
+<script>
+  function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+  }
+</script>
+
+</body>
+</html>

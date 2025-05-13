@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>강의계획서 관리</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #3b003b;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hamburger {
+            font-size: 26px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+        }
+
+        .logout-btn {
+            padding: 6px 12px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background-color: #d93636;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 250px;
+            height: 100%;
+            background-color: #f9f9f9;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding-left: 15px;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .sidebar .close-btn {
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #ff4d4d;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .close-btn:hover {
+            background-color: #d93636;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .course {
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background-color: white;
+        }
+
+        .course-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .btn-group {
+            margin-top: 10px;
+        }
+
+        .btn-group form {
+            display: inline;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            margin-right: 6px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .btn-group a,
+        .btn-group form {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- 본문 -->
+<div class="container">
+    <h2>📚 담당 과목 강의계획서 관리</h2>
+
+    <div th:if="${courses != null}">
+        <div th:each="course : ${courses}" class="course">
+            <div class="course-title" th:text="${course.courseName}">과목명</div>
+
+            <div class="btn-group" th:if="${course.syllabus == null}">
+                <a th:href="@{/syllabus/professor/new(professorId=${professorId}, courseId=${course.id})}">
+                    <button class="btn">등록</button>
+                </a>
+            </div>
+
+            <div class="btn-group" th:if="${course.syllabus != null}">
+                <a th:href="@{/syllabus/professor/{id}/edit(id=${course.id}, professorId=${professorId})}">
+                    <button class="btn">수정</button>
+                </a>
+                <form th:action="@{/syllabus/professor/{courseId}/delete(courseId=${course.id})}" method="post">
+                    <input type="hidden" name="professorId" th:value="${professorId}" />
+                    <button type="submit" class="btn delete-btn">삭제</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(courses)}">
+        <p>담당 과목이 없습니다.</p>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("active");
+    }
+</script>
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof initializeSidebarEvents === 'function') {
+        initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+      }
+    });
+</script>
+</body>
+</html>

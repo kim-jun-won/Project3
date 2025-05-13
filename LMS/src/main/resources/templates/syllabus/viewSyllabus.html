@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>강의계획서 상세 보기</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+  <style>
+    body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #f5f5f5;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        margin-bottom: 15px;
+    }
+
+    .label {
+        font-weight: bold;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .content-box {
+        background-color: #f9f9f9;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        white-space: pre-wrap;
+    }
+
+    .back-btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+    }
+
+    .back-btn:hover {
+        background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<div class="container">
+  <h2>📖 강의계획서 상세</h2>
+
+  <!-- 과목명 표시 -->
+  <div>
+    <span class="label">과목명</span>
+    <div class="content-box" th:text="${syllabus.course.courseName}">과목명</div>
+  </div>
+
+  <!-- 강의계획서 내용 -->
+  <div style="margin-top: 20px;">
+    <span class="label">강의 내용</span>
+    <div class="content-box" th:text="${syllabus.content}"></div>
+  </div>
+
+  <!-- 뒤로가기 -->
+  <a href="javascript:history.back()" class="back-btn">← 뒤로가기</a>
+</div>
+
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${course.courseName + ' 공지사항'}">공지사항 목록</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f8f8f8;
+      padding: 30px;
+    }
+
+    h2 {
+      color: #3b003b;
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #3b003b;
+      color: white;
+    }
+
+    .no-notice {
+      margin-top: 20px;
+      color: #777;
+      text-align: center;
+    }
+
+    a.notice-link {
+      color: #007bff;
+      text-decoration: none;
+    }
+
+    a.notice-link:hover {
+      text-decoration: underline;
+    }
+
+    .back-btn {
+      margin-top: 25px;
+      padding: 8px 16px;
+      background-color: #888;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .back-btn:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<h2 th:text="${course.courseName + ' 공지사항'}">자료구조 공지사항</h2>
+
+<table th:if="${notices != null and !#lists.isEmpty(notices)}">
+  <thead>
+  <tr>
+    <th>제목</th>
+    <th>작성일</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="notice : ${notices}">
+    <td>
+      <a th:href="@{'/notice/view/' + ${notice.id}}"
+         th:text="${notice.title}"
+         class="notice-link">공지 제목</a>
+    </td>
+    <td th:text="${#temporals.format(notice.date, 'yyyy-MM-dd')}">2025-05-13</td>
+  </tr>
+  </tbody>
+</table>
+
+<div th:if="${notices == null or #lists.isEmpty(notices)}" class="no-notice">
+  해당 과목에 등록된 공지사항이 없습니다.
+</div>
+
+<form th:action="@{/home}" method="get">
+  <button type="submit" class="back-btn">홈으로 가기</button>
+</form>
+
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+    }
+  });
+</script>
+</body>
+</html>
