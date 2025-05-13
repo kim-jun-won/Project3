@@ -82,5 +82,12 @@ public class TimetableService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 교수에 따른 Timetable 전달해줌
+     */
+    public List<Timetable> getProfessorTimetable(Long professorId) {
+        return timetableRepository.findByProfessorId(professorId);
+    }
+
 
 }
