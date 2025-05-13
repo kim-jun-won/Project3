@@ -27,6 +27,8 @@ public class Enrollment {
 
     private LocalDate enrollmentDate;
 
+    private String grade;
+
     @Enumerated(EnumType.STRING)
     private EnrollmentStatus enrollmentsStatus;
 

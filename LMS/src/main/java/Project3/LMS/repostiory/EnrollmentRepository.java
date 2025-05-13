@@ -1,5 +1,6 @@
 package Project3.LMS.repostiory;
 
+import Project3.LMS.domain.Course;
 import Project3.LMS.domain.Enrollment;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -56,5 +57,24 @@ public class EnrollmentRepository {
                 .getSingleResult();
 
         return count > 0;
+    }
+
+    /**
+     * 학생 id 과목 id를 넣으면 해당 수강신청 객체를 찾아주는 로직
+     */
+    public Enrollment findByCourseIdAndStudentId2(Long courseId, Long studentId) {
+        return em.createQuery(
+                        "SELECT e FROM Enrollment e WHERE e.course.id = :courseId AND e.student.id = :studentId",
+                        Enrollment.class)
+                .setParameter("courseId", courseId)
+                .setParameter("studentId", studentId)
+                .getSingleResult();
+    }
+
+
+    public List<Enrollment> findByCourse(Course course) {
+        return em.createQuery("SELECT e FROM Enrollment e WHERE e.course = :course", Enrollment.class)
+                .setParameter("course", course)
+                .getResultList();
     }
 }
