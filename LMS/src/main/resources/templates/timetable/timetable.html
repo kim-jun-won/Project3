@@ -3,59 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>시간표</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
   <style>
-    body {
-        font-family: 'Noto Sans KR', sans-serif;
-        background-color: #f5f5f5;
-        margin: 0;
-        padding: 0;
-    }
-
-    .navbar {
-        background-color: #3b003b;
-        color: white;
-        padding: 10px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .logout-btn {
-        padding: 6px 12px;
-        background-color: #ff4d4d;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    .sidebar {
-        position: fixed;
-        top: 0;
-        left: -300px;
-        width: 250px;
-        height: 100%;
-        background-color: #f9f9f9;
-        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        transition: left 0.3s ease;
-        padding: 20px;
-        z-index: 1000;
-    }
-
-    .sidebar.active {
-        left: 0;
-    }
-
-    .sidebar .close-btn {
-        background-color: #ff4d4d;
-        color: white;
-        padding: 10px 15px;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-    }
-
     .container {
         max-width: 1000px;
         margin: 30px auto;
@@ -133,12 +82,11 @@
 </head>
 <body>
 
-<div class="navbar">
-  <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
-  <form th:action="@{/logout}" method="get" style="display: inline;">
-    <button class="logout-btn">Logout</button>
-  </form>
-</div>
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
 
 <div class="container">
   <h2>시간표 구성</h2>
@@ -250,31 +198,14 @@
   </table>
 </div>
 
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
 <script>
-  function toggleSidebar() {
-    document.getElementById("sidebar").classList.toggle("active");
-  }
-
   document.addEventListener("DOMContentLoaded", function () {
-    const cells = document.querySelectorAll(".timetable-cell");
-    const colorMap = {};
-    let colorIndex = 0;
-    const totalColors = 8;
-
-    cells.forEach(cell => {
-      const text = cell.innerText.trim();
-      if (text !== '') {
-        const courseName = text.split("(")[0].trim();
-        if (!colorMap[courseName]) {
-          colorMap[courseName] = colorIndex % totalColors;
-          colorIndex++;
-        }
-        const assignedColor = colorMap[courseName];
-        cell.classList.add(`color-${assignedColor}`);
-      }
-    });
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+    }
   });
 </script>
-
 </body>
 </html>

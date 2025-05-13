@@ -3,6 +3,8 @@ package Project3.LMS.repostiory;
 import Project3.LMS.domain.Student;
 import Project3.LMS.domain.Timetable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,5 +17,11 @@ public interface TimetableRepository extends JpaRepository<Timetable,Long> {
 
     Timetable findByStudentAndDayAndTime(Student student, String day, int time);
 
-    List<Timetable> findByCourseId(Long courseId);
+    /**
+     * 교수 시간표 조회를 위한 query문
+     */
+    @Query("SELECT t FROM Timetable t WHERE t.course.professor.id = :professorId")
+    List<Timetable> findByProfessorId(@Param("professorId") Long professorId);
+
+    List<Timetable> findByCourseId(Long id);
 }

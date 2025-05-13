@@ -59,11 +59,14 @@ public class HomeController {
             for(Timetable t : timetableList){
                 String[] times = timetableMap.get(t.getDay());
                 if(times!=null && t.getTime()>=1 && t.getTime()<=6){
-                    times[t.getTime()] = t.getCourse().getCourseName();
+                    String courseName = t.getCourse().getCourseName();
+                    String professorName = t.getCourse().getProfessor().getName();
+                    times[t.getTime()] = courseName + "::" + professorName;
                 }
             }
 
             model.addAttribute("timetableMap", timetableMap);
+            model.addAttribute("userRole","student");
 
 
             /**
@@ -73,8 +76,8 @@ public class HomeController {
                     .map(Timetable::getCourse)
                     .distinct()
                     .toList();
+
             model.addAttribute("courses", courses);
-            model.addAttribute("userRole", "student");
         }
 
         //로그인된 세션이 교수
@@ -83,15 +86,31 @@ public class HomeController {
             model.addAttribute("welcomeMessage", professor.getName() + "님 환영합니다!");
             model.addAttribute("professor",professor);
             model.addAttribute("professorId", professor.getId());
-            model.addAttribute("userRole", "professor");
 
+            // 교수인 경우 시간표 조회
+            List<Timetable> timetableList = timetableService.getProfessorTimetable(professor.getId());
+
+            Map<String, String[]> timetableMap = new HashMap<>();
+            for (String day : List.of("월", "화", "수", "목", "금")) {
+                timetableMap.put(day, new String[7]);
+            }
+
+            for (Timetable t : timetableList) {
+                String[] times = timetableMap.get(t.getDay());
+                if (times != null && t.getTime() >= 1 && t.getTime() <= 6) {
+                    times[t.getTime()] = t.getCourse().getCourseName();
+                }
+            }
+
+            model.addAttribute("timetableMap", timetableMap);
+            model.addAttribute("userRole","professor");
 
         }
 
         //관리자일 경우
         else{
             model.addAttribute("welcomeMessage", "관리자님 환영합니다!");
-            model.addAttribute("userRole", "admin");
+            model.addAttribute("userRole","admin");
         }
 
         /**
@@ -123,7 +142,5 @@ public class HomeController {
 
         return "notice/studentCourseNoticeList";
     }
-
-
 
 }
