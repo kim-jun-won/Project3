@@ -60,4 +60,10 @@ public class CourseService {
     public Course getCourse(Long courseId) {
         return courseRepository.findById(courseId);
     }
+
+    @Transactional
+    public void updateOnlineLectureUrl(Long courseId, String url) {
+        Course course = courseRepository.findById(courseId);
+        
+    }
 }
