@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>강의계획서 등록</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
   <style>
     body {
         font-family: 'Noto Sans KR', sans-serif;
@@ -65,6 +66,12 @@
 </head>
 <body>
 
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
 <div class="form-container">
   <h2>강의계획서 등록</h2>
 
@@ -84,5 +91,14 @@
   </form>
 </div>
 
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+    }
+  });
+</script>
 </body>
 </html>

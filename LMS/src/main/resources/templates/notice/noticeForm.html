@@ -3,13 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title th:text="${isEdit} ? '공지사항 수정' : '공지사항 작성'">공지사항 작성</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
   <style>
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      padding: 30px;
-      background-color: #f9f9f9;
-    }
-
     h2 {
       color: #3b003b;
     }
@@ -54,6 +49,14 @@
 </head>
 <body>
 
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<div class="container">
+
 <h2 th:text="${isEdit} ? '공지사항 수정' : '공지사항 작성'">공지사항 작성</h2>
 
 <form th:action="@{${isEdit} ? '/notice/professor/edit' : '/notice/professor/new'}"
@@ -91,14 +94,16 @@
 
   <button type="submit" th:text="${isEdit} ? '수정하기' : '작성하기'">작성하기</button>
 </form>
+</div>
 
-<!-- 홈으로 가기 버튼 -->
-<form th:action="@{/home}" method="get" style="margin-top: 10px;">
-  <button type="submit"
-          style="padding: 8px 16px; background-color: #888; color: white; border: none; border-radius: 5px; cursor: pointer;">
-    홈으로 가기
-  </button>
-</form>
-
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+    }
+  });
+</script>
 </body>
 </html>

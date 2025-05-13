@@ -59,7 +59,6 @@ public class TimetableService {
         timetableRepository.save(timetable);
     }
 
-
     /**
      * 시간표 삭제
      */
@@ -68,5 +67,12 @@ public class TimetableService {
         if (timetable != null) {
             timetableRepository.delete(timetable);
         }
+    }
+
+    /**
+     * 교수에 따른 Timetable 전달해줌
+     */
+    public List<Timetable> getProfessorTimetable(Long professorId) {
+        return timetableRepository.findByProfessorId(professorId);
     }
 }

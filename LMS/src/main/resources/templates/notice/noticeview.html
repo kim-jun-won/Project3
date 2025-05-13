@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>공지사항 상세보기</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
   <style>
     body {
       font-family: 'Noto Sans KR', sans-serif;
@@ -53,6 +54,13 @@
 </head>
 <body>
 
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+
 <div class="container">
   <h2 th:text="${notice.title}">공지 제목</h2>
 
@@ -70,5 +78,14 @@
   </form>
 </div>
 
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+    }
+  });
+</script>
 </body>
 </html>
