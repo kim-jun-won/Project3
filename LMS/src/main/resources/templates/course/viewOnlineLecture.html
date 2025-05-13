@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>온라인 강의 수강</title>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 40px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #3b003b;
+        }
+
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #3b003b;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .lecture-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 6px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .lecture-btn:hover {
+            background-color: #0056b3;
+        }
+
+
+        .no-lecture {
+            font-weight: 500;
+        }
+
+        .disabled-btn {
+            background-color: #ccc;
+            cursor: not-allowed;
+            color: #666;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<h2>온라인 강의 수강</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>과목 이름</th>
+        <th>교수 이름</th>
+        <th>남은 강의</th>
+        <th>강의 보기</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="enroll : ${enrollments}">
+        <td th:text="${enroll.course.courseName}">과목명</td>
+        <td th:text="${enroll.course.professor.name}">교수명</td>
+        <td>
+    <span th:if="${#lists.isEmpty(enroll.course.onlineLectures)}"
+          class="no-lecture">남은 강의가 없습니다!</span>
+
+            <span th:unless="${#lists.isEmpty(enroll.course.onlineLectures)}"
+                  class="no-lecture" style="color: red;"
+                  th:text="${#lists.size(enroll.course.onlineLectures) + '개의 강의 수강 가능!'}">
+    </span>
+        </td>
+        <td>
+            <!-- 강의 있음: 파란색 버튼 -->
+            <a th:if="${!#lists.isEmpty(enroll.course.onlineLectures)}"
+               th:href="@{/content/{id}/online-lectures(id=${enroll.course.id})}"
+               class="lecture-btn">
+                강의 보기
+            </a>
+
+            <!-- 강의 없음: 회색 버튼 (비활성화) -->
+            <button th:if="${#lists.isEmpty(enroll.course.onlineLectures)}"
+                    class="lecture-btn disabled-btn" disabled>
+                강의 보기
+            </button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
