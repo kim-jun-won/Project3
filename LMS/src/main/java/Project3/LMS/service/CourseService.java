@@ -48,4 +48,16 @@ public class CourseService {
     public List<Course> findCourses(CourseSearch courseSearch) {
         return courseRepository.findAll(courseSearch); // 여기서 repository 메서드를 호출
     }
+
+    public Course findbyCourseId(Long courseId) {
+        return courseRepository.findById(courseId);
+    }
+
+    public List<Course> getCoursesByProfessor(Long id) {
+        return courseRepository.getCoursesByProfessor(id);
+    }
+
+    public Course getCourse(Long courseId) {
+        return courseRepository.findById(courseId);
+    }
 }

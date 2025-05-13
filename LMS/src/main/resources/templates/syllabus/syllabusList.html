@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>강의계획서 관리</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #3b003b;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hamburger {
+            font-size: 26px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+        }
+
+        .logout-btn {
+            padding: 6px 12px;
+            background-color: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .logout-btn:hover {
+            background-color: #d93636;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 250px;
+            height: 100%;
+            background-color: #f9f9f9;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            transition: left 0.3s ease;
+            padding: 20px;
+            z-index: 1000;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding-left: 15px;
+        }
+
+        .sidebar ul li {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .sidebar .close-btn {
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #ff4d4d;
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .close-btn:hover {
+            background-color: #d93636;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        .course {
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            background-color: white;
+        }
+
+        .course-title {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .btn-group {
+            margin-top: 10px;
+        }
+
+        .btn-group form {
+            display: inline;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            margin-right: 6px;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .btn-group a,
+        .btn-group form {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div class="navbar">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <div>
+        <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
+        <form th:action="@{/logout}" method="get" style="display: inline;">
+            <button class="logout-btn" style="margin-left: 15px;">Logout</button>
+        </form>
+    </div>
+</div>
+
+<!-- 사이드바 -->
+<div id="sidebar" class="sidebar">
+    <button class="close-btn" onclick="toggleSidebar()">닫기</button>
+
+    <h3>기능 목록</h3>
+
+    <strong>학생</strong>
+    <ul>
+        <li><a href="/timetable">시간표 구성</a></li>
+        <li><a href="/grades">성적 확인</a></li>
+        <li th:if="${student != null}">
+            <a th:href="@{/syllabus/student/list}">강의계획서 조회</a>
+        </li>
+        <li><a href="/content">온라인 콘텐츠 수강</a></li>
+        <li><a href="/enroll">수강신청</a></li>
+        <li><a href="/mypage">개인정보 조회 및 수정</a></li>
+    </ul>
+
+    <strong>교수</strong>
+    <ul>
+        <li><a href="/grade-input">성적 입력</a></li>
+        <li><a href="/lecture-upload">온라인 강의 업로드</a></li>
+        <li><a href="/notice-write">공지사항 작성</a></li>
+        <li><a th:href="@{/syllabus-manage(professorId=${professorId})}">강의 계획서 등록/수정/삭제</a></li>
+        <li><a href="/attendance">수강 학생 관리</a></li>
+        <li><a href="/course-notice">과목 공지사항 작성</a></li>
+    </ul>
+
+    <strong>관리자</strong>
+    <ul>
+        <li><a href="/enroll-schedule">수강신청 날짜 설정/삭제</a></li>
+        <li><a href="/grade-period">성적 입력기간 설정/수정/삭제</a></li>
+        <li><a href="/professors">교수 정보 확인</a></li>
+        <li><a href="/students">학생 정보 확인</a></li>
+        <li><a href="/course-manage">강의 등록/삭제</a></li>
+    </ul>
+</div>
+
+<!-- 본문 -->
+<div class="container">
+    <h2>📚 담당 과목 강의계획서 관리</h2>
+
+    <div th:if="${courses != null}">
+        <div th:each="course : ${courses}" class="course">
+            <div class="course-title" th:text="${course.courseName}">과목명</div>
+
+            <div class="btn-group" th:if="${course.syllabus == null}">
+                <a th:href="@{/syllabus/professor/new(professorId=${professorId}, courseId=${course.id})}">
+                    <button class="btn">등록</button>
+                </a>
+            </div>
+
+            <div class="btn-group" th:if="${course.syllabus != null}">
+                <a th:href="@{/syllabus/professor/{id}/edit(id=${course.id}, professorId=${professorId})}">
+                    <button class="btn">수정</button>
+                </a>
+                <form th:action="@{/syllabus/professor/{courseId}/delete(courseId=${course.id})}" method="post">
+                    <input type="hidden" name="professorId" th:value="${professorId}" />
+                    <button type="submit" class="btn delete-btn">삭제</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(courses)}">
+        <p>담당 과목이 없습니다.</p>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("active");
+    }
+</script>
+
+</body>
+</html>

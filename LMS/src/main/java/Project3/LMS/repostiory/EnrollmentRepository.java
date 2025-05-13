@@ -48,5 +48,13 @@ public class EnrollmentRepository {
     }
 
 
+    public boolean existsByStudentIdAndCourseId(Long studentId, Long courseId) {
+        Long count = em.createQuery(
+                        "SELECT COUNT(e) FROM Enrollment e WHERE e.student.id = :studentId AND e.course.id = :courseId", Long.class)
+                .setParameter("studentId", studentId)
+                .setParameter("courseId", courseId)
+                .getSingleResult();
 
+        return count > 0;
+    }
 }

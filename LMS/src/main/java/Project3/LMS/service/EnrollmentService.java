@@ -1,12 +1,10 @@
 package Project3.LMS.service;
 
-import Project3.LMS.domain.Course;
-import Project3.LMS.domain.Enrollment;
-import Project3.LMS.domain.EnrollmentStatus;
-import Project3.LMS.domain.Student;
+import Project3.LMS.domain.*;
 import Project3.LMS.repostiory.CourseRepository;
 import Project3.LMS.repostiory.EnrollmentRepository;
 import Project3.LMS.repostiory.StudentRepository;
+import Project3.LMS.repostiory.TimetableRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +18,7 @@ public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
+    private final TimetableRepository timetableRepository;
 
 
     //==수강 신청==//
