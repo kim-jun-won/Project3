@@ -76,7 +76,7 @@ body {
 .sidebar {
     position: fixed;
     top: 0;
-    left: -280px;
+    left: -300px;
     width: 240px;
     height: 100%;
     background-color: #ffffff;
@@ -148,3 +148,4 @@ body {
 .color-5 { background-color: #ffe3e3; }  /* 연살구 */
 .color-6 { background-color: #e0eaff; }  /* 연파랑 */
 .color-7 { background-color: #fdfdcf; }  /* 크림옐로우 */
+
