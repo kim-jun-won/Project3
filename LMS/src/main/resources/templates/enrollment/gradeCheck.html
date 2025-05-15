@@ -2,102 +2,103 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>수강 과목 정보</title>
+    <title>성적 내역</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
             background-color: #f5f5f5;
-            padding: 30px;
-        }
-
-        h2 {
-            color: #3b003b;
-            text-align: center;
+            margin: 0;
+            padding: 0;
         }
 
         .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
             background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
-            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .sub-header {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .note {
+            color: #3b00aa;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .term {
+            font-weight: bold;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 18px;
+            border-top: 2px solid #999;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
         }
 
         table {
             width: 100%;
-            margin-top: 20px;
             border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 10px;
-            border: 1px solid #ddd;
-            text-align: left;
+            margin-top: 10px;
         }
 
         th {
-            background-color: #3b003b;
+            background-color: #61103e;
             color: white;
+            padding: 12px;
+            font-weight: 500;
+            font-size: 15px;
+            border: 1px solid #ddd;
         }
 
         td {
+            padding: 11px;
+            text-align: center;
+            font-size: 14px;
+            border: 1px solid #ddd;
             background-color: #fff;
         }
 
-        .alert {
-            padding: 10px;
-            background-color: #f8d7da;
-            color: #721c24;
-            border-radius: 5px;
-            margin-bottom: 20px;
+        tr:hover td {
+            background-color: #fcf5fa;
         }
 
-        .home-link {
-            display: inline-block;
-            text-decoration: none;
-            color: #888;
-            margin-bottom: 20px;
-            font-size: 16px;
+        td:first-child {
+            text-align: left;
         }
 
-        .home-link:hover {
-            color: #555;
-        }
-
-        table {
-            margin-top: 30px;
-        }
-
-        button {
-            margin-top: 20px;
-            background-color: #3b003b;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #2a002a;
+        .category {
+            color: #444;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
+
+<!-- 공통 상단/사이드바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
 <div class="container">
-    <!-- 왼쪽 상단에 홈으로 가기 링크 추가 -->
-    <a th:href="@{/home}" class="home-link">홈으로 가기</a>
+    <h2>*성적내역</h2>
+    <div class="sub-header">[2025년도 1학기 성적표 출력]</div>
+    <div class="note">※ 동일학기 재수강 과목의 기 이수한 과목은 성적마감과 동시에 삭제되며, 기존 이수과목의 성적은 '등급(재수강)'으로 표기됨</div>
 
-    <h2>수강 과목정보/성적</h2>
+    <div class="term">2025학년도 1학기</div>
 
-    <!-- 수강 중인 과목이 없을 경우 메시지 출력 -->
-    <div th:if="${message != null}" class="alert">
-        <p th:text="${message}"></p>
-    </div>
-
-    <!-- 과목 정보 출력 테이블 -->
     <table>
         <thead>
         <tr>
@@ -108,15 +109,24 @@
         </tr>
         </thead>
         <tbody>
-        <!-- 학생이 수강 중인 각 과목 출력 -->
-        <tr th:each="enrollment : ${studentEnrollList}">
-            <td th:text="${enrollment.course.courseName}">과목 이름</td> <!-- 과목 이름 -->
-            <td th:text="${enrollment.course.credits != null ? enrollment.course.credits : '미입력'}">학점</td> <!-- 학점 -->
-            <td th:text="${enrollment.course.professor.name}">교수</td> <!-- 교수명 -->
-            <td th:text="${enrollment.grade != null ? enrollment.grade : '미입력'}">성적</td> <!-- 성적 -->
+        <tr th:each="enroll : ${studentEnrollList}">
+            <td th:text="${enroll.course.courseName}">자료구조</td>
+            <td th:text="${enroll.course.credits != null ? enroll.course.credits : '미입력'}">3</td>
+            <td th:text="${enroll.course.professor.name}">교수명</td>
+            <td th:text="${enroll.grade != null ? enroll.grade : '미입력'}">A+</td>
         </tr>
         </tbody>
     </table>
 </div>
+
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents();
+        }
+    });
+</script>
+
 </body>
 </html>

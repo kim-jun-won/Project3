@@ -7,5 +7,8 @@ import lombok.Setter;
 public class GradeInputDTO {
     private Long studentId;
     private String studentName;
+    private String sid; // 학번
+    private String department; // 학과
     private String grade;
+
 }

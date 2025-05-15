@@ -238,7 +238,9 @@
                     <a th:href="@{/notice/student/course(courseId=${course.id})}">
                         <button type="button">공지사항</button>
                     </a>
-                    <button>자료실</button>
+                    <a th:href="@{/courses/{id}/materials(id=${course.id})}">
+                        <button type="button">자료실</button>
+                    </a>
                 </div>
             </div>
         </div>

@@ -1,10 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>권한 없음</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f5f5f5;
+      text-align: center;
+      padding-top: 100px;
+    }
+
+    .box {
+      display: inline-block;
+      background-color: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+      color: #d9534f;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: #3b003b;
+    }
+  </style>
 </head>
 <body>
-$END$
+<div class="box">
+  <h2>⚠️ 권한이 없습니다.</h2>
+  <p>이 페이지는 교수만 접근할 수 있습니다.</p>
+  <a th:href="@{/home}">← 홈으로 돌아가기</a>
+</div>
 </body>
 </html>
