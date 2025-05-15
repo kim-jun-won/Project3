@@ -4,6 +4,7 @@ function toggleSidebar() {
     if (sidebar) {
         sidebar.classList.toggle("active");
     }
+
 }
 
 // ✅ DOM 로드 이후 실행

@@ -47,6 +47,10 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List <OnlineLecture> onlineLectures = new ArrayList<>();
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LectureMaterial> lectureMaterials = new ArrayList<>();
+
+
     /**
      *     연관관계 메소드
      */
@@ -86,6 +90,10 @@ public class Course {
 
     }
 
+    public void addLectureMaterial(LectureMaterial material) {
+        lectureMaterials.add(material);
+        material.setCourse(this);
+    }
 
     /**
      *     생성 메소드
