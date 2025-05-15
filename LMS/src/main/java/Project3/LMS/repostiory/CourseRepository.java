@@ -1,14 +1,6 @@
 package Project3.LMS.repostiory;
 
 import Project3.LMS.domain.Course;
-<<<<<<< HEAD
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
-
-@Repository
-public interface CourseRepository extends JpaRepository<Course, Long> {
-}
-=======
 import Project3.LMS.domain.Professor;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -85,4 +77,3 @@ public class CourseRepository {
 
 
 }
->>>>>>> 8beaa63dbe0e423e88c034bd400de213d8d5eb8d

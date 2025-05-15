@@ -39,13 +39,15 @@ document.addEventListener("DOMContentLoaded", function () {
             "/content",
             "/mypage",
             "/enroll",
-            "/enroll/gradeCheck"
+            "/enroll/gradeCheck",
+            "/assignment/student/list"
         ],
         professor: [
             "/enroll/attendance",
             "/online-lecture",
             "/notice/professor",
-            "/syllabus/professor"
+            "/syllabus/professor",
+            "/assignment/professor/list"
         ],
         admin: [
             "/enroll-schedule",

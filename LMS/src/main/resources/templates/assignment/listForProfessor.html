@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+    <meta charset="UTF-8">
+    <title>과목 선택</title>
+    <style>
+        body {
+          margin: 0;
+          font-family: 'Noto Sans KR', sans-serif;
+          background-color: #f5f5f5;
+        }
+
+        .top-bar {
+          background-color: #3b003b;
+          height: 50px;
+          width: 100%;
+        }
+
+        .course-container {
+          max-width: 600px;
+          margin: 60px auto;
+          padding: 30px;
+          background-color: #fff;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-title {
+          text-align: center;
+          font-size: 22px;
+          margin-bottom: 25px;
+          color: #3b003b;
+        }
+
+        .course-list {
+          list-style: none;
+          padding: 0;
+        }
+
+        .course-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 18px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          margin-bottom: 12px;
+          transition: background-color 0.2s ease;
+        }
+
+        .course-item:hover {
+          background-color: #f5f0fa;
+        }
+
+        .course-name {
+          font-weight: bold;
+          color: #333;
+        }
+
+        .btn {
+          padding: 6px 12px;
+          background-color: #3b003b;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+          margin-left: 5px;
+        }
+
+        .btn:hover {
+          background-color: #5c1c5c;
+        }
+
+        .assignment-list {
+          margin-top: 40px;
+        }
+
+        .assignment-item {
+          padding: 10px 18px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          margin-bottom: 10px;
+          background-color: #fafafa;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .assignment-title {
+          font-weight: bold;
+          color: #444;
+        }
+
+        .delete-btn {
+          background-color: #b22222;
+        }
+
+        .delete-btn:hover {
+          background-color: #8b0000;
+        }
+
+        .button-group {
+          display: flex;
+          gap: 10px;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="course-container">
+    <div class="course-title">과제 출제를 위한 과목 선택</div>
+    <ul class="course-list">
+        <li class="course-item" th:each="course : ${courses}">
+            <span class="course-name" th:text="${course.courseName}">과목명</span>
+            <div>
+                <form th:action="@{/assignment/create}" method="get" style="display:inline;">
+                    <input type="hidden" name="courseId" th:value="${course.id}" />
+                    <button type="submit" class="btn">출제</button>
+                </form>
+                <form th:action="@{/assignment/professor/view}" method="get" style="display:inline;">
+                    <input type="hidden" name="courseId" th:value="${course.id}" />
+                    <button type="submit" class="btn">조회</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+
+
+    <!-- 과제 목록 출력 -->
+    <div class="assignment-list" th:if="${assignments != null}">
+        <h3 th:text="'[' + ${selectedCourseName} + '] 출제된 과제 목록'">출제된 과제 목록</h3>
+        <div th:each="assignment : ${assignments}" class="assignment-item">
+            <div class="assignment-title" th:text="${assignment.title}">과제 제목</div>
+            <div class="button-group">
+                <form th:action="@{/assignment/professor/submissions}" method="get" style="margin: 0;">
+                    <input type="hidden" name="assignmentId" th:value="${assignment.id}" />
+                    <button type="submit" class="btn">채점</button>
+                </form>
+                <form th:action="@{/assignment/delete}" method="post" style="margin: 0;">
+                    <input type="hidden" name="assignmentId" th:value="${assignment.id}" />
+                    <button type="submit" class="btn delete-btn">삭제</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/js/common.js"></script>
+<script>
+<!--    document.addEventListener("DOMContentLoaded", function () {-->
+<!--        const sidebar = document.getElementById("sidebar");-->
+<!--        if (sidebar && sidebar.classList.contains("active")) {-->
+<!--            sidebar.classList.remove("active");-->
+<!--        }-->
+<!--    });-->
+
+      document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+    }
+  });
+</script>
+
+</body>
+</html>
