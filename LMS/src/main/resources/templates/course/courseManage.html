@@ -1,10 +1,15 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+
 <head>
     <meta charset="UTF-8">
     <title>강의 관리</title>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+
+
     <style>
+
         /* ... 기존 home 스타일 복붙 ... */
         body { font-family: 'Noto Sans KR', sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }
         .navbar { background-color: #3b003b; color: white; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; }
@@ -31,6 +36,7 @@
             padding: 8px 16px;
             border-radius: 4px;
             cursor: pointer;
+            margin-top: 20px;
         }
 
         .danger-btn:hover {
@@ -54,18 +60,12 @@
 <body>
 
 <!-- 상단바 -->
-<div class="navbar">
-    <div style="display: flex; align-items: center; gap: 15px;">
-        <button class="hamburger" onclick="toggleSidebar()">☰</button>
-        <a href="/home" class="home-btn">홈으로</a>
-    </div>
-    <div>
-        <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
-        <form th:action="@{/logout}" method="get" style="display: inline;">
-            <button class="logout-btn" style="margin-left: 15px;">Logout</button>
-        </form>
-    </div>
-</div>
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+
 
 <!-- 사이드 메뉴 -->
 <div id="sidebar" class="sidebar">
@@ -122,10 +122,14 @@
     </form>
 </div>
 
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
 <script>
-    function toggleSidebar() {
-        document.getElementById("sidebar").classList.toggle("active");
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+        }
+    });
 </script>
 </body>
 </html>

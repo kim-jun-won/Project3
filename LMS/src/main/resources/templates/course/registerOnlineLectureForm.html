@@ -2,22 +2,24 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
     <title>온라인 강의 등록</title>
+
     <style>
-        body {
+        .lecture-scope body {
             font-family: 'Noto Sans KR', sans-serif;
             background-color: #f5f5f5;
             margin: 0;
-            padding: 40px;
+            padding: 0;
         }
 
-        h2 {
+        .lecture-scope h2 {
             text-align: center;
             margin-bottom: 30px;
             color: #3b003b;
         }
 
-        table {
+        .lecture-scope table {
             width: 100%;
             max-width: 800px;
             margin: 0 auto 30px;
@@ -28,29 +30,29 @@
             overflow: hidden;
         }
 
-        th, td {
+        .lecture-scope th, .lecture-scope td {
             padding: 14px;
             text-align: center;
             border-bottom: 1px solid #ddd;
         }
 
-        th {
+        .lecture-scope th {
             background-color: #3b003b;
             color: white;
         }
 
-        tr:last-child td {
+        .lecture-scope tr:last-child td {
             border-bottom: none;
         }
 
-        .no-lecture {
+        .lecture-scope .no-lecture {
             text-align: center;
             font-weight: bold;
             color: #ff4d4d;
             margin-bottom: 30px;
         }
 
-        form {
+        .lecture-scope form {
             width: 90%;
             max-width: 500px;
             margin: 0 auto;
@@ -60,19 +62,19 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        form div {
+        .lecture-scope form div {
             margin-bottom: 20px;
         }
 
-        label {
+        .lecture-scope label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
             color: #333;
         }
 
-        input[type="text"],
-        input[type="datetime-local"] {
+        .lecture-scope input[type="text"],
+        .lecture-scope input[type="datetime-local"] {
             width: 100%;
             padding: 10px;
             font-size: 14px;
@@ -81,7 +83,7 @@
             box-sizing: border-box;
         }
 
-        button {
+        .lecture-scope button {
             padding: 10px 20px;
             background-color: #3b003b;
             color: white;
@@ -92,11 +94,11 @@
             width: 100%;
         }
 
-        button:hover {
+        .lecture-scope button:hover {
             background-color: #5a005a;
         }
 
-        a {
+        .lecture-scope a {
             display: block;
             text-align: center;
             margin-top: 20px;
@@ -105,10 +107,11 @@
             font-weight: bold;
         }
 
-        a:hover {
+        .lecture-scope a:hover {
             text-decoration: underline;
         }
-        a.link-button {
+
+        .lecture-scope a.link-button {
             display: inline-block;
             padding: 6px 12px;
             background-color: #007bff;
@@ -120,55 +123,70 @@
             width: 100px;
             margin: 0 auto;
         }
-
     </style>
 </head>
 <body>
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
 
-<h2 th:text="'온라인 강의 등록 - ' + ${course.courseName}">온라인 강의 등록</h2>
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
 
-<!-- ✅ 등록된 온라인 강의 목록 -->
-<div th:if="${#lists.isEmpty(onlineLectures)}" class="no-lecture">
-    등록된 온라인 강의가 없습니다.
+<div class="lecture-scope">
+    <h2 th:text="'온라인 강의 등록 - ' + ${course.courseName}">온라인 강의 등록</h2>
+
+    <!-- ✅ 등록된 온라인 강의 목록 -->
+    <div th:if="${#lists.isEmpty(onlineLectures)}" class="no-lecture">
+        등록된 온라인 강의가 없습니다.
+    </div>
+
+    <table th:if="${!#lists.isEmpty(onlineLectures)}">
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>URL</th>
+            <th>마감기한</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="lecture : ${onlineLectures}">
+            <td th:text="${lecture.title}">제목</td>
+            <td>
+                <a th:href="${lecture.url}" target="_blank" class="link-button">강의 바로가기</a>
+            </td>
+            <td th:text="${#temporals.format(lecture.deadline, 'yyyy-MM-dd HH:mm')}">마감기한</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- ✅ 온라인 강의 등록 폼 -->
+    <form th:action="@{/course/{id}/online-lecture(id=${course.id})}" method="post" th:object="${onlineLectureDTO}">
+        <div>
+            <label for="title">강의 제목</label>
+            <input type="text" id="title" th:field="*{title}" required />
+        </div>
+        <div>
+            <label for="url">온라인 강의 URL</label>
+            <input type="text" id="url" th:field="*{url}" required />
+        </div>
+        <div>
+            <label for="deadline">마감 기한</label>
+            <input type="datetime-local" id="deadline" th:field="*{deadline}" required />
+        </div>
+        <button type="submit">온라인 강의 등록</button>
+    </form>
+
+    <a th:href="@{/online-lecture}">← 강의 목록으로 돌아가기</a>
 </div>
 
-<table th:if="${!#lists.isEmpty(onlineLectures)}">
-    <thead>
-    <tr>
-        <th>제목</th>
-        <th>URL</th>
-        <th>마감기한</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="lecture : ${onlineLectures}">
-        <td th:text="${lecture.title}">제목</td>
-        <td>
-            <a th:href="${lecture.url}" target="_blank" class="link-button">강의 바로가기</a>
-        </td>
-        <td th:text="${#temporals.format(lecture.deadline, 'yyyy-MM-dd HH:mm')}">마감기한</td>
-    </tr>
-    </tbody>
-</table>
-
-<!-- ✅ 온라인 강의 등록 폼 -->
-<form th:action="@{/course/{id}/online-lecture(id=${course.id})}" method="post" th:object="${onlineLectureDTO}">
-    <div>
-        <label for="title">강의 제목</label>
-        <input type="text" id="title" th:field="*{title}" required />
-    </div>
-    <div>
-        <label for="url">온라인 강의 URL</label>
-        <input type="text" id="url" th:field="*{url}" required />
-    </div>
-    <div>
-        <label for="deadline">마감 기한</label>
-        <input type="datetime-local" id="deadline" th:field="*{deadline}" required />
-    </div>
-    <button type="submit">온라인 강의 등록</button>
-</form>
-
-<a th:href="@{/online-lecture}">← 강의 목록으로 돌아가기</a>
-
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents();
+        }
+    });
+</script>
 </body>
 </html>
