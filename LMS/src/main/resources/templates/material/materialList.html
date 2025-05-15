@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>강의자료실</title>
+</head>
+<body>
+<h2 th:text="'📁 ' + ${course.courseName} + ' 강의자료실'"></h2>
+
+<!-- 교수라면 글쓰기 버튼 -->
+<div th:if="${userRole == 'PROFESSOR'}">
+  <a th:href="@{/courses/{id}/materials/new(id=${course.id})}">
+    <button>자료 업로드</button>
+  </a>
+</div>
+
+<!-- 자료 목록 -->
+<ul>
+  <li th:each="material : ${materials}">
+    <a th:href="@{/courses/{courseId}/materials/{materialId}(courseId=${course.id}, materialId=${material.id})}"
+       th:text="${material.title}"></a>
+  </li>
+</ul>
+
+<!-- 목록이 없을 경우 -->
+<div th:if="${#lists.isEmpty(materials)}">
+  등록된 강의자료가 없습니다.
+</div>
+</body>
+</html>
