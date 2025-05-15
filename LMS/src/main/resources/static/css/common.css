@@ -1,33 +1,36 @@
+/* 기본 리셋 */
 body, h1, h2, h3, form {
     margin: 0;
     padding: 0;
 }
 
-/* 공통 폰트 및 기본 레이아웃 */
+/* 전체 배경 및 폰트 */
 body {
     font-family: 'Noto Sans KR', sans-serif;
-    background-color: #f5f5f5;
-    margin: 0;
-    padding: 0;
+    background-color: #f0f2f5;
+    color: #212529;
+    line-height: 1.6;
 }
 
+/* 상단 내비게이션 바 */
 .navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #3b003b;
-  color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 28px;
+    background-color: #3b003b;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .navbar-left,
 .navbar-right {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-/* 햄버거 메뉴 버튼 */
+/* 햄버거 버튼 */
 .hamburger {
     font-size: 26px;
     cursor: pointer;
@@ -38,32 +41,35 @@ body {
 
 /* 로그아웃 버튼 */
 .logout-btn {
-    padding: 6px 12px;
-    background-color: #ff4d4d;
+    padding: 8px 16px;
+    background-color: #e53935;
     color: white;
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    border-radius: 6px;
     font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .logout-btn:hover {
-    background-color: #d93636;
+    background-color: #c62828;
 }
 
-/* 홈으로 버튼 */
+/* 홈 버튼 */
 .home-btn {
     color: white;
-    background-color: #3b003b;
+    background-color: transparent;
     border: 1px solid white;
-    padding: 6px 12px;
+    padding: 8px 16px;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 6px;
     font-size: 14px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .home-btn:hover {
-    background-color: #5a005a;
+    background-color: white;
+    color: #3b003b;
 }
 
 /* 사이드바 */
@@ -71,12 +77,12 @@ body {
     position: fixed;
     top: 0;
     left: -300px;
-    width: 250px;
+    width: 240px;
     height: 100%;
-    background-color: #f9f9f9;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    transition: left 0.3s ease;
-    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s ease-in-out;
+    padding: 25px;
     z-index: 1000;
 }
 
@@ -85,46 +91,61 @@ body {
 }
 
 .sidebar h3 {
-    margin-top: 0;
+    font-size: 18px;
+    color: #333;
     margin-bottom: 20px;
 }
 
 .sidebar ul {
     list-style: none;
-    padding-left: 15px;
+    padding-left: 0;
 }
 
 .sidebar ul li {
-    margin-bottom: 8px;
-    font-size: 14px;
+    margin-bottom: 12px;
+    font-size: 15px;
+    color: #555;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.sidebar ul li:hover {
+    color: #3b003b;
 }
 
 .sidebar .close-btn {
-    font-size: 18px;
-    cursor: pointer;
-    background-color: #ff4d4d;
-    border: none;
+    background-color: #e53935;
     color: white;
-    padding: 10px 15px;
-    border-radius: 5px;
+    padding: 10px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
     margin-bottom: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .sidebar .close-btn:hover {
-    background-color: #d93636;
+    background-color: #c62828;
 }
 
+/* 본문 중앙 컨테이너 */
 .container {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 0 20px;
+    max-width: 960px;
+    margin: 60px auto;
+    padding: 0 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
 }
 
-.color-0 { background-color: #fcb1ec; }
-.color-1 { background-color: #d9b3ff; }
-.color-2 { background-color: #ffdd99; }
-.color-3 { background-color: #a3d5d3; }
-.color-4 { background-color: #a4e29d; }
-.color-5 { background-color: #ffd6d6; }
-.color-6 { background-color: #d6e0ff; }
-.color-7 { background-color: #f6f6b2; }
+/* 수업 칸 색상 */
+.color-0 { background-color: #fce3f0; }  /* 연한 핑크 */
+.color-1 { background-color: #eadcff; }  /* 연보라 */
+.color-2 { background-color: #fff1cc; }  /* 연노랑 */
+.color-3 { background-color: #d2f0ed; }  /* 민트 */
+.color-4 { background-color: #d7f7d1; }  /* 연녹 */
+.color-5 { background-color: #ffe3e3; }  /* 연살구 */
+.color-6 { background-color: #e0eaff; }  /* 연파랑 */
+.color-7 { background-color: #fdfdcf; }  /* 크림옐로우 */
+

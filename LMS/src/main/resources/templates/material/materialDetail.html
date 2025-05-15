@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>강의자료 상세</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 1200px; /* ✅ 확장 */
+      margin: 40px auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      padding: 40px; /* ✅ 안쪽 여백도 조금 여유 있게 */
+    }
+
+    .title-box {
+      border-bottom: 2px solid #ccc;
+      padding-bottom: 12px;
+      margin-bottom: 15px;
+    }
+
+    .title-box h2 {
+      font-size: 24px;
+      color: #3b003b;
+      margin: 0;
+    }
+
+    .meta {
+      font-size: 14px;
+      color: #666;
+      margin-top: 8px;
+    }
+
+    .meta span {
+      margin-right: 20px;
+    }
+
+    .file-section {
+      border-top: 1px dashed #ccc;
+      padding-top: 15px;
+      margin-top: 20px;
+      font-size: 15px;
+    }
+
+    .file-section a {
+      color: #0066cc;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .file-section a:hover {
+      text-decoration: underline;
+    }
+
+    .content {
+      padding: 25px 0;
+      font-size: 16px;
+      color: #333;
+      line-height: 1.6;
+      border-top: 1px solid #eee;
+      margin-top: 20px;
+    }
+
+    .bottom-actions {
+      text-align: right;
+      margin-top: 40px;
+    }
+
+    .btn-back {
+      background-color: #666;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-back:hover {
+      background-color: #4d4d4d;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 상단/사이드 공통 구성 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<div class="container">
+
+  <!-- 제목 + 메타 정보 -->
+  <div class="title-box">
+    <h2 th:text="${material.title}">자료 제목</h2>
+    <div class="meta">
+      <span th:text="'작성자: ' + ${material.writer}"></span>
+      <span th:text="'등록일: ' + ${#temporals.format(material.createdDate, 'yyyy-MM-dd HH:mm')}"></span>
+      <span th:text="'조회수: ' + ${material.viewCount}"></span>
+    </div>
+  </div>
+
+  <!-- 파일 다운로드 -->
+  <div class="file-section">
+    📎 파일:
+    <span th:if="${material.filePath != null}">
+      <a th:href="@{/materials/download/{filename}(filename=${material.filePath})}"
+         th:text="${material.filePath.substring(material.filePath.indexOf('_') + 1)}"
+         download></a>
+    </span>
+    <span th:if="${material.filePath == null}">파일 없음</span>
+  </div>
+
+  <!-- 본문 -->
+  <div class="content" th:text="${material.title}">본문 내용</div>
+
+  <!-- 목록으로 돌아가기 -->
+  <div class="bottom-actions">
+    <a th:href="@{/courses/{id}/materials(id=${material.course.id})}">
+      <button class="btn-back">목록</button>
+    </a>
+  </div>
+
+</div>
+
+<!-- 공통 스크립트 -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents();
+    }
+  });
+</script>
+
+</body>
+</html>

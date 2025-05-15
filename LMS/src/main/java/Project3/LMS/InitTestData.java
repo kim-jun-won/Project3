@@ -3,7 +3,6 @@ package Project3.LMS;
 import Project3.LMS.domain.*;
 import Project3.LMS.repostiory.*;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.Subgraph;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -11,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Configuration
 @RequiredArgsConstructor
@@ -24,11 +24,10 @@ public class InitTestData {
     private final NoticeRepository noticeRepository;
     private final EntityManager em;
 
-    // Bean + CommandRunner -> 시작 시 한번 실행하는 메서드
     @Bean
     public CommandLineRunner initTestDataRunner() {
         return new InitDataRunner(
-                userRepository, studentRepo, professorRepo, timetableRepository, enrollmentRepository, noticeRepository,em
+                userRepository, studentRepo, professorRepo, timetableRepository, enrollmentRepository, noticeRepository, em
         );
     }
 
@@ -46,153 +45,139 @@ public class InitTestData {
         @Override
         @Transactional
         public void run(String... args) {
-            if (userRepository.existsByEmail("junwon2631@kw.ac.kr")) return;
+            if (userRepository.existsByEmail("professor1@kw.ac.kr")) return;
 
-            /** 1. 학생 계정 및 엔티티 생성 */
-            User user = new User();
-            user.setName("김준원");
-            user.setUid("2020202095");
-            user.setPassword("1234");
-            user.setEmail("junwon2631@kw.ac.kr");
-            user.setUserType(UserType.STUDENT);
-            user.setDepartment("컴퓨터정보공학부");
-            user.setPhoneNumber("010-2425-4974");
-            userRepository.save(user);
+            // 1. 교수 5명 등록 (이름 현실감 있게)
+            String[][] professorInfos = {
+                    {"이기훈", "professor1@kw.ac.kr", "1234"},
+                    {"장민호", "professor2@kw.ac.kr", "12345"},
+                    {"김다영", "professor3@kw.ac.kr", "123456"},
+                    {"박수현", "professor4@kw.ac.kr", "1234567"},
+                    {"최은지", "professor5@kw.ac.kr", "12345678"}
+            };
 
-            Student student = new Student();
-            student.setName(user.getName());
-            student.setSid(user.getUid());
-            student.setPassword(user.getPassword());
-            student.setEmail(user.getEmail());
-            student.setDepartment(user.getDepartment());
-            student.setPhoneNumber(user.getPhoneNumber())   ;
-            studentRepo.save(student);
+            List<Professor> professorList = new ArrayList<>();
+            for (String[] info : professorInfos) {
+                User user = new User();
+                user.setName(info[0]);
+                user.setUid(info[2]);
+                user.setPassword("1234");
+                user.setEmail(info[1]);
+                user.setUserType(UserType.PROFESSOR);
+                user.setDepartment("컴퓨터정보공학부");
+                user.setPhoneNumber("010-9" + info[2].substring(1)); // 예: 010-9000-0001
+                userRepository.save(user);
 
-            /** 2. 교수 계정 및 엔티티 생성 */
-            User professorUser = new User();
-            professorUser.setName("이기훈");
-            professorUser.setUid("9999999999");
-            professorUser.setPassword("1234");
-            professorUser.setEmail("professor@kw.ac.kr");
-            professorUser.setUserType(UserType.PROFESSOR);
-            professorUser.setDepartment("컴퓨터정보공학부");
-            professorUser.setPhoneNumber("010-1111-1111");
-            userRepository.save(professorUser);
+                Professor professor = new Professor();
+                professor.setName(user.getName());
+                professor.setPid(user.getUid());
+                professor.setPassword(user.getPassword());
+                professor.setEmail(user.getEmail());
+                professor.setDepartment(user.getDepartment());
+                professor.setPhoneNumber(user.getPhoneNumber());
+                professorRepo.save(professor);
+                professorList.add(professor);
+            }
 
-            Professor professor = new Professor();
-            professor.setName(professorUser.getName());
-            professor.setPid(professorUser.getUid());
-            professor.setPassword(professorUser.getPassword());
-            professor.setEmail(professorUser.getEmail());
-            professor.setDepartment(professorUser.getDepartment());
-            professor.setPhoneNumber(professorUser.getPhoneNumber());
-            professorRepo.save(professor);
+            // 2. 과목 8개 생성 → 교수들에게 2개씩 공평하게 분배
+            String[] courseNames = {
+                    "자료구조", "운영체제", "웹프로그래밍", "컴퓨터네트워크",
+                    "인공지능", "알고리즘", "데이터베이스", "객체지향프로그래밍"
+            };
+            List<Course> courseList = new ArrayList<>();
+            for (int i = 0; i < courseNames.length; i++) {
+                Course course = new Course();
+                course.setCourseName(courseNames[i]);
+                course.setCredits(3);
+                course.setProfessor(professorList.get(i / 2)); // 교수 5명 → 2개씩 분배
+                em.persist(course);
+                courseList.add(course);
 
-            /** 3. 과목 등록 */
-            Course course = new Course();
-            course.setCourseName("자료구조");
-            course.setProfessor(professor);
+                Syllabus syllabus = new Syllabus();
+                syllabus.setCourse(course);
+                syllabus.setContent(courseNames[i] + " 과목은 기본 개념과 실습을 포함합니다.");
+                em.persist(syllabus);
+            }
 
-            em.persist(course); // 트랜잭션 안에서 안전하게 실행됨
+            // 3. 시간표 분산용 데이터
+            String[][] timeTableSlots = {
+                    {"월", "1"}, {"화", "2"}, {"수", "3"}, {"목", "4"},
+                    {"금", "5"}, {"월", "2"}, {"수", "1"}, {"화", "4"}
+            };
 
-            Course course1 = new Course();
-            course1.setCourseName("선형대수학");
-            course1.setProfessor(professor);
-            em.persist(course1);
+            // 4. 학생 생성 및 수강신청
+            String[][] studentInfos = {
+                    {"김지훈", "2020202001", "kimjh01@kw.ac.kr", "010-1111-2222"},
+                    {"박소연", "2020202002", "parksy02@kw.ac.kr", "010-2222-3333"},
+                    {"이준석", "2020202003", "leejs03@kw.ac.kr", "010-3333-4444"},
+                    {"최민정", "2020202004", "choimj04@kw.ac.kr", "010-4444-5555"},
+                    {"정재현", "2020202005", "jungjh05@kw.ac.kr", "010-5555-6666"},
+                    {"김준원", "2020202095", "junwon@kw.ac.kr", "010-6666-7777"},
+                    {"홍왕기", "2020202060", "leejd8130@kw.ac.kr", "010-5346-8130"},
+                    {"강현민", "2020202092", "abc8130@kw.ac.kr", "010-1234-8130"},
+                    {"박세영", "2020202093", "123a0@kw.ac.kr", "010-2345-8130"},
+            };
 
-            Course course2 = new Course();
-            course2.setCourseName("소프트웨어공학");
-            course2.setProfessor(professor);
-            em.persist(course2);
+            for (String[] info : studentInfos) {
+                User user = new User();
+                user.setName(info[0]);
+                user.setUid(info[1]);
+                user.setPassword("1234");
+                user.setEmail(info[2]);
+                user.setUserType(UserType.STUDENT);
+                user.setDepartment("컴퓨터정보공학부");
+                user.setPhoneNumber(info[3]);
+                userRepository.save(user);
 
-            Course course3 = new Course();
-            course3.setCourseName("운영체제");
-            course3.setProfessor(professor);
-            em.persist(course3);
+                Student student = new Student();
+                student.setName(info[0]);
+                student.setSid(info[1]);
+                student.setPassword("1234");
+                student.setEmail(info[2]);
+                student.setDepartment("컴퓨터정보공학부");
+                student.setPhoneNumber(info[3]);
+                studentRepo.save(student);
 
-            /** 4. 강의계획서 등록 */
-            Syllabus syllabus = new Syllabus();
-            syllabus.setCourse(course);
-            syllabus.setContent("이 과목은 자료구조와 알고리즘의 기본 개념을 학습합니다.");
-            em.persist(syllabus);
+                // 5. 수강신청 8과목 전체 등록
+                for (int i = 0; i < courseList.size(); i++) {
+                    Course course = courseList.get(i);
+                    String[] slot = timeTableSlots[i]; // 요일-시간 짝
+                    enroll(student, course, slot[0], Integer.parseInt(slot[1]));
+                }
+            }
 
-            Syllabus syllabus1 = new Syllabus();
-            syllabus1.setCourse(course1);
-            syllabus1.setContent("이 과목은 선형대수학을 학습합니다.");
-            em.persist(syllabus1);
-
-            Syllabus syllabus2 = new Syllabus();
-            syllabus2.setCourse(course2);
-            syllabus2.setContent("이 과목을 소프트웨어 방법론을 학습합니다.");
-            em.persist(syllabus2);
-
-            /** 4. 타임테이블 등록 */
-
-            // 자료구조
-            Timetable tt = new Timetable();
-            tt.setStudent(student);
-            tt.setCourse(course);
-            tt.setDay("화");
-            tt.setTime(3);
-            timetableRepository.save(tt);
-
-            // 수강과목: 선형대수학
-            Timetable tt1 = new Timetable();
-            tt1.setStudent(student);
-            tt1.setCourse(course1);
-            tt1.setDay("수");
-            tt1.setTime(2);
-            timetableRepository.save(tt1);
-
-            // 수강과목: 소프트웨어공학
-            Timetable tt2 = new Timetable();
-            tt2.setStudent(student);
-            tt2.setCourse(course2);
-            tt2.setDay("목");
-            tt2.setTime(1);
-            timetableRepository.save(tt2);
-
-            // 수강과목: 운영체제 (강의계획서 없음)
-            Timetable tt3 = new Timetable();
-            tt3.setStudent(student);
-            tt3.setCourse(course3);
-            tt3.setDay("금");
-            tt3.setTime(4);
-            timetableRepository.save(tt3);
-
-            /** 수강신청과목 저장*/
-            Enrollment enroll1 = new Enrollment();
-            enroll1.setStudent(student);
-            enroll1.setCourse(course); // 자료구조
-            enrollmentRepository.save(enroll1);
-
-            Enrollment enroll2 = new Enrollment();
-            enroll2.setStudent(student);
-            enroll2.setCourse(course1); // 선형대수학
-            enrollmentRepository.save(enroll2);
-
-            Enrollment enroll3 = new Enrollment();
-            enroll3.setStudent(student);
-            enroll3.setCourse(course2); // 소프트웨어공학
-            enrollmentRepository.save(enroll3);
-
-            Enrollment enroll4 = new Enrollment();
-            enroll4.setStudent(student);
-            enroll4.setCourse(course3); // 소프트웨어공학
-            enrollmentRepository.save(enroll4);
-
-
-            /**
-             * 공지사항 추가
-             */
+            // 6. 교수 공지사항 예시
             Notice notice = new Notice();
             notice.setDate(LocalDateTime.now());
             notice.setWriterType(NoticeWriterType.PROFESSOR);
-            notice.setProfessor(professor);
-            notice.setCourse(course1);
-            notice.setTitle("휴강안내");
-            notice.setContent("교수 개인 사정으로 휴강합니다.");
+            notice.setProfessor(professorList.get(0)); // 이기훈
+            notice.setCourse(courseList.get(0)); // 자료구조
+            notice.setTitle("[자료구조] 1주차 예습 및 과제 안내");
+            notice.setContent("자료구조 1주차 수업은 배열과 연결 리스트 개념입니다.\n예습하고, 과제는 LMS에 업로드하세요.");
             noticeRepository.save(notice);
+        }
+
+        private Course createCourse(String name, Professor professor) {
+            Course course = new Course();
+            course.setCourseName(name);
+            course.setProfessor(professor);
+            course.setCredits(3);
+            em.persist(course);
+            return course;
+        }
+
+        private void enroll(Student student, Course course, String day, int time) {
+            Enrollment e = new Enrollment();
+            e.setStudent(student);
+            e.setCourse(course);
+            enrollmentRepository.save(e);
+
+            Timetable t = new Timetable();
+            t.setStudent(student);
+            t.setCourse(course);
+            t.setDay(day);
+            t.setTime(time);
+            timetableRepository.save(t);
         }
     }
 }
