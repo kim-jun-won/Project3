@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
 <head>
     <meta charset="UTF-8">
     <title>온라인 강의 목록</title>
@@ -42,7 +43,7 @@
         }
 
         .lecture-btn {
-            background-color: #007bff;
+            background-color: #575758;
             color: white;
             padding: 6px 14px;
             border: none;
@@ -58,6 +59,12 @@
 </head>
 <body>
 
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
 <h2 th:text="'[' + ${course.courseName} + '] 온라인 강의 목록'">온라인 강의 목록</h2>
 
 <table>
@@ -71,15 +78,25 @@
     </thead>
     <tbody>
     <tr th:each="lecture : ${onlineLectures}">
-        <td th:text="${lecture.title}">강의명</td>
+        <td th:text="${lecture.title}">제목</td>
         <td th:text="${course.professor.name}">교수명</td>
         <td th:text="${#temporals.format(lecture.deadline, 'yyyy-MM-dd HH:mm')}">마감기한</td>
         <td>
-            <a th:href="${lecture.url}" target="_blank" class="lecture-btn">강의 보기</a>
+            <a th:href="${lecture.url}" target="_blank" class="lecture-btn">강의보기</a>
         </td>
     </tr>
     </tbody>
 </table>
+
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+        }
+    });
+</script>
 
 </body>
 </html>
