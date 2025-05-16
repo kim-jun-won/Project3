@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -127,6 +129,14 @@ public class UserService {
     }
 
 
-
+    public List<User> search(String userType, String keyword, String department) {
+        return userRepository.findAll().stream()
+                .filter(u -> {
+                    boolean matchType = userType == null || userType.equals("ALL") || u.getUserType().name().equals(userType);
+                    boolean matchName = keyword == null || u.getName().contains(keyword);
+                    boolean matchDept = department == null || department.isBlank() || u.getDepartment().equals(department);
+                    return matchType && matchName && matchDept;
+                }).collect(Collectors.toList());
+    }
 
 }

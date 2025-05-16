@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>사용자 정보</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      margin: 0;
+      background-color: #f8f9fc;
+    }
+
+    .user-content {
+      margin-left: 220px;
+      padding: 100px 60px 60px;
+      max-width: 1100px;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .section {
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      padding: 30px 40px;
+      margin-bottom: 40px;
+    }
+
+    .section h2 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #4b0082;
+      margin-bottom: 24px;
+      border-left: 5px solid #6f42c1;
+      padding-left: 12px;
+    }
+
+    .user-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .user-table th, .user-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #e0e0e0;
+      text-align: center;
+    }
+
+    .user-table th {
+      background-color: #f4f6fa;
+      color: #333;
+      font-weight: 600;
+    }
+
+    .user-table tr:hover {
+      background-color: #f9f9fc;
+    }
+
+    .search-form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .search-form input[type="text"],
+    .search-form select {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .search-form button {
+      padding: 6px 16px;
+      background-color: #6f42c1;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .radio-group label {
+      margin-right: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .user-content {
+        margin-left: 0;
+        padding: 80px 20px;
+      }
+
+      .section {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<main class="user-content">
+
+  <!-- 검색 영역 -->
+  <section class="section">
+    <h2>사용자 검색</h2>
+    <form th:action="@{/user-info}" method="get" class="search-form">
+      <div class="radio-group">
+        <label><input type="radio" name="userType" value="ALL" th:checked="${userType == null or userType == 'ALL'}"> 전체</label>
+        <label><input type="radio" name="userType" value="STUDENT" th:checked="${userType == 'STUDENT'}"> 학생</label>
+        <label><input type="radio" name="userType" value="PROFESSOR" th:checked="${userType == 'PROFESSOR'}"> 교수</label>
+      </div>
+      <input type="text" name="keyword" placeholder="이름 검색" th:value="${keyword}">
+      <select name="department">
+        <option value="">전체 학과</option>
+        <option value="컴퓨터정보공학부" th:selected="${department == '컴퓨터정보공학부'}">컴퓨터정보공학부</option>
+        <option value="전자공학부" th:selected="${department == '전자공학부'}">전자공학부</option>
+      </select>
+      <button type="submit">검색</button>
+    </form>
+  </section>
+
+  <!-- 검색 결과가 있을 경우 -->
+  <div th:if="${resultList != null}">
+    <section class="section">
+      <h2>검색 결과</h2>
+      <table class="user-table">
+        <thead>
+        <tr>
+          <th>학번/교번</th>
+          <th>이름</th>
+          <th>이메일</th>
+          <th>학과</th>
+          <th>전화번호</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${resultList}">
+          <td th:text="${user.uid}">UID</td>
+          <td th:text="${user.name}">이름</td>
+          <td th:text="${user.email}">이메일</td>
+          <td th:text="${user.department}">학과</td>
+          <td th:text="${user.phoneNumber}">전화번호</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <!-- 검색이 없을 경우: 학생 목록 -->
+  <div th:if="${resultList == null}">
+    <section class="section">
+      <h2>학생 목록</h2>
+      <table class="user-table">
+        <thead>
+        <tr>
+          <th>학번</th>
+          <th>이름</th>
+          <th>이메일</th>
+          <th>학과</th>
+          <th>전화번호</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student : ${studentList}" th:if="${student.user != null}">
+          <td th:text="${student.user.uid}">학번</td>
+          <td th:text="${student.user.name}">이름</td>
+          <td th:text="${student.user.email}">이메일</td>
+          <td th:text="${student.user.department}">학과</td>
+          <td th:text="${student.user.phoneNumber}">전화번호</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 교수 목록 -->
+    <section class="section">
+      <h2>교수 목록</h2>
+      <table class="user-table">
+        <thead>
+        <tr>
+          <th>교번</th>
+          <th>이름</th>
+          <th>이메일</th>
+          <th>학과</th>
+          <th>전화번호</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="professor : ${professorList}" th:if="${professor.user != null}">
+          <td th:text="${professor.user.uid}">교번</td>
+          <td th:text="${professor.user.name}">이름</td>
+          <td th:text="${professor.user.email}">이메일</td>
+          <td th:text="${professor.user.department}">학과</td>
+          <td th:text="${professor.user.phoneNumber}">전화번호</td>
+        </tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+</main>
+
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents();
+    }
+  });
+</script>
+
+</body>
+</html>

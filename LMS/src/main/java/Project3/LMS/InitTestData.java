@@ -57,7 +57,8 @@ public class InitTestData {
             };
 
             List<Professor> professorList = new ArrayList<>();
-            for (String[] info : professorInfos) {
+            for (int i = 0; i < professorInfos.length; i++) {
+                String[] info = professorInfos[i];
                 User user = new User();
                 user.setName(info[0]);
                 user.setUid(info[2]);
@@ -65,7 +66,9 @@ public class InitTestData {
                 user.setEmail(info[1]);
                 user.setUserType(UserType.PROFESSOR);
                 user.setDepartment("컴퓨터정보공학부");
-                user.setPhoneNumber("010-9" + info[2].substring(1)); // 예: 010-9000-0001
+                // 전화번호를 010-9234-0001, 0002 ... 처럼 생성
+                String phone = String.format("010-92%02d-%04d", i / 10, i % 10000);
+                user.setPhoneNumber(phone);
                 userRepository.save(user);
 
                 Professor professor = new Professor();
@@ -75,6 +78,7 @@ public class InitTestData {
                 professor.setEmail(user.getEmail());
                 professor.setDepartment(user.getDepartment());
                 professor.setPhoneNumber(user.getPhoneNumber());
+                professor.setUser(user);
                 professorRepo.save(professor);
                 professorList.add(professor);
             }
@@ -127,6 +131,7 @@ public class InitTestData {
                 user.setUserType(UserType.STUDENT);
                 user.setDepartment("컴퓨터정보공학부");
                 user.setPhoneNumber(info[3]);
+
                 userRepository.save(user);
 
                 Student student = new Student();
@@ -136,6 +141,7 @@ public class InitTestData {
                 student.setEmail(info[2]);
                 student.setDepartment("컴퓨터정보공학부");
                 student.setPhoneNumber(info[3]);
+                student.setUser(user);  // 추가!
                 studentRepo.save(student);
 
                 // 5. 수강신청 8과목 전체 등록

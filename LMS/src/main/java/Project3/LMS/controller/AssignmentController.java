@@ -89,7 +89,7 @@ public class AssignmentController {
     }
 
     @GetMapping("/professor/view")
-    public String viewAssignments(@RequestParam Long courseId, Model model, HttpSession session) {
+    public String viewAssignments(@RequestParam("courseId") Long courseId, Model model, HttpSession session) {
         List<Assignment> assignments = assignmentQueryService.findByCourseId(courseId);
         Course course = assignmentQueryService.findCourse(courseId);
 
@@ -110,7 +110,7 @@ public class AssignmentController {
 
     // 교수 - 특정 과제의 제출 목록 조회 (채점용)
     @GetMapping("/professor/submissions")
-    public String viewSubmissions(@RequestParam Long assignmentId, Model model) {
+    public String viewSubmissions(@RequestParam("assignmentId") Long assignmentId, Model model) {
         Assignment assignment = assignmentQueryService.findById(assignmentId);
         List<AssignmentSubmission> submissions = submissionService.findByAssignment(assignmentId);
 
@@ -121,7 +121,7 @@ public class AssignmentController {
 
     // 교수 - 채점 폼 이동
     @GetMapping("/professor/grade")
-    public String showGradeForm(@RequestParam Long submissionId, Model model) {
+    public String showGradeForm(@RequestParam("submissionId") Long submissionId, Model model) {
         AssignmentSubmission submission = submissionService.findById(submissionId);
         model.addAttribute("submission", submission);
         return "assignment/gradeForm";
@@ -176,7 +176,7 @@ public class AssignmentController {
     }
 
     @GetMapping("/student/viewList")
-    public String viewAssignmentList(@RequestParam Long courseId, Model model, HttpSession session) {
+    public String viewAssignmentList(@RequestParam("courseId") Long courseId, Model model, HttpSession session) {
         Student student = (Student) session.getAttribute("loginMember");
         List<Assignment> assignments = assignmentQueryService.findByCourseId(courseId);
         Course course = assignmentQueryService.findCourse(courseId);
@@ -195,7 +195,7 @@ public class AssignmentController {
     }
 
     @GetMapping("/student/detail")
-    public String viewAssignmentDetail(@RequestParam Long assignmentId, Model model, HttpSession session) {
+    public String viewAssignmentDetail(@RequestParam("assignmentId") Long assignmentId, Model model, HttpSession session) {
         Assignment assignment = assignmentQueryService.findById(assignmentId);        Course course = assignment.getCourse();
         Student student = (Student) session.getAttribute("loginMember");
         List<Course> courses = assignmentQueryService.getCoursesByStudentSid(student.getSid());
@@ -210,7 +210,7 @@ public class AssignmentController {
     }
 
     @GetMapping("/download/{fileId}")
-    public ResponseEntity<org.springframework.core.io.Resource> downloadFile(@PathVariable Long fileId) throws IOException {
+    public ResponseEntity<org.springframework.core.io.Resource> downloadFile(@PathVariable("fileId") Long fileId) throws IOException {
         AssignmentFile file = assignmentFileRepository.findById(fileId)
                 .orElseThrow(() -> new IllegalArgumentException("파일을 찾을 수 없습니다."));
 

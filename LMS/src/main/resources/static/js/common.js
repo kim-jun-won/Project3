@@ -56,7 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
             "/notice/admin",
             "/professors",
             "/students",
-            "/course-manage"
+            "/course-manage",
+            "/user-info"
         ]
     };
 
