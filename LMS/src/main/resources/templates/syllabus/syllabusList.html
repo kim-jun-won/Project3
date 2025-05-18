@@ -4,151 +4,81 @@
     <meta charset="UTF-8">
     <title>강의계획서 관리</title>
     <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+
     <style>
         body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
+          font-family: 'Noto Sans KR', sans-serif;
+          background-color: #f5f5f5;
+          margin: 0;
+          padding: 0;
         }
 
-        .navbar {
-            background-color: #3b003b;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        /* ✅ 본문 전용 wrapper */
+        #syllabus-wrapper {
+          max-width: 960px;
+          margin: 30px auto;
+          padding: 0 20px;
         }
 
-        .hamburger {
-            font-size: 26px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: white;
+        #syllabus-wrapper h2 {
+          color: #3b003b;
+          font-size: 22px;
+          margin-bottom: 20px;
         }
 
-        .logout-btn {
-            padding: 6px 12px;
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
+        #syllabus-wrapper .course {
+          background-color: white;
+          padding: 15px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          margin-bottom: 12px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
-        .logout-btn:hover {
-            background-color: #d93636;
+        #syllabus-wrapper .course-title {
+          font-weight: bold;
+          font-size: 16px;
         }
 
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -300px;
-            width: 250px;
-            height: 100%;
-            background-color: #f9f9f9;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            transition: left 0.3s ease;
-            padding: 20px;
-            z-index: 1000;
+        #syllabus-wrapper .btn-group {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          margin-top: 10px;
         }
 
-        .sidebar.active {
-            left: 0;
+        #syllabus-wrapper .btn-group a,
+        #syllabus-wrapper .btn-group form {
+          margin: 0;
         }
 
-        .sidebar h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
+        #syllabus-wrapper .btn {
+          padding: 6px 12px;
+          background-color: #3b003b;
+          border: none;
+          border-radius: 4px;
+          color: white;
+          cursor: pointer;
+          font-size: 14px;
         }
 
-        .sidebar ul {
-            list-style: none;
-            padding-left: 15px;
+        #syllabus-wrapper .btn:hover {
+          background-color: #5c005c;
         }
 
-        .sidebar ul li {
-            margin-bottom: 8px;
-            font-size: 14px;
+        #syllabus-wrapper .delete-btn {
+          background-color: #dc3545;
         }
 
-        .sidebar .close-btn {
-            font-size: 18px;
-            cursor: pointer;
-            background-color: #ff4d4d;
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
+        #syllabus-wrapper .delete-btn:hover {
+          background-color: #c82333;
         }
 
-        .sidebar .close-btn:hover {
-            background-color: #d93636;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        .course {
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            margin-bottom: 12px;
-            background-color: white;
-        }
-
-        .course-title {
-            font-weight: bold;
-            font-size: 16px;
-        }
-
-        .btn-group {
-            margin-top: 10px;
-        }
-
-        .btn-group form {
-            display: inline;
-        }
-
-        .btn {
-            padding: 6px 12px;
-            margin-right: 6px;
-            background-color: #007bff;
-            border: none;
-            border-radius: 4px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .btn:hover {
-            background-color: #0056b3;
-        }
-
-        .delete-btn {
-            background-color: #dc3545;
-        }
-
-        .delete-btn:hover {
-            background-color: #c82333;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .btn-group a,
-        .btn-group form {
-            margin: 0;
+        #syllabus-wrapper .no-course {
+          text-align: center;
+          color: #777;
+          font-size: 15px;
+          margin-top: 30px;
         }
     </style>
 </head>
@@ -160,9 +90,9 @@
 <!-- 사이드바 -->
 <div th:replace="fragments/sidebar :: sidebar"></div>
 
-<!-- 본문 -->
-<div class="container">
-    <h2>📚 담당 과목 강의계획서 관리</h2>
+<!-- ✅ 본문 영역 -->
+<div id="syllabus-wrapper">
+    <h2>담당 과목 강의계획서 관리</h2>
 
     <div th:if="${courses != null}">
         <div th:each="course : ${courses}" class="course">
@@ -186,22 +116,24 @@
         </div>
     </div>
 
-    <div th:if="${#lists.isEmpty(courses)}">
-        <p>담당 과목이 없습니다.</p>
+    <div th:if="${#lists.isEmpty(courses)}" class="no-course">
+        담당 과목이 없습니다.
     </div>
 </div>
 
+<!-- 사이드바 토글 -->
 <script>
     function toggleSidebar() {
-        document.getElementById("sidebar").classList.toggle("active");
+      document.getElementById("sidebar").classList.toggle("active");
     }
 </script>
-<!-- 공통 JavaScript 파일 로드 -->
+
+<!-- 공통 JavaScript -->
 <script src="/js/common.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
       if (typeof initializeSidebarEvents === 'function') {
-        initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+        initializeSidebarEvents();
       }
     });
 </script>

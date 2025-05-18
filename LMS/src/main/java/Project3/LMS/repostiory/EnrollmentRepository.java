@@ -2,6 +2,7 @@ package Project3.LMS.repostiory;
 
 import Project3.LMS.domain.Course;
 import Project3.LMS.domain.Enrollment;
+import Project3.LMS.domain.EnrollmentStatus;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -45,6 +46,14 @@ public class EnrollmentRepository {
                         "SELECT e FROM Enrollment e WHERE e.student.id = :studentId AND e.course.id = :courseId", Enrollment.class)
                 .setParameter("studentId", studentId)
                 .setParameter("courseId", courseId)
+                .getResultList();
+    }
+
+    public List<Enrollment> findActiveByStudentId(Long studentId) {
+        return em.createQuery(
+                        "SELECT e FROM Enrollment e WHERE e.student.id = :studentId AND e.enrollmentsStatus = :status", Enrollment.class)
+                .setParameter("studentId", studentId)
+                .setParameter("status", EnrollmentStatus.ENROLLED)
                 .getResultList();
     }
 

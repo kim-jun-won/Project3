@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -52,11 +53,22 @@ public class NoticeController {
      * 교수용 - 공지사항 등록 처리
      * */
     @PostMapping("/notice/professor/new")
-    public String createNotice(@ModelAttribute NoticeForm form, HttpSession session) {
+    public String createNotice(@ModelAttribute NoticeForm form,
+                               @RequestParam("file") MultipartFile file,
+                               HttpSession session) {
         Professor professor = (Professor) session.getAttribute("loginMember");
         if (professor == null) return "redirect:/login";
 
-        noticeService.createByProfessor(form.getCourseId(), professor, form.getTitle(), form.getContent());
+        String fileName = !file.isEmpty() ? file.getOriginalFilename() : null;
+
+        noticeService.createByProfessor(
+                form.getCourseId(),
+                professor,
+                form.getTitle(),
+                form.getContent(),
+                form.isFixed(),
+                fileName
+        );
 
         return "redirect:/notice/professor/list";
     }
@@ -92,15 +104,23 @@ public class NoticeController {
     }
 
 
-    /**
-     * 교수용 - 공지사항 수정 처리
-     * */
     @PostMapping("/notice/professor/edit")
-    public String updateNotice(@ModelAttribute NoticeForm form, HttpSession session) {
+    public String updateNotice(@ModelAttribute NoticeForm form,
+                               @RequestParam("file") MultipartFile file,
+                               HttpSession session) {
         Professor professor = (Professor) session.getAttribute("loginMember");
         if (professor == null) return "redirect:/login";
 
-        noticeService.updateNotice(form.getNoticeId(), professor, form.getTitle(), form.getContent());
+        String fileName = !file.isEmpty() ? file.getOriginalFilename() : null;
+
+        noticeService.updateNotice(
+                form.getNoticeId(),
+                professor,
+                form.getTitle(),
+                form.getContent(),
+                form.isFixed(),
+                fileName
+        );
 
         return "redirect:/notice/professor/list";
     }
@@ -143,6 +163,7 @@ public class NoticeController {
         if (student == null) return "redirect:/login";
 
         Notice notice = noticeService.getNoticeById(id);
+        noticeService.incrementViewCount(notice);
 
         // 선택한 공지가 학생의 수강 과목인지 검증할 수도 있음 (보안 강화용)
         model.addAttribute("notice", notice);

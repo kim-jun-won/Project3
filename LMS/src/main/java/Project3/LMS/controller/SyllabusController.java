@@ -106,7 +106,7 @@ public class SyllabusController {
             throw new IllegalArgumentException("해당 교수의 과목이 아닙니다.");
         }
         System.out.println("-----------------------");
-        syllabusService.deleteSyllabus(courseId);
+        syllabusService.deleteSyllabusByCourseId(courseId);
         System.out.println("-----------------------");
         return "redirect:/syllabus/professor/list";
     }

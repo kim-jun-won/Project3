@@ -4,63 +4,77 @@
   <meta charset="UTF-8">
   <title>강의계획서 등록</title>
   <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+
   <style>
     body {
-        font-family: 'Noto Sans KR', sans-serif;
-        background-color: #f9f9f9;
-        margin: 0;
-        padding: 20px;
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
     }
 
-    .form-container {
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    /* ✅ 본문 스코프 지정 */
+    #syllabus-form-wrapper {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 0 20px;
     }
 
-    h2 {
-        margin-bottom: 20px;
+    #syllabus-form-wrapper .form-container {
+      background-color: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
-    label {
-        display: block;
-        margin: 12px 0 6px;
-        font-weight: bold;
+    #syllabus-form-wrapper h2 {
+      margin-bottom: 20px;
+      color: #3b003b;
+      font-size: 22px;
+      text-align: center;
     }
 
-    textarea, button {
-        width: 100%;
-        padding: 8px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        font-size: 14px;
+    #syllabus-form-wrapper label {
+      display: block;
+      margin: 14px 0 6px;
+      font-weight: bold;
+      font-size: 15px;
     }
 
-    textarea {
-        height: 150px;
+    #syllabus-form-wrapper textarea,
+    #syllabus-form-wrapper button {
+      width: 100%;
+      padding: 10px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
     }
 
-    button {
-        margin-top: 20px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        cursor: pointer;
+    #syllabus-form-wrapper textarea {
+      height: 150px;
     }
 
-    button:hover {
-        background-color: #0056b3;
+    #syllabus-form-wrapper button {
+      margin-top: 20px;
+      background-color: #3b003b;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
     }
 
-    .readonly-field {
-        background-color: #f1f1f1;
-        border: 1px solid #ccc;
-        padding: 8px;
-        border-radius: 4px;
-        margin-bottom: 10px;
+    #syllabus-form-wrapper button:hover {
+      background-color: #0056b3;
+    }
+
+    #syllabus-form-wrapper .readonly-field {
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -72,31 +86,34 @@
 <!-- 사이드바 -->
 <div th:replace="fragments/sidebar :: sidebar"></div>
 
-<div class="form-container">
-  <h2>강의계획서 등록</h2>
+<!-- ✅ 본문 시작 -->
+<div id="syllabus-form-wrapper">
+  <div class="form-container">
+    <h2>강의계획서 등록</h2>
 
-  <form th:action="@{/syllabus/professor/new}" method="post">
-    <!-- 과목 ID는 전송 필요 -->
-    <input type="hidden" name="courseId" th:value="${course.id}" />
+    <form th:action="@{/syllabus/professor/new}" method="post">
+      <!-- 과목 ID는 전송 필요 -->
+      <input type="hidden" name="courseId" th:value="${course.id}" />
 
-    <!-- 과목명 출력 -->
-    <label>과목명</label>
-    <div class="readonly-field" th:text="${course.courseName}">과목명 표시</div>
+      <!-- 과목명 출력 -->
+      <label>과목명</label>
+      <div class="readonly-field" th:text="${course.courseName}">과목명 표시</div>
 
-    <!-- 강의계획서 내용 입력 -->
-    <label for="content">강의계획서 내용</label>
-    <textarea id="content" name="content" placeholder="내용을 입력하세요" required></textarea>
+      <!-- 강의계획서 내용 입력 -->
+      <label for="content">강의계획서 내용</label>
+      <textarea id="content" name="content" placeholder="내용을 입력하세요" required></textarea>
 
-    <button type="submit">등록</button>
-  </form>
+      <button type="submit">등록</button>
+    </form>
+  </div>
 </div>
 
-<!-- 공통 JavaScript 파일 로드 -->
+<!-- 공통 JS -->
 <script src="/js/common.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     if (typeof initializeSidebarEvents === 'function') {
-      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+      initializeSidebarEvents();
     }
   });
 </script>

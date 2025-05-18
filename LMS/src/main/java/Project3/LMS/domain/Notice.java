@@ -38,12 +38,14 @@ public class Notice {
     private NoticeWriterType writerType;
 
     private String title;
+
+    @Lob
     private String content;
 
     private LocalDateTime date;
 
-    /**
-     * createByProfessor() 구현
-     * createByAdmin() 구현
-     */
+    // 추가된 field
+    private String fileName;
+    private boolean fixed;
+    private int viewCount;
 }

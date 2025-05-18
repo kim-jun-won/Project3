@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -53,21 +54,25 @@ public class SyllabusService {
     /**
      * 삭제
      * */
-    public void deleteSyllabus(Long syllabusId) {
-        Syllabus syllabus = syllabusRepository.findById(syllabusId)
-                .orElseThrow(() -> new RuntimeException("Syllabus not found"));
+    public void deleteSyllabusByCourseId(Long courseId) {
+        Optional<Course> optionalCourse = Optional.ofNullable(courseRepository.findById(courseId));
 
-        Course course = syllabus.getCourse();
+        if (optionalCourse.isPresent()) {
+            Course course = optionalCourse.get();
 
-        if (course != null) {
-            course.setSyllabus(null);   // 연결 해제
-            syllabus.setCourse(null);
-            courseRepository.save(course);
+            Syllabus syllabus = course.getSyllabus();
+            if (syllabus == null) {
+                throw new RuntimeException("해당 과목에 강의계획서가 없습니다.");
+            }
+            course.setSyllabus(null);    // 연관관계 제거
+            courseRepository.save(course); // DB 반영
+            syllabusRepository.delete(syllabus); // 강의계획서 삭제
+
+        } else {
+            throw new RuntimeException("Course not found");
         }
-
-        syllabusRepository.delete(syllabus); // 실제 삭제
     }
-
+    
 
     /**
      * 특정과목에 대한 강의계획서 조회

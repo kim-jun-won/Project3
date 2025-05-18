@@ -23,17 +23,19 @@ public class NoticeService {
     /**
      * 교수 : 공지사항 등록
      * */
-    public void createByProfessor(Long courseId, Professor professor, String title, String content){
+    public void createByProfessor(Long courseId, Professor professor, String title, String content, boolean fixed, String fileName) {
         Course course = courseRepository.findById(courseId);
-
 
         Notice notice = new Notice();
         notice.setCourse(course);
         notice.setProfessor(professor);
         notice.setTitle(title);
         notice.setContent(content);
+        notice.setFixed(fixed);
+        notice.setFileName(fileName);
         notice.setWriterType(NoticeWriterType.PROFESSOR);
         notice.setDate(LocalDateTime.now());
+        notice.setViewCount(0); // 초기값
 
         noticeRepository.save(notice);
     }
@@ -41,7 +43,7 @@ public class NoticeService {
     /**
      * 교수 : 공지사항 수정
      * */
-    public void updateNotice(Long noticeId, Professor professor, String title, String content) {
+    public void updateNotice(Long noticeId, Professor professor, String title, String content, boolean fixed, String fileName) {
         Notice notice = noticeRepository.findById(noticeId)
                 .orElseThrow(() -> new IllegalArgumentException("공지사항이 존재하지 않습니다."));
 
@@ -51,6 +53,10 @@ public class NoticeService {
 
         notice.setTitle(title);
         notice.setContent(content);
+        notice.setFixed(fixed);
+        if (fileName != null) {
+            notice.setFileName(fileName);
+        }
     }
 
     /**
@@ -142,4 +148,8 @@ public class NoticeService {
         noticeRepository.delete(notice);
     }
 
+
+    public void incrementViewCount(Notice notice) {
+        notice.setViewCount(notice.getViewCount() + 1);
+    }
 }

@@ -28,7 +28,6 @@ public class Course {
     private Professor professor;
 
     @OneToOne(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-
     private Syllabus syllabus;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -47,6 +46,9 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List <OnlineLecture> onlineLectures = new ArrayList<>();
 
+    private String day;
+    private int time;
+
     /**
      *     연관관계 메소드
      */
@@ -55,9 +57,14 @@ public class Course {
         professor.getCourses().add(this);
     }
 
+    /**
+     * 양방향 연관관계이기에 null을 체크해 주어야한다.
+     * */
     public void setSyllabus(Syllabus syllabus) {
         this.syllabus = syllabus;
-        syllabus.setCourse(this);
+        if (syllabus != null) {
+            syllabus.setCourse(this);
+        }
     }
 
     public void addTimetable(Timetable timetable) {
@@ -97,7 +104,7 @@ public class Course {
         course.setProfessor(professor);
 
         return course;
-
     }
+
 }
 

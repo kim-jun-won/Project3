@@ -98,16 +98,22 @@ public class InitTestData {
             Course course1 = new Course();
             course1.setCourseName("선형대수학");
             course1.setProfessor(professor);
+            course1.setDay("월");
+            course1.setTime(1);
             em.persist(course1);
 
             Course course2 = new Course();
             course2.setCourseName("소프트웨어공학");
             course2.setProfessor(professor);
+            course2.setDay("화");
+            course2.setTime(4);
             em.persist(course2);
 
             Course course3 = new Course();
             course3.setCourseName("운영체제");
             course3.setProfessor(professor);
+            course3.setDay("수");
+            course3.setTime(5);
             em.persist(course3);
 
             /** 4. 강의계획서 등록 */

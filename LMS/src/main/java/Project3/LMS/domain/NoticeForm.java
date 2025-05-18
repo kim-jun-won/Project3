@@ -10,4 +10,6 @@ public class NoticeForm {
     private Long courseId;
     private String title;
     private String content;
+    private boolean fixed;
+    private String fileName;
 }

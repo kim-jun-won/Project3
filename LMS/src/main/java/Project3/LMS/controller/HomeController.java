@@ -46,38 +46,36 @@ public class HomeController {
             session.setAttribute("studentId", student.getId()); // 수강신청을 위해서 추가
 
             /**
-             * timetable service를 호출.
-             * 세션에 있는 학생을 가지고 있는 timetable 객체 모두 출력
+             * enrollment service를 호출.
+             * 세션에 있는 학생을 가지고 있는 course 객체 모두 출력
              */
-            // 시간표를 요일+교시별 맵으로 재구성
-            List<Timetable> timetableList = timetableService.getStudentTimetable(student);
-            Map<String, String[]> timetableMap= new HashMap<>();
+            // 수강신청을 기반으로 한 실제 시간표 구성
+            List<Course> enrolledCourses = courseService.getEnrolledCoursesWithSchedule(student.getId());
+            Map<String, String[]> timetableMap = new HashMap<>();
+
             for (String day : List.of("월", "화", "수", "목", "금")) {
                 timetableMap.put(day, new String[7]);  // 1~6교시 (0은 안 씀)
             }
 
-            for(Timetable t : timetableList){
-                String[] times = timetableMap.get(t.getDay());
-                if(times!=null && t.getTime()>=1 && t.getTime()<=6){
-                    String courseName = t.getCourse().getCourseName();
-                    String professorName = t.getCourse().getProfessor().getName();
-                    times[t.getTime()] = courseName + "::" + professorName;
+            for (Course course : enrolledCourses) {
+                // 가정: Course 클래스에 getDay()와 getTime()이 존재하거나, Schedule 정보를 가지고 있어야 함
+                // 예시: Course가 월요일 3교시에 있다면
+                String day = course.getDay();   // Course에 day 필드가 있을 경우
+                int time = course.getTime();    // Course에 time 필드가 있을 경우
+
+                String courseName = course.getCourseName();
+                String professorName = course.getProfessor().getName();
+
+                String[] times = timetableMap.get(day);
+                if (times != null && time >= 1 && time <= 6) {
+                    times[time] = courseName + "<br/><span style='font-size: 12px;'>" + professorName + "</span>";
                 }
             }
 
             model.addAttribute("timetableMap", timetableMap);
             model.addAttribute("userRole","student");
+            model.addAttribute("courses", enrolledCourses);
 
-
-            /**
-             * 수강과목 리스트 전달
-             * */
-            List<Course> courses = timetableList.stream()
-                    .map(Timetable::getCourse)
-                    .distinct()
-                    .toList();
-
-            model.addAttribute("courses", courses);
         }
 
         //로그인된 세션이 교수
@@ -105,6 +103,10 @@ public class HomeController {
             model.addAttribute("timetableMap", timetableMap);
             model.addAttribute("userRole","professor");
 
+            // 교수 과목 리스트 추가
+            List<Course> courses = courseService.findCoursesByProfessorId(professor.getId());
+            model.addAttribute("courses", courses);
+
         }
 
         //관리자일 경우
@@ -127,7 +129,12 @@ public class HomeController {
      * */
     @GetMapping("/notice/student/course")
     public String studentCourseNotice(@RequestParam(name = "courseId") Long courseId, HttpSession session, Model model) {
-        Student student = (Student) session.getAttribute("loginMember");
+        Object loginMember = session.getAttribute("loginMember");
+        if (!(loginMember instanceof Student)) {
+            return "redirect:/login"; // or 에러 페이지
+        }
+        Student student = (Student) loginMember;
+
         if (student == null) return "redirect:/login";
 
         Course course = courseService.findbyCourseId(courseId);
@@ -141,6 +148,29 @@ public class HomeController {
         model.addAttribute("course", course);
 
         return "notice/studentCourseNoticeList";
+    }
+
+    /**
+     * 교수가 특정 강의의 공지사항 버튼 클릭 시 이동
+     */
+    @GetMapping("/notice/professor/course")
+    public String professorCourseNotice(@RequestParam(name = "courseId") Long courseId,
+                                        HttpSession session, Model model) {
+        Professor professor = (Professor) session.getAttribute("loginMember");
+        if (professor == null) return "redirect:/login";
+
+        Course course = courseService.findbyCourseId(courseId);
+
+        // 보안 검증: 이 과목의 담당 교수가 맞는지 확인
+        if (!course.getProfessor().getId().equals(professor.getId())) {
+            return "redirect:/notice/professor/list";
+        }
+
+        List<Notice> notices = noticeService.findNoticesByCourse(course);
+        model.addAttribute("notices", notices);
+        model.addAttribute("course", course);
+
+        return "notice/professorCourseNoticeList";
     }
 
 }

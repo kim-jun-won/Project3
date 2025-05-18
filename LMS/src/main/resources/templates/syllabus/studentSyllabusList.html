@@ -9,7 +9,7 @@
         font-family: 'Noto Sans KR', sans-serif;
         background-color: #f5f5f5;
         margin: 0;
-        padding: 20px;
+        padding: 0;
     }
 
     .container {
@@ -41,7 +41,7 @@
     .btn {
         margin-top: 10px;
         padding: 6px 12px;
-        background-color: #007bff;
+        background-color: #3b003b;
         border: none;
         border-radius: 4px;
         color: white;
@@ -69,7 +69,7 @@
 <div th:replace="fragments/sidebar :: sidebar"></div>
 
 <div class="container">
-  <h2>📘 수강 과목 강의계획서</h2>
+  <h2>수강 과목 강의계획서</h2>
 
   <div th:if="${not #lists.isEmpty(courses)}">
     <div th:each="course : ${courses}" class="course">

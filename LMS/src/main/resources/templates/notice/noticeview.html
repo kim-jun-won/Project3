@@ -5,51 +5,56 @@
   <title>공지사항 상세보기</title>
   <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
   <style>
-    body {
-      font-family: 'Noto Sans KR', sans-serif;
-      padding: 40px;
-      background-color: #f8f8f8;
-    }
-
-    .container {
+      /* 공지사항 컨테이너 */
+  .container {
       max-width: 800px;
-      margin: 0 auto;
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
+      margin: 60px auto;
+      padding: 30px 40px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  }
 
-    h2 {
+  /* 제목 스타일 */
+  .container h2 {
+      font-size: 24px;
+      font-weight: 700;
       color: #3b003b;
-      margin-bottom: 10px;
-    }
-
-    .meta {
-      color: #666;
-      font-size: 14px;
       margin-bottom: 20px;
-    }
+  }
 
-    .content {
+  /* 메타 정보 (과목, 작성일 등) */
+  .meta {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 25px;
+  }
+
+  /* 본문 내용 */
+  .content {
+      font-size: 15px;
+      color: #444;
+      line-height: 1.8;
+      margin-bottom: 30px;
       white-space: pre-wrap;
-      line-height: 1.6;
-      font-size: 16px;
-    }
+  }
 
-    .back-btn {
-      margin-top: 30px;
-      padding: 8px 16px;
-      background-color: #888;
+  /* 뒤로가기 버튼 */
+  .back-btn {
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #3b003b;
       color: white;
       border: none;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
-    }
+      transition: background-color 0.3s ease;
+  }
 
-    .back-btn:hover {
-      background-color: #555;
-    }
+  .back-btn:hover {
+      background-color: #5b005b;
+  }
+
   </style>
 </head>
 <body>
@@ -73,7 +78,8 @@
     공지사항 본문 내용
   </div>
 
-  <form th:action="@{/notice/student/list}" method="get">
+  <form th:action="@{/notice/student/course}" method="get">
+    <input type="hidden" name="courseId" th:value="${notice.course.id}" />
     <button type="submit" class="back-btn">공지 목록으로</button>
   </form>
 </div>
@@ -83,7 +89,7 @@
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     if (typeof initializeSidebarEvents === 'function') {
-      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+      initializeSidebarEvents();
     }
   });
 </script>

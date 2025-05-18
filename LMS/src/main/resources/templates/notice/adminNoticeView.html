@@ -3,9 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>공지사항 상세</title>
-  <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+
   <style>
-    .notice-container {
+    /* ✅ 스코프 분리: notice-wrapper 내부 전용 */
+    #notice-wrapper .notice-container {
         max-width: 700px;
         margin: auto;
         background-color: white;
@@ -14,24 +16,24 @@
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
     }
 
-    h2 {
+    #notice-wrapper h2 {
         color: #3b003b;
         margin-bottom: 15px;
     }
 
-    .meta {
+    #notice-wrapper .meta {
         color: #777;
         font-size: 14px;
         margin-bottom: 20px;
     }
 
-    .content {
+    #notice-wrapper .content {
         white-space: pre-wrap;
         line-height: 1.6;
         font-size: 16px;
     }
 
-    .back-link {
+    #notice-wrapper .back-link {
         display: block;
         margin-top: 30px;
         text-align: center;
@@ -39,38 +41,40 @@
         text-decoration: none;
     }
 
-    .back-link:hover {
+    #notice-wrapper .back-link:hover {
         color: #555;
     }
   </style>
 </head>
 <body>
 
-<!-- 상단바 -->
-<div th:replace="fragments/navbar :: topbar"></div>
+<!-- 상단바 fragment -->
+<div id="navbar-container" th:replace="fragments/navbar :: topbar"></div>
 
-<!-- 사이드바 -->
-<div th:replace="fragments/sidebar :: sidebar"></div>
+<!-- 사이드바 fragment -->
+<div id="sidebar-container" th:replace="fragments/sidebar :: sidebar"></div>
 
+<!-- ✅ 본문 wrapper 시작 -->
+<div id="notice-wrapper">
+  <div class="notice-container">
+    <h2 th:text="${notice.title}">공지 제목</h2>
+    <div class="meta">
+      작성일: <span th:text="${#temporals.format(notice.date, 'yyyy-MM-dd HH:mm')}">2025-05-12 10:00</span>
+    </div>
+    <div class="content" th:text="${notice.content}">
+      공지 내용이 여기에 표시됩니다.
+    </div>
 
-<div class="notice-container">
-  <h2 th:text="${notice.title}">공지 제목</h2>
-  <div class="meta">
-    작성일: <span th:text="${#temporals.format(notice.date, 'yyyy-MM-dd HH:mm')}">2025-05-12 10:00</span>
+    <a th:href="@{/home}" class="back-link">← 홈으로 돌아가기</a>
   </div>
-  <div class="content" th:text="${notice.content}">
-    공지 내용이 여기에 표시됩니다.
-  </div>
-
-  <a th:href="@{/home}" class="back-link">← 홈으로 돌아가기</a>
 </div>
 
-<!-- 공통 JavaScript 파일 로드 -->
+<!-- 공통 JavaScript -->
 <script src="/js/common.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     if (typeof initializeSidebarEvents === 'function') {
-      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+      initializeSidebarEvents();
     }
   });
 </script>

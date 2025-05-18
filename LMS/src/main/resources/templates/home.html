@@ -3,186 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>광운대학교 KLAS 메인</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 0;
-        }
-
-        .navbar {
-            background-color: #3b003b;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .hamburger {
-            font-size: 26px;
-            cursor: pointer;
-            background: none;
-            border: none;
-            color: white;
-        }
-
-        .logout-btn {
-            padding: 6px 12px;
-            background-color: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .logout-btn:hover {
-            background-color: #d93636;
-        }
-
-        /* 사이드바 기본 스타일 */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: -300px;  /* 사이드바를 숨긴 상태 */
-            width: 250px;
-            height: 100%;
-            background-color: #f9f9f9;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-            transition: left 0.3s ease;
-            padding: 20px;
-            z-index: 1000;
-        }
-
-        /* 사이드바가 열렸을 때 */
-        .sidebar.active {
-            left: 0; /* 사이드바가 오른쪽으로 슬라이드 */
-        }
-
-        .sidebar h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding-left: 15px;
-        }
-
-        .sidebar ul li {
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .sidebar .close-btn {
-            font-size: 18px;
-            cursor: pointer;
-            background-color: #ff4d4d;
-            border: none;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-
-        .sidebar .close-btn:hover {
-            background-color: #d93636;
-        }
-
-        .container {
-            max-width: 1000px;
-            margin: 20px auto;
-            padding: 0 20px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout : fixed;
-            margin-bottom: 40px;
-        }
-
-        th, td {
-            border: 1px solid #ccc;
-            height: 80px;
-            text-align: center;
-            vertical-align: middle;
-            padding : 8px;
-            word-break: break-word;
-        }
-
-        th {
-            background-color: #ddd;
-            font-weight: bold;
-        }
-
-        td {
-            background-color: #fff;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-        .course-section {
-            margin-bottom: 20px;
-        }
-
-        .course-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: white;
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .course-row span {
-            font-weight: 600;
-        }
-
-        .course-row .btn-group {
-            display: flex;
-            gap: 8px;
-        }
-
-        .course-row .btn-group button {
-            padding: 5px 12px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-        }
-
-        .course-row .btn-group button:hover {
-            background-color: #0056b3;
-        }
-
-        .no-course {
-            text-align: center;
-            font-size: 16px;
-            color: #555;
-        }
-
-        .no-notice {
-            text-align: center;
-            font-size: 16px;
-            color: #555;
-            margin-top: 20px;
-        }
-
-        .color-0 { background-color: #fcb1ec; }
-        .color-1 { background-color: #d9b3ff; }
-        .color-2 { background-color: #ffdd99; }
-        .color-3 { background-color: #a3d5d3; }
-        .color-4 { background-color: #a4e29d; }
-        .color-5 { background-color: #ffd6d6; }
-        .color-6 { background-color: #d6e0ff; }
-        .color-7 { background-color: #f6f6b2; }
-    </style>
 </head>
 <body>
 <input type="hidden" id="userRole" th:value="${userRole}" />
@@ -219,11 +41,16 @@
             <tbody>
             <tr th:each="i : ${#numbers.sequence(1, 6)}" th:with="idx=${i}">
                 <td th:text="${idx}">1</td>
-                <td class="timetable-cell" th:text="${timetableMap['월'][idx] != null ? timetableMap['월'][idx] : ''}"></td>
-                <td class="timetable-cell" th:text="${timetableMap['화'][idx] != null ? timetableMap['화'][idx] : ''}"></td>
-                <td class="timetable-cell" th:text="${timetableMap['수'][idx] != null ? timetableMap['수'][idx] : ''}"></td>
-                <td class="timetable-cell" th:text="${timetableMap['목'][idx] != null ? timetableMap['목'][idx] : ''}"></td>
-                <td class="timetable-cell" th:text="${timetableMap['금'][idx] != null ? timetableMap['금'][idx] : ''}"></td>
+                <td class="timetable-cell"
+                    th:utext="${timetableMap['월'][idx] != null ? timetableMap['월'][idx] : ''}"></td>
+                <td class="timetable-cell"
+                    th:utext="${timetableMap['화'][idx] != null ? timetableMap['화'][idx] : ''}"></td>
+                <td class="timetable-cell"
+                    th:utext="${timetableMap['수'][idx] != null ? timetableMap['수'][idx] : ''}"></td>
+                <td class="timetable-cell"
+                    th:utext="${timetableMap['목'][idx] != null ? timetableMap['목'][idx] : ''}"></td>
+                <td class="timetable-cell"
+                    th:utext="${timetableMap['금'][idx] != null ? timetableMap['금'][idx] : ''}"></td>
             </tr>
             </tbody>
         </table>
@@ -235,21 +62,28 @@
             <div class="course-row" th:each="course : ${courses}">
                 <span th:text="${course.courseName}">과목명</span>
                 <div class="btn-group">
-                    <a th:href="@{/notice/student/course(courseId=${course.id})}">
+                    <!-- 공지사항 버튼: 역할에 따라 URL 분기 -->
+                    <a th:if="${userRole == 'student'}" th:href="@{/notice/student/course(courseId=${course.id})}">
                         <button type="button">공지사항</button>
                     </a>
-                    <button>자료실</button>
+
+                    <a th:if="${userRole == 'professor'}" th:href="@{/notice/professor/course(courseId=${course.id})}">
+                        <button type="button">공지사항</button>
+                    </a>
+                    <a th:href="@{/courses/{id}/materials(id=${course.id})}">
+                        <button type="button">자료실</button>
+                    </a>
                 </div>
             </div>
         </div>
-        <div th:if="${courses == null or #lists.isEmpty(courses)}" class="no-course">
+        <div th:if="(${courses == null or #lists.isEmpty(courses)}) and ${userRole != 'admin'}" class="no-course">
             수강 중인 과목이 없습니다.
         </div>
     </div>
 
     <!-- 관리자 공지사항 -->
     <div class="course-section">
-        <h3>📢 광운대학교 공지사항</h3>
+        <h3>광운대학교 공지사항</h3>
 
         <div th:if="${adminNotices != null and !#lists.isEmpty(adminNotices)}">
             <div class="course-row" th:each="notice : ${adminNotices}">
