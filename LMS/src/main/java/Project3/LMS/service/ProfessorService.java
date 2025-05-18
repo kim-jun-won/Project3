@@ -44,4 +44,9 @@ public class ProfessorService {
     public List<Professor> findAll() {
         return professorRepository.findAll();
     }
+
+    public Professor findByPidWithUser(String pid) {
+        return professorRepository.findByPidWithUser(pid)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 교수입니다."));
+    }
 }

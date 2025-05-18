@@ -132,4 +132,45 @@ public class UserController {
         return "redirect:/login?logout=true";    // 로그인 페이지로 리디렉션하면서 logout=true 전달
     }
 
+    /**
+     개인정보 조회
+     */
+    @GetMapping("/mypage")
+    public String mypageForm(Model model, HttpSession session) {
+        Object loginMember = session.getAttribute("loginMember");
+
+        UserDTO userDTO = new UserDTO();
+
+        if (loginMember instanceof Student) {
+            // ✅ 변경: user가 붙은 상태로 조회
+            Student student = studentService.findBySidWithUser(((Student) loginMember).getSid());
+            userDTO.setUid(student.getSid());
+            userDTO.setName(student.getName());
+            userDTO.setEmail(student.getEmail());
+            userDTO.setDepartment(student.getDepartment());
+            userDTO.setPassword(student.getPassword());
+            userDTO.setPhoneNumber(student.getPhoneNumber());
+            if (student.getUser() != null) {
+                userDTO.setUserType(student.getUser().getUserType());
+            }
+
+        } else if (loginMember instanceof Professor) {
+            Professor professor = professorService.findByPidWithUser(((Professor) loginMember).getPid());
+
+            userDTO.setUid(professor.getPid());
+            userDTO.setName(professor.getName());
+            userDTO.setEmail(professor.getEmail());
+            userDTO.setDepartment(professor.getDepartment());
+            userDTO.setPassword(professor.getPassword());
+            userDTO.setPhoneNumber(professor.getPhoneNumber());
+            if (professor.getUser() != null) {
+                userDTO.setUserType(professor.getUser().getUserType());
+            }
+        }
+
+        model.addAttribute("userDTO", userDTO);
+        return "/mypage";
+
+    }
+
 }

@@ -50,6 +50,8 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureMaterial> lectureMaterials = new ArrayList<>();
 
+    private String day;
+    private int time;
 
     /**
      *     연관관계 메소드
@@ -98,11 +100,14 @@ public class Course {
     /**
      *     생성 메소드
      */
-    public static Course createCourse(String courseName, int credits, Professor professor) {
+    public static Course createCourse(String courseName, int credits, Professor professor, String day, int time) {
         Course course = new Course();
         course.setCourseName(courseName);
         course.setCredits(credits);
         course.setProfessor(professor);
+
+        course.setDay(day);
+        course.setTime(time);
 
         return course;
 

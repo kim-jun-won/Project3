@@ -92,6 +92,8 @@ public class InitTestData {
                 course.setProfessor(professorList.get(i / 2)); // 교수 5명 → 2개씩 분배
                 em.persist(course);
                 courseList.add(course);
+                course.setDay("월");
+                course.setTime(1);
 
                 Syllabus syllabus = new Syllabus();
                 syllabus.setCourse(course);

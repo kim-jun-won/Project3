@@ -40,4 +40,9 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
+    public Student findBySidWithUser(String sid) {
+        return studentRepository.findBySidWithUser(sid)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 학생입니다."));
+    }
+
 }

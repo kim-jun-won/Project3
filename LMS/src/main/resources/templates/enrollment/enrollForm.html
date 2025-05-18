@@ -234,6 +234,7 @@
             <tr>
                 <th>강의명</th>
                 <th>교수</th>
+                <th>시간</th>
                 <th>학점</th>
                 <th>취소</th>
             </tr>
@@ -242,6 +243,7 @@
             <tr th:each="enroll : ${enrollments}">
                 <td th:text="${enroll.course.courseName}">강의명</td>
                 <td th:text="${enroll.course.professor.name}">교수</td>
+                <td th:text="${enroll.course.day} + ${enroll.course.time}">시간</td>
                 <td th:text="${enroll.course.credits}">학점</td>
                 <td>
                     <form th:action="@{/enroll/cancel}" method="post" style="margin: 0;">
@@ -274,6 +276,7 @@
             <tr>
                 <th>강의명</th>
                 <th>교수</th>
+                <th>시간</th>
                 <th>학점</th>
                 <th>신청</th>
             </tr>
@@ -282,6 +285,8 @@
             <tr th:each="course : ${courses}">
                 <td th:text="${course.courseName}"></td>
                 <td th:text="${course.professor.name}"></td>
+                <td th:text="${course.day} + ${course.time}">시간</td>
+
                 <td th:text="${course.credits}"></td>
                 <td>
                     <form th:action="@{/enroll}" method="post" style="margin:0;">

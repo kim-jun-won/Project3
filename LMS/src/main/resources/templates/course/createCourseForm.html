@@ -63,6 +63,29 @@
         </div>
 
         <div>
+            <label for="day">요일 선택</label>
+            <select th:field="*{day}" id="day" required>
+                <option value="월">월요일</option>
+                <option value="화">화요일</option>
+                <option value="수">수요일</option>
+                <option value="목">목요일</option>
+                <option value="금">금요일</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="time">시간 선택</label>
+            <select th:field="*{time}" id="time" required>
+                <option value="1">1교시</option>
+                <option value="2">2교시</option>
+                <option value="3">3교시</option>
+                <option value="4">4교시</option>
+                <option value="5">5교시</option>
+                <option value="6">6교시</option>
+            </select>
+        </div>
+
+        <div>
             <label for="credits">학점</label>
             <input type="number" th:field="*{credits}" id="credits" min="1" max="5" required />
         </div>
