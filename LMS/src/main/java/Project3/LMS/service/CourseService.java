@@ -75,7 +75,7 @@ public class CourseService {
         return courseRepository.getCoursesByProfessor(id);
     }
 
-    public List<Course> getEnrolledCoursesWithSchedule(Long studentId) {
+    public List<Course> getEnrolledCoursesWithStudentId(Long studentId) {
         List<Enrollment> enrollments = enrollmentRepository.findActiveByStudentId(studentId);
         return enrollments.stream()
                 .map(Enrollment::getCourse)

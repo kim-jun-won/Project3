@@ -3,6 +3,7 @@ package Project3.LMS.controller;
 import Project3.LMS.domain.*;
 import Project3.LMS.repostiory.EnrollmentRepository;
 import Project3.LMS.service.CourseService;
+import Project3.LMS.service.EnrollmentService;
 import Project3.LMS.service.NoticeService;
 import Project3.LMS.service.TimetableService;
 import jakarta.servlet.http.HttpSession;
@@ -28,6 +29,7 @@ public class HomeController {
     private final NoticeService noticeService;
     private final CourseService courseService;
     private final EnrollmentRepository enrollmentRepository;
+    private final EnrollmentService enrollmentService;
 
     /**
      * 로그인 후 화면
@@ -49,20 +51,28 @@ public class HomeController {
              * enrollment service를 호출.
              * 세션에 있는 학생을 가지고 있는 course 객체 모두 출력
              */
-            // 수강신청을 기반으로 한 실제 시간표 구성
-            List<Course> enrolledCourses = courseService.getEnrolledCoursesWithSchedule(student.getId());
-            Map<String, String[]> timetableMap = new HashMap<>();
 
+            // 1. 수강신청 정보 가져오기
+            List<Enrollment> enrollments = enrollmentService.findEByStudent(student.getId());
+
+
+            System.out.println("📌 수강신청 내역 수: " + enrollments.size());
+            for (Enrollment enrollment : enrollments) {
+                Course c = enrollment.getCourse();
+                System.out.println("📚 " + c.getCourseName() + " | 요일: " + c.getDay() + ", 교시: " + c.getTime());
+            }
+
+            // 2. 시간표 맵 초기화
+            Map<String, String[]> timetableMap = new HashMap<>();
             for (String day : List.of("월", "화", "수", "목", "금")) {
                 timetableMap.put(day, new String[7]);  // 1~6교시 (0은 안 씀)
             }
 
-            for (Course course : enrolledCourses) {
-                // 가정: Course 클래스에 getDay()와 getTime()이 존재하거나, Schedule 정보를 가지고 있어야 함
-                // 예시: Course가 월요일 3교시에 있다면
-                String day = course.getDay();   // Course에 day 필드가 있을 경우
-                int time = course.getTime();    // Course에 time 필드가 있을 경우
-
+            // 3. 각 수강과목의 Course 정보로 시간표 구성
+            for (Enrollment enrollment : enrollments) {
+                Course course = enrollment.getCourse();
+                String day = course.getDay();   // Course에 day 필드가 존재
+                int time = course.getTime();    // Course에 time 필드가 존재
                 String courseName = course.getCourseName();
                 String professorName = course.getProfessor().getName();
 
@@ -71,6 +81,12 @@ public class HomeController {
                     times[time] = courseName + "<br/><span style='font-size: 12px;'>" + professorName + "</span>";
                 }
             }
+
+            // 5. 과목 리스트도 따로 추출해서 전달 (뷰에서 리스트 출력용)
+            List<Course> enrolledCourses = enrollments.stream()
+                    .map(Enrollment::getCourse)
+                    .toList();
+
 
             model.addAttribute("timetableMap", timetableMap);
             model.addAttribute("userRole","student");

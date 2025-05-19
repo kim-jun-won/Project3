@@ -176,7 +176,11 @@ public class InitTestData {
             Enrollment e = new Enrollment();
             e.setStudent(student);
             e.setCourse(course);
+            e.setEnrollmentsStatus(EnrollmentStatus.ENROLLED);
             enrollmentRepository.save(e);
+
+            course.setDay(day);
+            course.setTime(time);
 
             Timetable t = new Timetable();
             t.setStudent(student);

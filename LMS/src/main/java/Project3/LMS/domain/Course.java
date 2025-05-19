@@ -22,6 +22,9 @@ public class Course {
 
     private String courseName;
     private int credits;
+    private String day;
+    private int time;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id",nullable = false)
@@ -49,8 +52,7 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureMaterial> lectureMaterials = new ArrayList<>();
 
-    private String day;
-    private int time;
+
 
     /**
      *     연관관계 메소드
@@ -108,7 +110,8 @@ public class Course {
         course.setCourseName(courseName);
         course.setCredits(credits);
         course.setProfessor(professor);
-
+        //course.setDay(day);
+        //course.setTime(time);
         return course;
     }
 
