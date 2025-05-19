@@ -28,7 +28,6 @@ public class Course {
     private Professor professor;
 
     @OneToOne(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
-
     private Syllabus syllabus;
 
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)

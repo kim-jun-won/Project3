@@ -4,6 +4,8 @@ import Project3.LMS.domain.*;
 import Project3.LMS.dto.UserDTO;
 import Project3.LMS.exception.DuplicateExistEmail;
 import Project3.LMS.exception.DuplicateUserException;
+import Project3.LMS.repostiory.ProfessorRepository;
+import Project3.LMS.repostiory.StudentRepository;
 import Project3.LMS.service.AdminService;
 import Project3.LMS.service.ProfessorService;
 import Project3.LMS.service.StudentService;
@@ -23,7 +25,8 @@ public class UserController {
     private final StudentService studentService;
     private final ProfessorService professorService;
     private final AdminService adminService;
-
+    private final ProfessorRepository professorRepository;
+    private final StudentRepository studentRepository;
 
 
     @GetMapping("/")
@@ -169,8 +172,110 @@ public class UserController {
         }
 
         model.addAttribute("userDTO", userDTO);
-        return "/mypage";
+        return "/mypage/mypage";
 
+    }
+
+    @GetMapping("/mypage/edit")
+    public String editMypageForm(Model model, HttpSession session) {
+        Object loginMember = session.getAttribute("loginMember");
+        UserDTO userDTO = new UserDTO();
+
+        if (loginMember instanceof Student) {
+            Student student = studentService.findBySidWithUser(((Student) loginMember).getSid());
+
+            userDTO.setUid(student.getSid());
+            userDTO.setName(student.getName());
+            userDTO.setEmail(student.getEmail());
+            userDTO.setDepartment(student.getDepartment());
+            userDTO.setPassword(student.getPassword());
+            userDTO.setPhoneNumber(student.getPhoneNumber());
+            if (student.getUser() != null) {
+                userDTO.setUserType(student.getUser().getUserType());
+            }
+
+        } else if (loginMember instanceof Professor) {
+            Professor professor = professorService.findByPidWithUser(((Professor) loginMember).getPid());
+
+            userDTO.setUid(professor.getPid());
+            userDTO.setName(professor.getName());
+            userDTO.setEmail(professor.getEmail());
+            userDTO.setDepartment(professor.getDepartment());
+            userDTO.setPassword(professor.getPassword());
+            userDTO.setPhoneNumber(professor.getPhoneNumber());
+            if (professor.getUser() != null) {
+                userDTO.setUserType(professor.getUser().getUserType());
+            }
+        }
+
+        model.addAttribute("userDTO", userDTO);
+        return "/mypage/mypageEdit";
+    }
+
+    @PostMapping("/mypage/edit")
+    public String editMypage(@ModelAttribute UserDTO userDTO,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
+        Object loginMember = session.getAttribute("loginMember");
+        try {
+            if (loginMember instanceof Student) {
+                Student student = studentService.findBySidWithUser(userDTO.getUid());
+
+                student.setEmail(userDTO.getEmail());
+                student.setDepartment(userDTO.getDepartment());
+                student.setPassword(userDTO.getPassword());
+                student.setPhoneNumber(userDTO.getPhoneNumber());
+
+                studentRepository.save(student); // 저장 메서드 필요
+
+            } else if (loginMember instanceof Professor) {
+                Professor professor = professorService.findByPidWithUser(userDTO.getUid());
+
+                professor.setEmail(userDTO.getEmail());
+                professor.setDepartment(userDTO.getDepartment());
+                professor.setPassword(userDTO.getPassword());
+                professor.setPhoneNumber(userDTO.getPhoneNumber());
+
+                professorRepository.save(professor); // 저장 메서드 필요
+            }
+
+            redirectAttributes.addFlashAttribute("success", "개인정보가 성공적으로 수정되었습니다.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "수정 중 오류가 발생했습니다.");
+        }
+
+        return "redirect:/mypage";
+    }
+
+    @GetMapping("/mypage/verify-password")
+    public String showPasswordVerifyForm() {
+        return "/mypage/verifyPw"; //
+    }
+
+    @PostMapping("/mypage/verify-password")
+    public String verifyPassword(@RequestParam("password") String password,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+
+        Object loginMember = session.getAttribute("loginMember");
+
+        if (loginMember instanceof Student student) {
+            if (!student.getPassword().equals(password)) {
+                redirectAttributes.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
+                return "redirect:/mypage/verify-password";
+            }
+        } else if (loginMember instanceof Professor professor) {
+            if (!professor.getPassword().equals(password)) {
+                redirectAttributes.addFlashAttribute("error", "비밀번호가 일치하지 않습니다.");
+                return "redirect:/mypage/verify-password";
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("error", "유효하지 않은 사용자입니다.");
+            return "redirect:/mypage/verify-password";
+        }
+
+        return "redirect:/mypage/edit";
     }
 
 }
