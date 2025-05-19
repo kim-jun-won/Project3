@@ -46,6 +46,9 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List <OnlineLecture> onlineLectures = new ArrayList<>();
 
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<LectureMaterial> lectureMaterials = new ArrayList<>();
+
     private String day;
     private int time;
 
@@ -90,9 +93,12 @@ public class Course {
     public void addOnlineLecture(OnlineLecture onlineLecture) {
         onlineLectures.add(onlineLecture);
         onlineLecture.setCourse(this);
-
     }
 
+    public void addLectureMaterial(LectureMaterial material) {
+        lectureMaterials.add(material);
+        material.setCourse(this);
+    }
 
     /**
      *     생성 메소드
