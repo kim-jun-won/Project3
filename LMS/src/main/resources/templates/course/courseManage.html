@@ -104,17 +104,20 @@
                 <th>선택</th>
                 <th>ID</th>
                 <th>강의명</th>
-                <th>학점</th>
                 <th>교수</th>
+                <th>시간</th>
+                <th>학점</th>
             </tr>
             </thead>
+
             <tbody>
             <tr th:each="course : ${courses}">
                 <td><input type="radio" name="courseId" th:value="${course.id}"/></td>
                 <td th:text="${course.id}"></td>
                 <td th:text="${course.courseName}"></td>
-                <td th:text="${course.credits}"></td>
                 <td th:text="${course.professor.name}"></td>
+                <td th:text="${course.day} + ${course.time}"></td>
+                <td th:text="${course.credits}"></td>
             </tr>
             </tbody>
         </table>

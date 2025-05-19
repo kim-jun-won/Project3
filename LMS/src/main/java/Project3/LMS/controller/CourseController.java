@@ -61,7 +61,8 @@ public class CourseController {
             Professor professor = professorRepository.findById(form.getProfessorId())
                     .orElseThrow(() -> new IllegalArgumentException("교수를 찾을 수 없습니다."));
 
-            Course course = Course.createCourse(form.getCourseName(), form.getCredits(), professor);
+            Course course = Course.createCourse(form.getCourseName(), form.getCredits(), professor,
+                    form.getDay(), form.getTime());
             courseService.registerCourse(course);
             return "redirect:/course-manage";
 

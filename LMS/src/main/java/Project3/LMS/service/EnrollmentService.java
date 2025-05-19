@@ -28,6 +28,9 @@ public class EnrollmentService {
         //중복 수강신청 검사
         validateDuplicateEnrollment(studentId, courseId);
 
+        //중복 시간 검사
+        validateDuplicateTime(studentId, courseId);
+
         Student student = studentRepository.findById(studentId).orElseThrow(() ->
                 new IllegalArgumentException("존재하지 않는 학생입니다."));
         Course course = courseRepository.findOne(courseId);
@@ -45,6 +48,24 @@ public class EnrollmentService {
         if (!enrollments.isEmpty()) {
             throw new IllegalStateException("이미 신청한 강의입니다.");
         }
+    }
+
+    public void validateDuplicateTime(Long studentId, Long courseId){
+        Course newCourse = courseRepository.findOne(courseId);
+        String newDay = newCourse.getDay();
+        int newTime = newCourse.getTime();
+
+        List<Enrollment> enrollments = enrollmentRepository.findByStudentId(studentId);
+
+        for (Enrollment e : enrollments) {
+            Course existingCourse = e.getCourse();
+            if (existingCourse.getDay().equals(newDay) && existingCourse.getTime() == newTime) {
+                throw new IllegalStateException("이미 동일한 시간에 수강 중인 강의가 있습니다.");
+            }
+        }
+
+
+
     }
 
     //==수강 삭제==//

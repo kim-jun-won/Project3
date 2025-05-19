@@ -22,9 +22,6 @@ public class Course {
 
     private String courseName;
     private int credits;
-    private String day;
-    private int time;
-
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id",nullable = false)
@@ -52,7 +49,8 @@ public class Course {
     @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureMaterial> lectureMaterials = new ArrayList<>();
 
-
+    private String day;
+    private int time;
 
     /**
      *     연관관계 메소드
@@ -62,14 +60,9 @@ public class Course {
         professor.getCourses().add(this);
     }
 
-    /**
-     * 양방향 연관관계이기에 null을 체크해 주어야한다.
-     * */
     public void setSyllabus(Syllabus syllabus) {
         this.syllabus = syllabus;
-        if (syllabus != null) {
-            syllabus.setCourse(this);
-        }
+        syllabus.setCourse(this);
     }
 
     public void addTimetable(Timetable timetable) {
@@ -95,6 +88,7 @@ public class Course {
     public void addOnlineLecture(OnlineLecture onlineLecture) {
         onlineLectures.add(onlineLecture);
         onlineLecture.setCourse(this);
+
     }
 
     public void addLectureMaterial(LectureMaterial material) {
@@ -105,15 +99,17 @@ public class Course {
     /**
      *     생성 메소드
      */
-    public static Course createCourse(String courseName, int credits, Professor professor) {
+    public static Course createCourse(String courseName, int credits, Professor professor, String day, int time) {
         Course course = new Course();
         course.setCourseName(courseName);
         course.setCredits(credits);
         course.setProfessor(professor);
-        //course.setDay(day);
-        //course.setTime(time);
-        return course;
-    }
 
+        course.setDay(day);
+        course.setTime(time);
+
+        return course;
+
+    }
 }
 
