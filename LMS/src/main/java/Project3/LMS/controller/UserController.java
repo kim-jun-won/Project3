@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.validation.Valid;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -131,5 +133,38 @@ public class UserController {
         session.invalidate();  // 세션을 무효화하여 로그아웃 처리
         return "redirect:/login?logout=true";    // 로그인 페이지로 리디렉션하면서 logout=true 전달
     }
+
+
+    /**
+     * 관리자가 회원 전부를 볼 수 있음
+     */
+    @GetMapping("/user-info")
+    public String showUserInfo(
+            @RequestParam(required = false,name = "userType") String userType,
+            @RequestParam(required = false,name = "keyword") String keyword,
+            @RequestParam(required = false,name="department") String department,
+            Model model) {
+
+        boolean hasSearch = (userType != null && !userType.equals("ALL")) ||
+                (keyword != null && !keyword.isBlank()) ||
+                (department != null && !department.isBlank());
+
+        if (hasSearch) {
+            List<User> resultList = userService.search(userType, keyword, department);
+            model.addAttribute("resultList", resultList);
+            model.addAttribute("title", "검색 결과");
+        } else {
+            model.addAttribute("studentList", studentService.findAll());
+            model.addAttribute("professorList", professorService.findAll());
+            model.addAttribute("title", "전체 사용자 목록");
+        }
+
+        model.addAttribute("userType", userType);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("department", department);
+
+        return "user-info";
+    }
+
 
 }

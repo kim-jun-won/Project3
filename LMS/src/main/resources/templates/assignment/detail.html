@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>과제 상세 보기</title>
+</head>
+<body>
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<h2>과제 상세 정보</h2>
+<div>
+    <p><strong>과목명:</strong> <span th:text="${assignment.course.courseName}"></span></p>
+    <p><strong>제목:</strong> <span th:text="${assignment.title}"></span></p>
+    <p><strong>내용:</strong> <span th:text="${assignment.content}"></span></p>
+    <p><strong>마감일:</strong> <span th:text="${#temporals.format(assignment.due_date, 'yyyy-MM-dd HH:mm')}"></span></p>
+    <p><strong>첨부파일:</strong>
+        <a th:href="@{'/' + ${file.file_path}}" th:text="${file.file_name}" download></a>
+    </p>
+</div>
+</body>
+</html>

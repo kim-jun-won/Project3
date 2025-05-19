@@ -123,10 +123,14 @@ public class EnrollmentController {
             List<Enrollment> enrollments = enrollmentRepository.findByCourse(course);
             List<GradeInputDTO> dtos = enrollments.stream().map(e -> {
                 GradeInputDTO dto = new GradeInputDTO();
-                dto.setStudentId(e.getStudent().getId());
-                dto.setStudentName(e.getStudent().getName());
+                Student student = e.getStudent();
+                dto.setStudentId(student.getId());
+                dto.setStudentName(student.getName());
+                dto.setSid(student.getSid()); // 학번
+                dto.setDepartment(student.getDepartment()); // 학과
                 dto.setGrade(e.getGrade());
                 return dto;
+
             }).toList();
             courseEnrollMap.put(course, dtos);
         }

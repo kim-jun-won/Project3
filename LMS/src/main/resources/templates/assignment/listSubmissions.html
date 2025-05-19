@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+    <meta charset="UTF-8">
+    <title>과제 제출 목록</title>
+    <style>
+        body {
+          margin: 0;
+          font-family: 'Noto Sans KR', sans-serif;
+          background-color: #f5f5f5;
+        }
+
+        .top-bar {
+          background-color: #3b003b;
+          height: 50px;
+          width: 100%;
+        }
+
+        .container {
+          max-width: 700px;
+          margin: 60px auto;
+          padding: 30px;
+          background-color: #fff;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+          text-align: center;
+          font-size: 22px;
+          margin-bottom: 25px;
+          color: #3b003b;
+        }
+
+        .submission-list {
+          list-style: none;
+          padding: 0;
+        }
+
+        .submission-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 18px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          margin-bottom: 12px;
+          background-color: #fafafa;
+        }
+
+        .submission-info {
+          flex: 1;
+        }
+
+        .submission-info p {
+          margin: 4px 0;
+        }
+
+        .btn {
+          padding: 6px 12px;
+          background-color: #3b003b;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+
+        .btn:hover {
+          background-color: #5c1c5c;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<div class="container">
+    <div class="title" th:text="'[' + ${assignment.title} + '] 제출 목록'">제출 목록</div>
+
+    <ul class="submission-list">
+        <li class="submission-item" th:each="submission : ${submissions}">
+            <div class="submission-info">
+                <p><strong>학생:</strong> <span th:text="${submission.student.name}">홍길동</span></p>
+                <p><strong>학번:</strong> <span th:text="${submission.student.sid}">20230001</span></p>
+                <p>
+                    <strong>점수:</strong>
+                    <span th:if="${submission.grade > 0}" th:text="${submission.grade + '점'}">90점</span>
+                    <span th:unless="${submission.grade > 0}" style="color:red;">미기입</span>
+                </p>
+            </div>
+
+            <form th:action="@{/assignment/professor/grade}" method="get" style="margin: 0;">
+                <input type="hidden" name="submissionId" th:value="${submission.id}" />
+                <button type="submit" class="btn">조회 및 채점</button>
+            </form>
+        </li>
+    </ul>
+</div>
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof initializeSidebarEvents === 'function') {
+        initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+      }
+    });
+</script>
+
+</body>
+</html>

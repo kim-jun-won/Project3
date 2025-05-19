@@ -1,5 +1,6 @@
 ﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
 <head>
     <meta charset="UTF-8">
     <title>강의 등록</title>
@@ -30,25 +31,10 @@
 <body>
 
 <!-- 상단바 -->
-<div class="navbar">
-    <button class="hamburger" onclick="toggleSidebar()">☰</button>
-    <div>
-        <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
-        <form th:action="@{/logout}" method="get" style="display: inline;">
-            <button class="logout-btn" style="margin-left: 15px;">Logout</button>
-        </form>
-    </div>
-</div>
+<div th:replace="fragments/navbar :: topbar"></div>
 
 <!-- 사이드바 -->
-<div id="sidebar" class="sidebar">
-    <button class="close-btn" onclick="toggleSidebar()">닫기</button>
-    <h3>기능 목록</h3>
-    <strong>관리자</strong>
-    <ul>
-        <li><a href="/course-manage">강의 등록/삭제</a></li>
-    </ul>
-</div>
+<div th:replace="fragments/sidebar :: sidebar"></div>
 
 <!-- 본문 -->
 <div class="container">
@@ -88,10 +74,14 @@
     </form>
 </div>
 
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
 <script>
-    function toggleSidebar() {
-        document.getElementById("sidebar").classList.toggle("active");
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+        }
+    });
 </script>
 </body>
 </html>

@@ -4,6 +4,7 @@ function toggleSidebar() {
     if (sidebar) {
         sidebar.classList.toggle("active");
     }
+
 }
 
 // ✅ DOM 로드 이후 실행
@@ -39,13 +40,15 @@ document.addEventListener("DOMContentLoaded", function () {
             "/content",
             "/mypage",
             "/enroll",
-            "/enroll/gradeCheck"
+            "/enroll/gradeCheck",
+            "/assignment/student/list"
         ],
         professor: [
             "/enroll/attendance",
             "/online-lecture",
             "/notice/professor",
-            "/syllabus/professor"
+            "/syllabus/professor",
+            "/assignment/professor/list"
         ],
         admin: [
             "/enroll-schedule",
@@ -53,7 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
             "/notice/admin",
             "/professors",
             "/students",
-            "/course-manage"
+            "/course-manage",
+            "/user-info"
         ]
     };
 

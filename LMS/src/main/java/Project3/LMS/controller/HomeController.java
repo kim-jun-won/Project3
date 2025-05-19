@@ -35,7 +35,7 @@ public class HomeController {
     @GetMapping("/home")
     public String showHomePage(Model model, HttpSession session)  {//매개변수 추가가능
         //학생인지 교수인지 관리자인지 모르기때문에 Object로 가져옴
-        Object loginMember = session.getAttribute("loginMember");;
+        Object loginMember = session.getAttribute("loginMember");
 
         //로그인된 세션이 학생
         if(loginMember instanceof Student) {

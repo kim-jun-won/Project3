@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+    <meta charset="UTF-8">
+    <title>과제 제출</title>
+</head>
+<body>
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<h2>과제 제출</h2>
+
+<form th:action="@{/assignment/submit}" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="assignmentId" th:value="${assignmentId}" />
+
+    <label for="title">제목:</label>
+    <input type="text" name="title" id="title" required/><br/>
+
+    <label for="content">내용:</label><br/>
+    <textarea name="content" id="content" rows="6" cols="60"></textarea><br/>
+
+    <label for="file">제출 파일:</label>
+    <input type="file" name="file" id="file" required/><br/>
+
+    <div th:if="${#temporals.createNow().isAfter(assignment.due_date)}">
+        <p style="color:red;">제출 마감일이 지났습니다. 제출할 수 없습니다.</p>
+        <button type="submit" disabled>제출</button>
+    </div>
+    <div th:unless="${#temporals.createNow().isAfter(assignment.due_date)}">
+        <button type="submit">제출</button>
+    </div>
+</form>
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof initializeSidebarEvents === 'function') {
+        initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+      }
+    });
+</script>
+</body>
+</html>
