@@ -75,6 +75,7 @@ public class InitTestData {
                 professor.setEmail(user.getEmail());
                 professor.setDepartment(user.getDepartment());
                 professor.setPhoneNumber(user.getPhoneNumber());
+                professor.setUser(user);
                 professorRepo.save(professor);
                 professorList.add(professor);
             }
@@ -138,6 +139,7 @@ public class InitTestData {
                 student.setEmail(info[2]);
                 student.setDepartment("컴퓨터정보공학부");
                 student.setPhoneNumber(info[3]);
+                student.setUser(user);
                 studentRepo.save(student);
 
                 // 5. 수강신청 8과목 전체 등록
