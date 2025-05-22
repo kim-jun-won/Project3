@@ -1,5 +1,7 @@
 ﻿<!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+
 <head>
     <meta charset="UTF-8">
     <title>비밀번호 확인</title>
@@ -8,7 +10,7 @@
             font-family: 'Noto Sans KR', sans-serif;
             background-color: #f5f5f5;
             margin: 0;
-            padding: 40px;
+            padding: 0;
         }
 
         .container {
@@ -59,6 +61,12 @@
     </style>
 </head>
 <body>
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
 <div class="container">
     <h2>비밀번호 확인</h2>
     <form th:action="@{/mypage/verify-password}" method="post">
@@ -67,5 +75,19 @@
         <button type="submit">확인</button>
     </form>
 </div>
+
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+        }
+    });
+</script>
+
 </body>
+
+
+
 </html>
