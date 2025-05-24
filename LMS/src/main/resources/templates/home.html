@@ -111,9 +111,24 @@
 <script src="/js/common.js"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-      if (typeof initializeSidebarEvents === 'function') {
-        initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
-      }
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents();
+        }
+
+        // 과목명에 학정번호 붙이기
+        document.querySelectorAll('.course-name').forEach(el => {
+            const name = el.textContent.trim();
+            const code = generateCode();
+            el.textContent = `${name} (${code})`;
+        });
+
+        function generateCode() {
+            function rand(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            return `I${rand(0, 999).toString().padStart(3, '0')}-${rand(1, 4)}-${rand(0, 9999).toString().padStart(4, '0')}-${rand(0, 99).toString().padStart(2, '0')}`;
+        }
     });
 </script>
 </body>
