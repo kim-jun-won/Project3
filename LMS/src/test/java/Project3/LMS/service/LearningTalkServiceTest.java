@@ -1,4 +1,4 @@
-package Project3.LMS;
+package Project3.LMS.service;
 
 import Project3.LMS.domain.Course;
 import Project3.LMS.domain.LearningTalk;

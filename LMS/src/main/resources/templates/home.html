@@ -25,6 +25,12 @@
 <!-- 본문 콘텐츠 -->
 <div class="container">
 
+    <!-- 현재 학기 -->
+    <div style="margin-top: 20px; text-align: center;">
+        <h2 style="margin: 0 auto 10px auto; font-size: 28px;">2025년 1학기</h2>
+        <hr style="border: none; border-top: 3px solid #800080; width: 100px; margin: 0 auto 20px auto; border-radius: 2px;">
+    </div>
+
     <!-- 시간표 테이블 -->
     <div th:if="${timetableMap != null}">
         <table>
@@ -60,7 +66,7 @@
     <div class="course-section">
         <div th:if="${courses != null and !#lists.isEmpty(courses)}">
             <div class="course-row" th:each="course : ${courses}">
-                <span th:text="${course.courseName}">과목명</span>
+                <span class="course-name" th:text="${course.courseName}">과목명</span>
                 <div class="btn-group">
                     <!-- 공지사항 버튼: 역할에 따라 URL 분기 -->
                     <a th:if="${userRole == 'student'}" th:href="@{/notice/student/course(courseId=${course.id})}">
@@ -72,6 +78,10 @@
                     </a>
                     <a th:href="@{/courses/{id}/materials(id=${course.id})}">
                         <button type="button">자료실</button>
+                    </a>
+                    <!-- ✅ 학습 톡톡 버튼 추가 -->
+                    <a th:href="@{/courses/{id}/learning-talk(id=${course.id})}">
+                        <button type="button">학습 톡톡</button>
                     </a>
                 </div>
             </div>

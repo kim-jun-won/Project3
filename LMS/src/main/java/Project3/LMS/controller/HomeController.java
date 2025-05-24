@@ -59,7 +59,7 @@ public class HomeController {
             System.out.println("📌 수강신청 내역 수: " + enrollments.size());
             for (Enrollment enrollment : enrollments) {
                 Course c = enrollment.getCourse();
-                System.out.println("📚 " + c.getCourseName() + " | 요일: " + c.getDay() + ", 교시: " + c.getTime());
+//                System.out.println("📚 " + c.getCourseName() + " | 요일: " + c.getDay() + ", 교시: " + c.getTime());
             }
 
             // 2. 시간표 맵 초기화
