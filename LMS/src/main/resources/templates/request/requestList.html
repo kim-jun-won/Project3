@@ -1,0 +1,48 @@
+<!-- templates/request/requestList.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>수강 승인 요청 목록</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+
+<div id="navbar-container" th:replace="fragments/navbar :: topbar"></div>
+<div id="sidebar-container" th:replace="fragments/sidebar :: sidebar"></div>
+
+<h2 style="text-align: center;">수강 승인 요청 목록</h2>
+
+<table border="1" style="margin: 30px auto; width: 90%; border-collapse: collapse;">
+  <thead>
+  <tr>
+    <th>학생 이름</th>
+    <th>요청 사유</th>
+    <th>요청일</th>
+    <th>상태</th>
+    <th>처리</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="request : ${requests}">
+    <td th:text="${request.student.name}">학생 이름</td>
+    <td th:text="${request.reason}">사유</td>
+    <td th:text="${#temporals.format(request.requestDate, 'yyyy-MM-dd')}">요청일</td>
+    <td th:text="${request.status}">상태</td>
+    <td>
+      <form th:action="@{'/courses/' + ${courseId} + '/requests/' + ${request.id} + '/approve'}" method="post"
+            th:if="${request.status.name() == 'WAITING'}">
+        <button type="submit">승인</button>
+      </form>
+      <form th:action="@{'/courses/' + ${courseId} + '/requests/' + ${request.id} + '/reject'}" method="post"
+            th:if="${request.status.name() == 'WAITING'}">
+        <button type="submit">거절</button>
+      </form>
+      <span th:if="${request.status.name() != 'WAITING'}">처리 완료</span>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

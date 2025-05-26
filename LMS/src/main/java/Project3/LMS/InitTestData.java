@@ -47,6 +47,27 @@ public class InitTestData {
         public void run(String... args) {
             if (userRepository.existsByEmail("professor1@kw.ac.kr")) return;
 
+            // 4-b. 수강신청을 하지 않은 테스트용 학생 추가
+            User testUser = new User();
+            testUser.setName("수강안한학생");
+            testUser.setUid("0000");
+            testUser.setPassword("1234");
+            testUser.setEmail("noenroll@kw.ac.kr");
+            testUser.setUserType(UserType.STUDENT);
+            testUser.setDepartment("컴퓨터정보공학부");
+            testUser.setPhoneNumber("010-0000-0000");
+            userRepository.save(testUser);
+
+            Student unenrolledStudent = new Student();
+            unenrolledStudent.setName(testUser.getName());
+            unenrolledStudent.setSid(testUser.getUid());
+            unenrolledStudent.setPassword(testUser.getPassword());
+            unenrolledStudent.setEmail(testUser.getEmail());
+            unenrolledStudent.setDepartment(testUser.getDepartment());
+            unenrolledStudent.setPhoneNumber(testUser.getPhoneNumber());
+            unenrolledStudent.setUser(testUser);
+            studentRepo.save(unenrolledStudent);
+
             // 1. 교수 5명 등록 (이름 현실감 있게)
             String[][] professorInfos = {
                     {"이기훈", "professor1@kw.ac.kr", "1234"},
@@ -94,6 +115,8 @@ public class InitTestData {
                 course.setCourseName(courseNames[i]);
                 course.setCredits(3);
                 course.setProfessor(professorList.get(i / 2)); // 교수 5명 → 2개씩 분배
+                course.setEnrolledCount(0);
+                course.setCapacity(9);
                 em.persist(course);
                 courseList.add(course);
                 course.setDay("월");
@@ -123,6 +146,7 @@ public class InitTestData {
                     {"강현민", "2020202092", "abc8130@kw.ac.kr", "010-1234-8130"},
                     {"박세영", "2020202093", "123a0@kw.ac.kr", "010-2345-8130"},
             };
+
 
             for (String[] info : studentInfos) {
                 User user = new User();
@@ -170,6 +194,8 @@ public class InitTestData {
             course.setCourseName(name);
             course.setProfessor(professor);
             course.setCredits(3);
+            course.setCapacity(1);
+            course.setEnrolledCount(0);
             em.persist(course);
             return course;
         }
@@ -183,6 +209,7 @@ public class InitTestData {
 
             course.setDay(day);
             course.setTime(time);
+            course.incrementEnrollment();
 
             Timetable t = new Timetable();
             t.setStudent(student);

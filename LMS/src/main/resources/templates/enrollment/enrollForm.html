@@ -286,17 +286,25 @@
                 <td th:text="${course.courseName}"></td>
                 <td th:text="${course.professor.name}"></td>
                 <td th:text="${course.day} + ${course.time}">시간</td>
-
                 <td th:text="${course.credits}"></td>
                 <td>
-                    <form th:action="@{/enroll}" method="post" style="margin:0;">
+                    <!-- 정원이 남아있을 경우 수강신청 -->
+                    <form th:if="${course.enrolledCount < course.capacity}"
+                          th:action="@{/enroll}" method="post" style="margin:0;">
                         <input type="hidden" name="studentId" th:value="${studentId}" />
                         <input type="hidden" name="courseId" th:value="${course.id}" />
                         <button type="submit" class="enroll-button">수강신청</button>
                     </form>
+
+                    <!-- 정원이 가득 찬 경우 수강 요청 버튼 -->
+                    <form th:if="${course.enrolledCount >= course.capacity}"
+                          th:action="@{'/courses/' + ${course.id} + '/requests/new-form'}" method="get" style="margin:0;">
+                        <button type="submit" class="enroll-button">수강 승인 요청</button>
+                    </form>
                 </td>
             </tr>
             </tbody>
+
         </table>
     </div>
 </div>
@@ -306,6 +314,18 @@
     function toggleSidebar() {
         document.getElementById("sidebar").classList.toggle("active");
     }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll("form").forEach(form => {
+            form.addEventListener("submit", function (e) {
+                if (form.classList.contains("submitted")) {
+                    e.preventDefault(); // 중복 방지
+                    return false;
+                }
+                form.classList.add("submitted");
+            });
+        });
+    });
 </script>
 
 </body>

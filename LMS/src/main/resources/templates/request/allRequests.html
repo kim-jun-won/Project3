@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>수강 승인 요청 전체 보기</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    #request-wrapper {
+      max-width: 900px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    .request-container {
+      background-color: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .request-container h2 {
+      margin-bottom: 20px;
+      color: #3b003b;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f1f1f1;
+    }
+
+    button {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #ccc;
+      color: white;
+      cursor: not-allowed;
+    }
+
+    .approve-btn {
+      background-color: #3b003b;
+      color: white;
+      border: none;
+    }
+
+    .reject-btn {
+      background-color: #ff4d4d;
+      color: white;
+      border: none;
+    }
+
+    .approve-btn:hover {
+      background-color: #5a005a;
+    }
+
+    .reject-btn:hover {
+      background-color: #cc0000;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #3b003b;
+      text-decoration: none;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- ✅ 본문 -->
+<div id="request-wrapper">
+  <div class="request-container">
+    <h2>전체 수강 승인 요청 목록</h2>
+
+    <table>
+      <thead>
+      <tr>
+        <th>과목명</th>
+        <th>학생명</th>
+        <th>요청 사유</th>
+        <th>요청 일시</th>
+        <th>상태</th>
+        <th>처리</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="req : ${requests}">
+        <td th:text="${req.course.courseName}">과목</td>
+        <td th:text="${req.student.name}">학생</td>
+        <td th:text="${req.reason}">사유</td>
+        <td th:text="${req.requestDate}">일시</td>
+        <td th:text="${req.status}">상태</td>
+        <td>
+          <form th:action="@{'/courses/' + ${req.course.id} + '/requests/' + ${req.id} + '/approve'}"
+                method="post" style="display:inline;">
+            <button type="submit" th:disabled="${req.status.name() != 'WAITING'}" class="approve-btn">승인</button>
+          </form>
+          <form th:action="@{'/courses/' + ${req.course.id} + '/requests/' + ${req.id} + '/reject'}"
+                method="post" style="display:inline;">
+            <button type="submit" th:disabled="${req.status.name() != 'WAITING'}" class="reject-btn">거절</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <a href="/home" class="back-link">← 교수 홈으로</a>
+  </div>
+</div>
+
+<!-- 공통 JS -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents();
+    }
+  });
+</script>
+
+</body>
+</html>

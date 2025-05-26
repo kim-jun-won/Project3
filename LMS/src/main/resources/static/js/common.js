@@ -48,7 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
             "/online-lecture",
             "/notice/professor",
             "/syllabus/professor",
-            "/assignment/professor/list"
+            "/assignment/professor/list",
+            "/requests/professor/all-requests"
         ],
         admin: [
             "/enroll-schedule",

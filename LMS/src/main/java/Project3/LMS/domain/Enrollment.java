@@ -10,6 +10,9 @@ import java.time.LocalDate;
  * 수강신청 엔티티
  */
 @Entity
+@Table(name = "enrollment", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"student_id", "course_id"})
+})
 @Getter @Setter
 public class Enrollment {
     @Id
