@@ -117,15 +117,22 @@ public class EnrollmentRequestController {
     @PostMapping("/courses/{courseId}/requests/new")
     public String sendRequest(@PathVariable("courseId") Long courseId,
                               @RequestParam(required = false) String reason,
-                              HttpSession session) {
+                              HttpSession session,
+                              RedirectAttributes redirectAttributes) {
 
         Object loginMember = session.getAttribute("loginMember");
         if (!(loginMember instanceof Student student)) {
             return "accessDenied";
         }
 
-        enrollmentRequestService.sendRequest(student.getId(), courseId, reason);
-        return "redirect:/enroll"; // 혹은 이전 수강 신청 페이지
+        try {
+            enrollmentRequestService.sendRequest(student.getId(), courseId, reason);
+            redirectAttributes.addFlashAttribute("successMessage", "수강 승인 요청이 성공적으로 전송되었습니다.");
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+
+        return "redirect:/enroll"; // 수강신청 페이지로 리다이렉트
     }
 
     /**
