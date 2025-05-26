@@ -81,5 +81,8 @@ public class CourseService {
                 .map(Enrollment::getCourse)
                 .collect(Collectors.toList());
     }
+    public Course findById(Long courseId) {
+        return courseRepository.findById(courseId);
+    }
 
 }

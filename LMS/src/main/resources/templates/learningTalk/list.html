@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>학습 톡톡</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Noto Sans KR', sans-serif; background-color: #f5f5f5; margin: 0; padding: 0; }
+    .container { max-width: 800px; margin: 30px auto; padding: 20px; background: white; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { color: #3b003b; margin-bottom: 20px; }
+    .talk-box { border: 1px solid #ccc; padding: 10px 15px; margin-bottom: 15px; border-radius: 5px; }
+    .talk-box.professor { background-color: #fff3cd; border-left: 5px solid #ffc107; }
+    .talk-box.student { background-color: #f8f9fa; }
+    .talk-meta { font-size: 13px; color: gray; margin-bottom: 5px; }
+    .form-section { margin-top: 30px; }
+    textarea { width: 100%; padding: 10px; resize: vertical; border-radius: 5px; border: 1px solid #ccc; font-size: 14px; }
+    button { background-color: #3b003b; color: white; padding: 8px 16px; border: none; border-radius: 5px; margin-top: 10px; cursor: pointer; }
+    button:hover { background-color: #5a005a; }
+  </style>
+</head>
+<body>
+
+<!-- 상단바 및 사이드바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<div class="container">
+  <h2 th:text="${course.courseName} + ' - 학습 톡톡'"></h2>
+
+  <!-- 글 목록 출력 -->
+  <div th:if="${#lists.isEmpty(talks)}">
+    <p>등록된 글이 없습니다.</p>
+  </div>
+
+  <div th:each="talk : ${talks}"
+       class="talk-box"
+       th:classappend="${talk.isProfessor()} ? 'professor' : 'student'">
+    <div class="talk-meta">
+      <span th:text="${talk.anonymousName}"></span>
+      |
+      <span th:text="${#temporals.format(talk.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+    </div>
+    <div th:text="${talk.content}">내용</div>
+  </div>
+
+  <!-- 글쓰기 폼 -->
+  <div class="form-section">
+    <form th:action="@{|/courses/${course.id}/learning-talk/new|}" method="post" th:object="${learningTalk}">
+      <textarea th:field="*{content}" rows="4" placeholder="내용을 입력하세요" required></textarea>
+      <br>
+      <button type="submit">등록</button>
+    </form>
+  </div>
+</div>
+
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents();
+    }
+  });
+</script>
+</body>
+</html>
