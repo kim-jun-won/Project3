@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>교수 공지사항 목록</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+
+  <style>
+    /* ✅ 본문 전체에만 적용되는 스코프 */
+    #professor-notice-wrapper {
+      max-width: 960px;
+      margin: 30px auto;
+      padding: 0 20px;
+      background-color: #f8f8f8;
+    }
+
+    #professor-notice-wrapper h2 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    #professor-notice-wrapper table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      table-layout: fixed;
+    }
+
+    #professor-notice-wrapper th,
+    #professor-notice-wrapper td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+      word-break: break-word;
+    }
+
+    #professor-notice-wrapper th {
+      background-color: #3b003b;
+      color: white;
+    }
+
+    #professor-notice-wrapper .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: white;
+      font-size: 14px;
+    }
+
+    #professor-notice-wrapper .btn-new {
+      background-color: #3b003b;
+      margin-bottom: 15px;
+    }
+
+    #professor-notice-wrapper .btn-edit {
+      background-color: #3b003b;
+    }
+
+    #professor-notice-wrapper .btn-delete {
+      background-color: #3b003b;
+    }
+
+    #professor-notice-wrapper .btn:hover {
+      opacity: 0.9;
+    }
+
+    #professor-notice-wrapper .no-notice {
+      text-align: center;
+      color: #777;
+      padding: 20px 0;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 외부 fragment -->
+<div th:replace="fragments/navbar :: topbar"></div>
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- ✅ 본문 wrapper 시작 -->
+<div id="professor-notice-wrapper">
+
+  <h2>과목 공지사항 목록</h2>
+
+  <!-- 공지사항 등록 버튼 -->
+  <form th:action="@{/notice/professor/new}" method="get">
+    <button type="submit" class="btn btn-new">+ 새 공지사항 작성</button>
+  </form>
+
+  <!-- 공지사항 테이블 -->
+  <table>
+    <thead>
+    <tr>
+      <th>번호</th>
+      <th>과목명</th>
+      <th>제목</th>
+      <th>작성일</th>
+      <th>수정</th>
+      <th>삭제</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="notice, iter : ${notices}">
+      <td th:text="${iter.index + 1}">1</td>
+      <td th:text="${notice.course.courseName}">자료구조</td>
+      <td th:text="${notice.title}">공지 제목</td>
+      <td th:text="${#temporals.format(notice.date, 'yyyy-MM-dd')}">2025-05-11</td>
+      <td>
+        <a th:href="@{'/notice/professor/edit/' + ${notice.id}}">
+          <button class="btn btn-edit">수정</button>
+        </a>
+      </td>
+      <td>
+        <form th:action="@{'/notice/professor/delete/' + ${notice.id}}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+          <button type="submit" class="btn btn-delete">삭제</button>
+        </form>
+      </td>
+    </tr>
+    <tr th:if="${notices == null or #lists.isEmpty(notices)}">
+      <td colspan="6" class="no-notice">등록된 공지사항이 없습니다.</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 공통 JS -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+    }
+  });
+</script>
+</body>
+</html>

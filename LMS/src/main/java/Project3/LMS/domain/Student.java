@@ -18,11 +18,15 @@ public class Student {
     @Column(name = "student_id")
     private Long id;
 
+    private String sid; //학생 학번
     private String name;
     private String email;
     private String department;
     private String password;
     private String phoneNumber;
+
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private User user;
 
     @OneToMany(mappedBy = "student")
     private List<Timetable> timetables= new ArrayList<>();

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>강의계획서 관리</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+
+    <style>
+        body {
+          font-family: 'Noto Sans KR', sans-serif;
+          background-color: #f5f5f5;
+          margin: 0;
+          padding: 0;
+        }
+
+        /* ✅ 본문 전용 wrapper */
+        #syllabus-wrapper {
+          max-width: 960px;
+          margin: 30px auto;
+          padding: 0 20px;
+        }
+
+        #syllabus-wrapper h2 {
+          color: #3b003b;
+          font-size: 22px;
+          margin-bottom: 20px;
+        }
+
+        #syllabus-wrapper .course {
+          background-color: white;
+          padding: 15px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          margin-bottom: 12px;
+          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        #syllabus-wrapper .course-title {
+          font-weight: bold;
+          font-size: 16px;
+        }
+
+        #syllabus-wrapper .btn-group {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+          margin-top: 10px;
+        }
+
+        #syllabus-wrapper .btn-group a,
+        #syllabus-wrapper .btn-group form {
+          margin: 0;
+        }
+
+        #syllabus-wrapper .btn {
+          padding: 6px 12px;
+          background-color: #3b003b;
+          border: none;
+          border-radius: 4px;
+          color: white;
+          cursor: pointer;
+          font-size: 14px;
+        }
+
+        #syllabus-wrapper .btn:hover {
+          background-color: #5c005c;
+        }
+
+        #syllabus-wrapper .delete-btn {
+          background-color: #dc3545;
+        }
+
+        #syllabus-wrapper .delete-btn:hover {
+          background-color: #c82333;
+        }
+
+        #syllabus-wrapper .no-course {
+          text-align: center;
+          color: #777;
+          font-size: 15px;
+          margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- ✅ 본문 영역 -->
+<div id="syllabus-wrapper">
+    <h2>담당 과목 강의계획서 관리</h2>
+
+    <div th:if="${courses != null}">
+        <div th:each="course : ${courses}" class="course">
+            <div class="course-title" th:text="${course.courseName}">과목명</div>
+
+            <div class="btn-group" th:if="${course.syllabus == null}">
+                <a th:href="@{/syllabus/professor/new(professorId=${professorId}, courseId=${course.id})}">
+                    <button class="btn">등록</button>
+                </a>
+            </div>
+
+            <div class="btn-group" th:if="${course.syllabus != null}">
+                <a th:href="@{/syllabus/professor/{id}/edit(id=${course.id}, professorId=${professorId})}">
+                    <button class="btn">수정</button>
+                </a>
+                <form th:action="@{/syllabus/professor/{courseId}/delete(courseId=${course.id})}" method="post">
+                    <input type="hidden" name="professorId" th:value="${professorId}" />
+                    <button type="submit" class="btn delete-btn">삭제</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(courses)}" class="no-course">
+        담당 과목이 없습니다.
+    </div>
+</div>
+
+<!-- 사이드바 토글 -->
+<script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("active");
+    }
+</script>
+
+<!-- 공통 JavaScript -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof initializeSidebarEvents === 'function') {
+        initializeSidebarEvents();
+      }
+    });
+</script>
+</body>
+</html>

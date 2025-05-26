@@ -1,0 +1,40 @@
+<!-- templates/request/myRequestStatus.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>내 수강 요청 내역</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+
+<div id="navbar-container" th:replace="fragments/navbar :: topbar"></div>
+<div id="sidebar-container" th:replace="fragments/sidebar :: sidebar"></div>
+
+<h2 style="text-align: center;">내 수강 승인 요청 현황</h2>
+
+<table border="1" style="margin: 30px auto; width: 90%; border-collapse: collapse;">
+  <thead>
+  <tr>
+    <th>과목명</th>
+    <th>요청일</th>
+    <th>상태</th>
+    <th>처리일</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="request : ${requests}">
+    <td th:text="${request.course.courseName}">과목명</td>
+    <td th:text="${#temporals.format(request.requestDate, 'yyyy-MM-dd')}">요청일</td>
+    <td th:text="${request.status}">상태</td>
+    <td th:text="${request.processedDate != null ? #temporals.format(request.processedDate, 'yyyy-MM-dd') : '대기 중'}">
+      처리일
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<a th:href="@{/courses}" style="display: block; text-align: center; margin-bottom: 40px;">← 강의 목록으로</a>
+
+</body>
+</html>

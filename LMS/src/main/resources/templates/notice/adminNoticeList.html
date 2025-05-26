@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 공지사항 목록</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <style>
+        body {
+          font-family: 'Noto Sans KR', sans-serif;
+          background-color: #f5f5f5;
+          margin: 0;
+          padding: 0;
+        }
+
+        /* ✅ 본문 전체 여백을 주기 위한 컨테이너 */
+        .container {
+          max-width: 960px;
+          margin: 20px auto;
+          padding: 0 20px;
+        }
+
+        h2.page-title {
+          text-align: center;
+          margin: 25px 0 20px;
+          font-size: 26px;
+          color: #3b003b;
+        }
+
+        .create-btn {
+          display: inline-block;
+          margin-bottom: 18px;
+          padding: 10px 18px;
+          background-color: #3b003b;
+          color: white;
+          text-decoration: none;
+          border-radius: 6px;
+          font-size: 15px;
+        }
+
+        .create-btn:hover {
+          background-color: #2a002a;
+        }
+
+        table {
+          width: 100%;
+          background-color: white;
+          border-collapse: separate;
+          border-spacing: 0;
+          font-size: 15px;
+          line-height: 1.6;
+          border-radius: 10px;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+          overflow: hidden;
+        }
+
+        th, td {
+          padding: 12px 16px;
+          border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+          background-color: #3b003b;
+          color: white;
+          font-weight: 600;
+          font-size: 15px;
+          text-align: center;
+        }
+
+        td {
+          text-align: center;
+          color: #333;
+        }
+
+        td.title-cell {
+          text-align: left;
+          font-weight: 500;
+          color: #2d2d2d;
+        }
+
+        .action-link {
+          color: #3b003b;
+          text-decoration: none;
+        }
+
+        .action-link:hover {
+          text-decoration: underline;
+        }
+
+        .delete-btn {
+          background-color: #d9534f;
+          color: white;
+          border: none;
+          padding: 6px 12px;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+
+        .delete-btn:hover {
+          background-color: #c9302c;
+        }
+
+        .no-notice {
+          text-align: center;
+          color: #777;
+          margin-top: 25px;
+          font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- fragment들 -->
+<div id="navbar-container" th:replace="fragments/navbar :: topbar"></div>
+<div id="sidebar-container" th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- ✅ 본문 -->
+<div class="container">
+    <h2 class="page-title">📢 관리자 공지사항</h2>
+
+    <a th:href="@{/notice/admin/new}" class="create-btn">공지사항 등록</a>
+
+    <table th:if="${notices != null and !#lists.isEmpty(notices)}">
+        <thead>
+        <tr>
+            <th style="width: 50%;">제목</th>
+            <th style="width: 20%;">작성일</th>
+            <th style="width: 15%;">수정</th>
+            <th style="width: 15%;">삭제</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="notice : ${notices}">
+            <td class="title-cell">
+                <a th:href="@{/notice/admin/view/{id}(id=${notice.id})}"
+                   th:text="${notice.title}"
+                   class="action-link">공지제목</a>
+            </td>
+            <td th:text="${#temporals.format(notice.date, 'yyyy-MM-dd HH:mm')}">2025-01-01</td>
+            <td>
+                <a th:href="@{/notice/admin/edit/{id}(id=${notice.id})}" class="action-link">수정</a>
+            </td>
+            <td>
+                <form th:action="@{/notice/admin/delete/{id}(id=${notice.id})}" method="post">
+                    <button type="submit" class="delete-btn" onclick="return confirm('삭제하시겠습니까?')">삭제</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${notices == null or #lists.isEmpty(notices)}" class="no-notice">
+        등록된 공지사항이 없습니다.
+    </div>
+</div>
+
+<!-- 공통 JS -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof initializeSidebarEvents === 'function') {
+        initializeSidebarEvents();
+      }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title th:text="${isEdit} ? '공지사항 수정' : '공지사항 작성'">공지사항 작성</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+
+  <style>
+    #notice-form-wrapper {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    #notice-form-wrapper h2 {
+      color: #3b003b;
+      font-size: 22px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    #notice-form-wrapper form {
+      background: white;
+      padding: 24px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #notice-form-wrapper label {
+      display: block;
+      margin-top: 18px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    #notice-form-wrapper input,
+    #notice-form-wrapper select,
+    #notice-form-wrapper textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    #notice-form-wrapper input[type="checkbox"] {
+      width: auto;
+      margin-right: 8px;
+    }
+
+    #notice-form-wrapper button {
+      margin-top: 24px;
+      padding: 10px 24px;
+      background-color: #3b003b;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 15px;
+      display: block;
+      width: 100%;
+    }
+
+    #notice-form-wrapper button:hover {
+      background-color: #5c005c;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 외부 fragment -->
+<div th:replace="fragments/navbar :: topbar"></div>
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- ✅ 본문 시작 -->
+<div id="notice-form-wrapper">
+  <h2 th:text="${isEdit} ? '공지사항 수정' : '공지사항 작성'">공지사항 작성</h2>
+
+  <form th:action="@{${isEdit} ? '/notice/professor/edit' : '/notice/professor/new'}"
+        th:object="${noticeForm}" method="post" enctype="multipart/form-data">
+
+    <!-- 공지 ID (수정 시 hidden) -->
+    <input type="hidden" th:if="${isEdit}" th:field="*{noticeId}"/>
+
+    <!-- 과목 선택 -->
+    <label for="course">과목</label>
+    <div th:if="${isEdit}">
+      <input type="text" th:value="${selectedCourse.courseName}" readonly />
+      <input type="hidden" th:field="*{courseId}" />
+    </div>
+    <div th:unless="${isEdit}">
+      <select th:field="*{courseId}" id="course" required>
+        <option value="" disabled selected>과목을 선택하세요</option>
+        <option th:each="course : ${courses}"
+                th:value="${course.id}"
+                th:text="${course.courseName}">
+        </option>
+      </select>
+    </div>
+
+    <!-- 제목 -->
+    <label for="title">제목</label>
+    <input type="text" th:field="*{title}" id="title" required/>
+
+    <!-- 내용 -->
+    <label for="content">내용</label>
+    <textarea th:field="*{content}" id="content" rows="8" required></textarea>
+
+    <!-- 고정 여부 -->
+    <label>
+      <input type="checkbox" th:field="*{fixed}"/> 상단 고정
+    </label>
+
+    <!-- 파일 업로드 -->
+    <label for="fileUpload">첨부 파일</label>
+    <input type="file" name="file" id="fileUpload" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg"/>
+
+    <!-- 제출 버튼 -->
+    <button type="submit" th:text="${isEdit} ? '수정하기' : '작성하기'">작성하기</button>
+  </form>
+</div>
+
+<!-- 공통 JS -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents();
+    }
+  });
+</script>
+</body>
+</html>
+
+

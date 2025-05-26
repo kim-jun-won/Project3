@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 수강 과목 공지사항</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            color: #3b003b;
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            background-color: white;
+            box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+
+        }
+        .table-wrapper {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            overflow: hidden; /* border-radius 적용되게 */
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 7px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #e9e9f0;
+            font-weight: 600;
+        }
+
+        td a {
+            color: #3b003b;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        td a:hover {
+            text-decoration: underline;
+        }
+
+        .no-notice {
+            text-align: center;
+            font-size: 16px;
+            color: #666;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        .back-btn {
+            display: inline-block;
+            background-color: #3b003b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .back-btn:hover {
+            background-color: #5a005a;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<div class="container">
+    <h2>📢 내 수강 과목 공지사항</h2>
+
+    <table th:if="${notices != null and !#lists.isEmpty(notices)}">
+        <thead>
+        <tr>
+            <th>과목명</th>
+            <th>공지 제목</th>
+            <th>작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="notice : ${notices}">
+            <td>
+                <a th:href="@{/notice/view/{id}(id=${notice.id})}"
+                   th:text="${notice.course.courseName}">자료구조</a>
+            </td>
+            <td th:text="${notice.title}">공지 제목</td>
+            <td th:text="${#temporals.format(notice.date, 'yyyy-MM-dd')}">2025-05-12</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:if="${notices == null or #lists.isEmpty(notices)}" class="no-notice">
+        수강 중인 과목의 공지사항이 없습니다.
+    </div>
+</div>
+
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents();
+        }
+    });
+</script>
+</body>
+</html>

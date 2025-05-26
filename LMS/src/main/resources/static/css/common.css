@@ -1,0 +1,287 @@
+/* 기본 리셋 */
+body, h1, h2, h3, form {
+    margin: 0;
+    padding: 0;
+}
+
+/* 전체 폰트 및 배경 */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f0f2f5;
+    color: #212529;
+    line-height: 1.6;
+}
+
+/* 상단 내비게이션 바 */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 30px;
+    background-color: #3b003b;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 햄버거/로그아웃/홈 버튼 */
+.hamburger,
+.logout-btn,
+.home-btn {
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.hamburger {
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.logout-btn {
+    padding: 6px 14px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background-color: #cc0000;
+}
+
+.home-btn {
+    color: white;
+    background-color: transparent;
+    border: 1px solid white;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.home-btn:hover {
+    background-color: white;
+    color: #3b003b;
+}
+
+/* 사이드바 */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: -300px;
+    width: 250px;
+    height: 100%;
+    background-color: #ffffff;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: left 0.3s ease;
+    padding: 25px;
+    z-index: 1000;
+    overflow-y: auto;
+    font-size: 14.5px;
+    line-height: 1.8;
+}
+.sidebar.active {
+    left: 0;
+}
+.sidebar h3 {
+    color: #3b003b;
+    font-size: 20px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #d6a8bd;
+    padding-bottom: 10px;
+}
+.sidebar ul {
+    list-style: none;
+    padding-left: 0;
+}
+.sidebar ul li {
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+.sidebar .close-btn {
+    background-color: #b2747b;
+    color: white;
+    padding: 10px 16px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.sidebar .close-btn:hover {
+    background-color: #c62828;
+}
+
+/* 역할 라벨 */
+.role-label {
+    display: inline-block;
+    padding: 6px 14px;
+    font-size: 15px;
+    font-weight: bold;
+    color: white;
+    border-radius: 6px;
+    margin: 24px 0 12px 0;
+}
+.student-label { background-color: #b2747b; }
+.professor-label { background-color: #b2747b; }
+.admin-label { background-color: #b2747b; }
+
+/* 메뉴 리스트 */
+.menu-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 20px;
+}
+.role-label + .menu-list {
+    margin-top: -6px;
+}
+.menu-list li {
+    margin-bottom: 10px;
+}
+.menu-list li a {
+    text-decoration: none;
+    font-size: 14.5px;
+    color: #444;
+    transition: color 0.2s ease, background-color 0.2s ease;
+    display: block;
+    padding: 6px 12px;
+    border-radius: 4px;
+}
+.menu-list li a:hover {
+    background-color: #f3e5f5;
+    color: #3b003b;
+    font-weight: 500;
+}
+
+/* 공통 컨테이너 */
+.container {
+    max-width: 960px;
+    margin: 60px auto;
+    padding: 0 30px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+}
+
+/* 테이블 */
+table {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+    background-color: white;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+}
+th, td {
+    padding: 0;
+    border: 1px solid #ddd;
+    text-align: center;
+    font-size: 14px;
+    height: 80px;
+    vertical-align: middle;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+th {
+    background-color: #e9e9f0;
+    color: #333;
+    font-weight: 600;
+}
+.timetable-cell {
+    font-size: 13.5px;
+    line-height: 1.4;
+    color: #212529;
+    background-color: #fafafa;
+    padding: 6px;
+    white-space: normal;
+}
+
+/* 과목 행 */
+.course-section {
+    margin-bottom: 30px;
+}
+.course-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.07);
+}
+.course-row span {
+    font-weight: 600;
+    font-size: 16px;
+}
+.btn-group {
+    display: flex;
+    gap: 10px;
+}
+.btn-group button {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 6px;
+    background-color: #3b003b;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 13px;
+}
+.btn-group button:hover {
+    background-color: #5b005b;
+}
+.no-course,
+.no-notice {
+    text-align: center;
+    font-size: 16px;
+    color: #666;
+    padding: 20px 0;
+}
+
+/* 수업칸 배경색 */
+.color-0 { background-color: #fce3f0; }
+.color-1 { background-color: #eadcff; }
+.color-2 { background-color: #fff1cc; }
+.color-3 { background-color: #d2f0ed; }
+.color-4 { background-color: #d7f7d1; }
+.color-5 { background-color: #ffe3e3; }
+.color-6 { background-color: #e0eaff; }
+.color-7 { background-color: #fdfdcf; }
+
+/* 공통 버튼 */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background-color: #3b003b;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.btn:hover {
+    background-color: #5b005b;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 15px;
+        margin: 30px auto;
+    }
+
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sidebar {
+        width: 220px;
+    }
+}

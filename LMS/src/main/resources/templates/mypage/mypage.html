@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+<head>
+    <meta charset="UTF-8">
+    <title>내 정보</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #3b003b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            width: 30%;
+        }
+
+        .edit-btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ff4d4d;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .edit-btn:hover {
+            background-color: #d93636;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="container">
+    <h2>개인정보 조회</h2>
+
+    <table>
+        <tr th:if="${userDTO.userType.name() == 'STUDENT'}">
+            <th>학번</th>
+            <td th:text="${userDTO.uid}">20230001</td>
+        </tr>
+        <tr th:if="${userDTO.userType.name() == 'PROFESSOR'}">
+            <th>교번</th>
+            <td th:text="${userDTO.uid}">PR10001</td>
+        </tr>
+        <tr>
+            <th>이름</th>
+            <td th:text="${userDTO.name}">홍길동</td>
+        </tr>
+        <tr>
+            <th>이메일</th>
+            <td th:text="${userDTO.email}">abc@example.com</td>
+        </tr>
+        <tr>
+            <th>학과</th>
+            <td th:text="${userDTO.department}">컴퓨터공학과</td>
+        </tr>
+        <tr>
+            <th>전화번호</th>
+            <td th:text="${userDTO.phoneNumber}">010-1234-5678</td>
+        </tr>
+        <tr>
+            <th>유형</th>
+            <td th:text="${userDTO.userType}">STUDENT</td>
+        </tr>
+        <tr>
+            <th>비밀번호</th>
+            <td th:text="${userDTO.password}">●●●●●●</td>
+        </tr>
+    </table>
+
+    <div style="text-align: center;">
+        <a th:href="@{/mypage/verify-password}" class="edit-btn">수정하기</a>
+    </div>
+</div>
+
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+    <meta charset="UTF-8">
+    <title>과제 채점</title>
+    <style>
+        body {
+          margin: 0;
+          font-family: 'Noto Sans KR', sans-serif;
+          background-color: #f5f5f5;
+        }
+
+        .top-bar {
+          background-color: #3b003b;
+          height: 50px;
+          width: 100%;
+        }
+
+        .grade-container {
+          max-width: 600px;
+          margin: 60px auto;
+          padding: 30px;
+          background-color: #fff;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .grade-title {
+          text-align: center;
+          font-size: 22px;
+          margin-bottom: 25px;
+          color: #3b003b;
+        }
+
+        .submission-info {
+          margin-bottom: 20px;
+        }
+
+        .submission-info p {
+          margin: 5px 0;
+        }
+
+        .form-group {
+          margin-bottom: 15px;
+        }
+
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+        }
+
+        input[type="number"],
+        textarea {
+          width: 100%;
+          padding: 8px;
+          border-radius: 6px;
+          border: 1px solid #ccc;
+          font-size: 14px;
+        }
+
+        .btn {
+          padding: 10px 18px;
+          background-color: #3b003b;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 15px;
+          width: 100%;
+          margin-top: 20px;
+        }
+
+        .btn:hover {
+          background-color: #5c1c5c;
+        }
+
+        .download-link {
+          display: inline-block;
+          margin-top: 10px;
+          color: #3b003b;
+          text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<div class="grade-container">
+    <div class="grade-title">과제 채점</div>
+
+    <div class="submission-info" th:object="${submission}">
+        <p><strong>학생 이름:</strong> <span th:text="*{student.name}">홍길동</span></p>
+        <p><strong>학번:</strong> <span th:text="*{student.sid}">202312345</span></p>
+        <p><strong>제목:</strong> <span th:text="*{title}">과제 제목</span></p>
+        <p><strong>내용:</strong></p>
+        <p th:text="*{content}">과제 내용</p>
+
+        <div th:if="*{file_name}">
+            <p><strong>첨부파일:</strong></p>
+            <a class="download-link"
+               th:href="@{'/assignment/download/' + ${submission.id}}"
+               th:text="*{file_name}">첨부파일명</a>
+        </div>
+    </div>
+
+    <form th:action="@{/assignment/professor/grade}" method="post">
+        <input type="hidden" name="submissionId" th:value="${submission.id}" />
+
+        <div class="form-group">
+            <label for="grade">점수</label>
+            <input type="number" id="grade" name="grade" min="0" max="100" required />
+        </div>
+
+        <div class="form-group">
+            <label for="feedback">피드백</label>
+            <textarea id="feedback" name="feedback" rows="4" placeholder="피드백을 입력하세요 (선택사항)"></textarea>
+        </div>
+
+        <button type="submit" class="btn">채점 완료</button>
+    </form>
+</div>
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof initializeSidebarEvents === 'function') {
+        initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+      }
+    });
+</script>
+</body>
+</html>

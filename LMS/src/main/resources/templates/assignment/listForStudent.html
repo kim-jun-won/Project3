@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+    <meta charset="UTF-8">
+    <title>과제 제출</title>
+    <style>
+        body {
+          margin: 0;
+          font-family: 'Noto Sans KR', sans-serif;
+          background-color: #f5f5f5;
+        }
+
+        .container {
+          max-width: 800px;
+          margin: 60px auto;
+          padding: 30px;
+          background-color: #fff;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+          text-align: center;
+          font-size: 22px;
+          margin-bottom: 25px;
+          color: #3b003b;
+        }
+
+        .course-list, .assignment-list {
+          list-style: none;
+          padding: 0;
+          margin-bottom: 30px;
+        }
+
+        .course-item, .assignment-item {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 12px 18px;
+          border: 1px solid #ccc;
+          border-radius: 8px;
+          margin-bottom: 12px;
+          background-color: #fafafa;
+        }
+
+        .btn {
+          padding: 6px 12px;
+          background-color: #3b003b;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 14px;
+        }
+
+        .btn:hover {
+          background-color: #5c1c5c;
+        }
+
+        .assignment-detail {
+          margin-top: 40px;
+          padding: 20px;
+          background-color: #f9f9f9;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+        }
+
+        .form-group {
+          margin-bottom: 15px;
+        }
+
+        label {
+          font-weight: bold;
+        }
+
+        input[type="text"], textarea, input[type="file"] {
+          width: 100%;
+          padding: 8px;
+          border-radius: 6px;
+          border: 1px solid #ccc;
+          font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+<div class="container">
+    <div class="title">과제 제출</div>
+
+    <!-- 수강 과목 목록 -->
+    <ul class="course-list">
+        <li class="course-item" th:each="course : ${courses}">
+            <span th:text="${course.courseName}">과목명</span>
+            <form th:action="@{/assignment/student/viewList}" method="get">
+                <input type="hidden" name="courseId" th:value="${course.id}" />
+                <button type="submit" class="btn">과제 목록 조회</button>
+            </form>
+        </li>
+    </ul>
+
+    <!-- 선택한 과목의 과제 목록 -->
+    <div th:if="${assignments != null}">
+        <h3 th:text="'[' + ${selectedCourseName} + '] 과제 목록'"></h3>
+        <ul class="assignment-list">
+            <li class="assignment-item" th:each="assignment : ${assignments}">
+                <span th:text="${assignment.title}">과제 제목</span>
+
+                <span th:if="${submissionStatus != null and submissionStatus[assignment.id]}" style="color:green;">제출됨</span>
+                <span th:if="${submissionStatus != null and !submissionStatus[assignment.id]}" style="color:red;">미제출</span>
+
+                <form th:action="@{/assignment/student/detail}" method="get" style="display:inline;">
+                    <input type="hidden" name="assignmentId" th:value="${assignment.id}" />
+                    <button type="submit">조회</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 과제 상세 보기 및 제출 폼 -->
+    <div class="assignment-detail" th:if="${selectedAssignment != null}">
+        <h3 th:text="${selectedAssignment.title}">과제 제목</h3>
+        <p><strong>마감일:</strong> <span th:text="${#temporals.format(selectedAssignment.due_date, 'yyyy-MM-dd HH:mm')}"></span></p>
+        <p><strong>내용:</strong></p>
+        <p th:text="${selectedAssignment.content}"></p>
+
+        <div th:if="${selectedAssignment.files != null and !selectedAssignment.files.isEmpty()}">
+            <p><strong>첨부파일:</strong></p>
+            <ul>
+                <li th:each="file : ${selectedAssignment.files}">
+                    <a th:href="@{'/assignment/download/' + ${file.id}}" th:text="${file.file_name}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 과제 제출 폼 -->
+        <form th:action="@{/assignment/submit}" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="assignmentId" th:value="${selectedAssignment.id}" />
+
+            <div class="form-group">
+                <label>제출 제목</label>
+                <input type="text" name="title" required />
+            </div>
+
+            <div class="form-group">
+                <label>제출 내용</label>
+                <textarea name="content" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>파일 첨부</label>
+                <input type="file" name="file" required />
+            </div>
+
+            <button type="submit" class="btn">제출하기</button>
+        </form>
+    </div>
+</div>
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof initializeSidebarEvents === 'function') {
+        initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+      }
+    });
+</script>
+</body>
+</html>

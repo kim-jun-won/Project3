@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>시간표</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+  <style>
+    .container {
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 0 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        height: 90px;
+        text-align: center;
+        vertical-align: middle;
+        padding: 8px;
+        word-break: break-word;
+    }
+
+    th {
+        background-color: #e5e5e5;
+    }
+
+    .timetable-form {
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+    }
+
+    .timetable-form select, .timetable-form button {
+        margin-right: 10px;
+        padding: 6px;
+    }
+
+    .course-container {
+        position: relative;
+        display: inline-block;
+        padding-right: 18px;
+    }
+
+    .delete-form {
+        position: absolute;
+        top: -4px;
+        right: -2px;
+        display: none;
+    }
+
+    .course-container:hover .delete-form {
+        display: inline;
+    }
+
+    .delete-x {
+        background: none;
+        border: none;
+        color: #d93636;
+        font-size: 14px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .color-0 { background-color: #fcb1ec; }
+    .color-1 { background-color: #d9b3ff; }
+    .color-2 { background-color: #ffdd99; }
+    .color-3 { background-color: #a3d5d3; }
+    .color-4 { background-color: #a4e29d; }
+    .color-5 { background-color: #ffd6d6; }
+    .color-6 { background-color: #d6e0ff; }
+    .color-7 { background-color: #f6f6b2; }
+  </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<div class="container">
+  <h2>시간표 구성</h2>
+
+  <div th:if="${errorMessage}" style="color: red; margin-bottom: 10px;">
+    <p th:text="${errorMessage}"></p>
+  </div>
+
+  <form class="timetable-form" th:action="@{/timetable/add}" method="post">
+    <label>요일:
+      <select name="day">
+        <option>월</option><option>화</option><option>수</option><option>목</option><option>금</option>
+      </select>
+    </label>
+
+    <label>교시:
+      <select name="time">
+        <option th:each="i : ${#numbers.sequence(1,6)}" th:value="${i}" th:text="${i}"></option>
+      </select>
+    </label>
+
+    <label>과목:
+      <select name="courseId">
+        <option th:each="course : ${courses}" th:value="${course.id}" th:text="${course.courseName}"></option>
+      </select>
+    </label>
+
+    <button type="submit">추가</button>
+  </form>
+
+  <table>
+    <thead>
+    <tr>
+      <th>교시</th>
+      <th>월</th>
+      <th>화</th>
+      <th>수</th>
+      <th>목</th>
+      <th>금</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="i : ${#numbers.sequence(1, 6)}" th:with="idx=${i}">
+      <td th:text="${idx}">1</td>
+
+      <td class="timetable-cell" th:if="${timetableMap['월'][idx] != null}">
+        <div class="course-container">
+          <span th:text="${timetableMap['월'][idx]}"></span>
+          <form th:action="@{/timetable/delete}" method="post" class="delete-form">
+            <input type="hidden" name="day" value="월" />
+            <input type="hidden" name="time" th:value="${idx}" />
+            <button type="submit" class="delete-x">×</button>
+          </form>
+        </div>
+      </td>
+      <td th:if="${timetableMap['월'][idx] == null}"></td>
+
+      <!-- 반복적으로 화~금 동일하게 구성 -->
+      <td class="timetable-cell" th:if="${timetableMap['화'][idx] != null}">
+        <div class="course-container">
+          <span th:text="${timetableMap['화'][idx]}"></span>
+          <form th:action="@{/timetable/delete}" method="post" class="delete-form">
+            <input type="hidden" name="day" value="화" />
+            <input type="hidden" name="time" th:value="${idx}" />
+            <button type="submit" class="delete-x">×</button>
+          </form>
+        </div>
+      </td>
+      <td th:if="${timetableMap['화'][idx] == null}"></td>
+
+      <td class="timetable-cell" th:if="${timetableMap['수'][idx] != null}">
+        <div class="course-container">
+          <span th:text="${timetableMap['수'][idx]}"></span>
+          <form th:action="@{/timetable/delete}" method="post" class="delete-form">
+            <input type="hidden" name="day" value="수" />
+            <input type="hidden" name="time" th:value="${idx}" />
+            <button type="submit" class="delete-x">×</button>
+          </form>
+        </div>
+      </td>
+      <td th:if="${timetableMap['수'][idx] == null}"></td>
+
+      <td class="timetable-cell" th:if="${timetableMap['목'][idx] != null}">
+        <div class="course-container">
+          <span th:text="${timetableMap['목'][idx]}"></span>
+          <form th:action="@{/timetable/delete}" method="post" class="delete-form">
+            <input type="hidden" name="day" value="목" />
+            <input type="hidden" name="time" th:value="${idx}" />
+            <button type="submit" class="delete-x">×</button>
+          </form>
+        </div>
+      </td>
+      <td th:if="${timetableMap['목'][idx] == null}"></td>
+
+      <td class="timetable-cell" th:if="${timetableMap['금'][idx] != null}">
+        <div class="course-container">
+          <span th:text="${timetableMap['금'][idx]}"></span>
+          <form th:action="@{/timetable/delete}" method="post" class="delete-form">
+            <input type="hidden" name="day" value="금" />
+            <input type="hidden" name="time" th:value="${idx}" />
+            <button type="submit" class="delete-x">×</button>
+          </form>
+        </div>
+      </td>
+      <td th:if="${timetableMap['금'][idx] == null}"></td>
+
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+    }
+  });
+</script>
+</body>
+</html>

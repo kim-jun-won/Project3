@@ -1,5 +1,6 @@
 package Project3.LMS.domain;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class Notice {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notice_id")
     private Long id;
 
@@ -36,12 +38,14 @@ public class Notice {
     private NoticeWriterType writerType;
 
     private String title;
+
+    @Lob
     private String content;
 
     private LocalDateTime date;
 
-    /**
-     * createByProfessor() 구현
-     * createByAdmin() 구현
-     */
+    // 추가된 field
+    private String fileName;
+    private boolean fixed;
+    private int viewCount;
 }

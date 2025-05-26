@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>성적 내역</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <style>
+        /* ===== grade-page 스타일 (본문 전용) ===== */
+        .grade-page body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .grade-page .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .grade-page h2 {
+            font-size: 22px;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .grade-page .sub-header {
+            color: #666;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .grade-page .note {
+            color: #3b00aa;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .grade-page .term {
+            font-weight: bold;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 18px;
+            border-top: 2px solid #999;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        .grade-page table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .grade-page th {
+            background-color: #61103e;
+            color: white;
+            padding: 12px;
+            font-weight: 500;
+            font-size: 15px;
+            border: 1px solid #ddd;
+        }
+
+        .grade-page td {
+            padding: 11px;
+            text-align: center;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+        }
+
+        .grade-page tr:hover td {
+            background-color: #fcf5fa;
+        }
+
+        .grade-page td:first-child {
+            text-align: left;
+        }
+
+        .grade-page .category {
+            color: #444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 상단 및 사이드바 fragment 삽입 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+<div class="sidebar-wrap" th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- 본문 영역 -->
+<div class="grade-page">
+    <div class="container">
+        <h2>*성적내역</h2>
+        <div class="sub-header">[2025년도 1학기 성적표 출력]</div>
+        <div class="note">※ 동일학기 재수강 과목의 기 이수한 과목은 성적마감과 동시에 삭제되며, 기존 이수과목의 성적은 '등급(재수강)'으로 표기됨</div>
+
+        <div class="term">2025학년도 1학기</div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>과목 이름</th>
+                <th>학점</th>
+                <th>교수</th>
+                <th>성적</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="enroll : ${studentEnrollList}">
+                <td th:text="${enroll.course.courseName}">자료구조</td>
+                <td th:text="${enroll.course.credits != null ? enroll.course.credits : '미입력'}">3</td>
+                <td th:text="${enroll.course.professor.name}">교수명</td>
+                <td th:text="${enroll.grade != null ? enroll.grade : '미입력'}">A+</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents();
+        }
+    });
+</script>
+
+</body>
+</html>

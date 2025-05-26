@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>광운대학교 KLAS - 성적 부여</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 40px;
+            color: #3b003b;
+            font-weight: 700;
+        }
+
+        .course-box {
+            background: linear-gradient(to bottom, #ffffff, #fcfcfc);
+            padding: 0;
+            border-radius: 16px;
+            margin-bottom: 45px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .grade-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .grade-table thead tr:first-child {
+            background-color: #3b003b;
+            color: white;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .grade-table thead tr:nth-child(2) {
+            background: linear-gradient(to right, #e4e4e4, #f4f4f4);
+        }
+
+        .grade-table th, .grade-table td {
+            padding: 14px 12px;
+            font-size: 14.5px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .grade-table td {
+            color: #444;
+            background-color: #ffffff;
+        }
+
+        .grade-table select {
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid #aaa;
+            font-size: 14px;
+            background-color: #fff;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            display: block;
+            margin: 60px auto 20px;
+            padding: 13px 45px;
+            background-color: #3b003b;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #290029;
+        }
+
+        @media (max-width: 768px) {
+            .grade-table th, .grade-table td {
+                font-size: 13px;
+                padding: 10px;
+            }
+
+            .submit-btn {
+                width: 100%;
+                padding: 14px 0;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- 공통 상단/사이드바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<div class="container">
+    <h1>성적 부여</h1>
+
+    <form method="post" th:action="@{/enroll/attendance/save}">
+        <div th:each="entry : ${courseEnrollMap}" class="course-box">
+            <table class="grade-table">
+                <thead>
+                <tr>
+                    <th colspan="4" style="text-align: left; padding: 18px;">
+                        [[${entry.key.courseName}]]
+                        <span style="font-weight: normal; font-size: 14px; margin-left: 20px;">
+                            교수: [[${entry.key.professor.name}]] | 학점: [[${entry.key.credits}]]
+                        </span>
+                    </th>
+                </tr>
+                <tr>
+                    <th>이름</th>
+                    <th>학번</th>
+                    <th>학과</th>
+                    <th>성적 입력</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dto : ${entry.value}">
+                    <td th:text="${dto.studentName}">홍길동</td>
+                    <td th:text="${dto.sid}">20230123</td>
+                    <td th:text="${dto.department}">전자공학과</td>
+                    <td>
+                        <input type="hidden" name="courseIds" th:value="${entry.key.id}" />
+                        <input type="hidden" name="studentIds" th:value="${dto.studentId}" />
+                        <select name="grades">
+                            <option value="" th:selected="${dto.grade == null or dto.grade == ''}">미입력</option>
+                            <option value="A+" th:selected="${dto.grade == 'A+'}">A+</option>
+                            <option value="A"  th:selected="${dto.grade == 'A'}">A</option>
+                            <option value="B+" th:selected="${dto.grade == 'B+'}">B+</option>
+                            <option value="B"  th:selected="${dto.grade == 'B'}">B</option>
+                            <option value="C+" th:selected="${dto.grade == 'C+'}">C+</option>
+                            <option value="C"  th:selected="${dto.grade == 'C'}">C</option>
+                            <option value="D"  th:selected="${dto.grade == 'D'}">D</option>
+                            <option value="F"  th:selected="${dto.grade == 'F'}">F</option>
+                        </select>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button type="submit" class="submit-btn">전체 저장</button>
+    </form>
+</div>
+
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents();
+        }
+    });
+</script>
+
+<!-- 저장 완료 시 알림 및 이동 -->
+<script th:if="${saved}" type="text/javascript">
+    alert("성적이 저장되었습니다.");
+    window.location.href = "/home";
+</script>
+
+</body>
+</html>

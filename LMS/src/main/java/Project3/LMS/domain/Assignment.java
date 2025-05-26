@@ -1,9 +1,12 @@
 package Project3.LMS.domain;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 과제 출제 엔티티
@@ -40,5 +43,7 @@ public class Assignment {
      *     createAssignment() 함수 구현
      *     연관관계 주의하여 교수와 과목 Listd에 정확히 넣을것
      */
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AssignmentFile> files = new ArrayList<>();
 
 }

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>수강 승인 요청</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+
+  <style>
+    /* 고유 컨테이너 범위 내부만 스타일 지정 */
+    #request-form-wrapper {
+      max-width: 600px;
+      margin: 60px auto;
+      padding: 30px;
+    }
+
+    .form-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+      padding: 30px;
+    }
+
+    .form-card h2 {
+      text-align: center;
+      color: #3b003b;
+      margin-bottom: 24px;
+      font-size: 22px;
+    }
+
+    .form-card label {
+      font-weight: bold;
+      margin-top: 18px;
+      display: block;
+      font-size: 15px;
+    }
+
+    .form-card textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: vertical;
+      font-size: 14px;
+    }
+
+    .form-card button {
+      margin-top: 25px;
+      background-color: #3b003b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-size: 15px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    .form-card button:hover {
+      background-color: #5a005a;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      color: #777;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      color: #3b003b;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- 본문 -->
+<div id="request-form-wrapper">
+  <div class="form-card">
+    <h2>수강 승인 요청</h2>
+    <form th:action="@{'/courses/' + ${courseId} + '/requests/new'}" method="post">
+      <label for="reason">요청 사유</label>
+      <textarea id="reason" name="reason" rows="6" placeholder="이 과목을 왜 수강하고 싶은지 간단히 작성해주세요." required></textarea>
+      <button type="submit">요청 보내기</button>
+    </form>
+    <a th:href="@{/home}" class="back-link">← 홈으로</a>
+  </div>
+</div>
+
+<!-- 공통 JS (필요 시) -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents();
+    }
+  });
+</script>
+</body>
+</html>

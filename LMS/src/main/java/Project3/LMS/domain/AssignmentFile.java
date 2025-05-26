@@ -1,5 +1,6 @@
 package Project3.LMS.domain;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter @Setter
 public class AssignmentFile {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "assignment_file_id")
     private long id;
 

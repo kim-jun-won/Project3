@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>강의계획서 수정</title>
+  <link rel="stylesheet" th:href="@{/css/common.css}">
+
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f9f9f9;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* ✅ 본문 전용 스코프 */
+    #syllabus-edit-wrapper {
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 0 20px;
+    }
+
+    #syllabus-edit-wrapper .form-container {
+      background-color: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    #syllabus-edit-wrapper h2 {
+      margin-bottom: 20px;
+      color: #3b003b;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    #syllabus-edit-wrapper label {
+      display: block;
+      margin-top: 14px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    #syllabus-edit-wrapper .readonly-field {
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      padding: 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    #syllabus-edit-wrapper textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    #syllabus-edit-wrapper button {
+      margin-top: 20px;
+      padding: 10px 24px;
+      background-color: #3b003b;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 15px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    #syllabus-edit-wrapper button:hover {
+      background-color: #218838;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- ✅ 본문 시작 -->
+<div id="syllabus-edit-wrapper">
+  <div class="form-container">
+    <h2>강의계획서 수정</h2>
+
+    <form th:action="@{/syllabus/professor/{id}/edit(id=${course.id})}" method="post">
+      <!-- 과목명 출력 -->
+      <label>과목명</label>
+      <div class="readonly-field" th:text="${course.courseName}">과목명</div>
+
+      <!-- 강의계획서 내용 입력 -->
+      <label for="content">내용</label>
+      <textarea id="content" name="content" th:text="${syllabus.content}" required></textarea>
+
+      <button type="submit">수정 완료</button>
+    </form>
+  </div>
+</div>
+
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof initializeSidebarEvents === 'function') {
+      initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+<head>
+    <meta charset="UTF-8">
+    <title>내 정보 수정</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #3b003b;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            width: 30%;
+        }
+
+        input[type="text"], input[type="email"], input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        input[readonly] {
+            background-color: #eeeeee;
+            cursor: not-allowed;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3b003b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #5a005a;
+        }
+    </style>
+</head>
+<body>
+<!-- 상단바 -->
+<div th:replace="fragments/navbar :: topbar"></div>
+
+<!-- 사이드바 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<div class="container">
+    <h2>내 정보 수정</h2>
+    <form th:action="@{/mypage/edit}" method="post" th:object="${userDTO}" onsubmit="return validatePasswords()">
+        <table>
+            <tr th:if="${userDTO.userType.name() == 'STUDENT'}">
+                <th>학번</th>
+                <td><input type="text" th:field="*{uid}" readonly /></td>
+            </tr>
+            <tr th:if="${userDTO.userType.name() == 'PROFESSOR'}">
+                <th>교번</th>
+                <td><input type="text" th:field="*{uid}" readonly /></td>
+            </tr>
+            <tr>
+                <th>이름</th>
+                <td><input type="text" th:field="*{name}" readonly /></td>
+            </tr>
+            <tr>
+                <th>이메일</th>
+                <td><input type="email" th:field="*{email}" required /></td>
+            </tr>
+            <tr>
+                <th>학과</th>
+                <td><input type="text" th:field="*{department}" readonly /></td>
+            </tr>
+            <tr>
+                <th>전화번호</th>
+                <td><input type="text" th:field="*{phoneNumber}" required /></td>
+            </tr>
+            <tr>
+                <th>비밀번호</th>
+                <td><input type="password" id="password" name="password" th:value="*{password}" required /></td>
+            </tr>
+            <tr>
+                <th>비밀번호 확인</th>
+                <td><input type="password" id="confirmPassword" required /></td>
+            </tr>
+        </table>
+        <div class="button-container">
+            <button type="submit">저장</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function validatePasswords() {
+        const pw = document.getElementById("password").value;
+        const confirmPw = document.getElementById("confirmPassword").value;
+
+        if (pw !== confirmPw) {
+            alert("비밀번호가 일치하지 않습니다.");
+            return false;
+        }
+        return true;
+    }
+</script>
+
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents(); // common.js 내부 함수가 정의되어 있다면
+        }
+    });
+</script>
+
+</body>
+
+
+</html>

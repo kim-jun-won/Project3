@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>광운대학교 KLAS 메인</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}"> <!-- 공통 CSS -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<input type="hidden" id="userRole" th:value="${userRole}" />
+<!-- 상단바 -->
+<div class="navbar">
+    <button class="hamburger" onclick="toggleSidebar()">☰</button>
+    <div>
+        <span th:text="${welcomeMessage}">사용자님 환영합니다!</span>
+        <form th:action="@{/logout}" method="get" style="display: inline;">
+            <button class="logout-btn" style="margin-left: 15px;">Logout</button>
+        </form>
+    </div>
+</div>
+
+<!-- 사이드 메뉴 -->
+<div th:replace="fragments/sidebar :: sidebar"></div>
+
+<!-- 본문 콘텐츠 -->
+<div class="container">
+
+    <!-- 현재 학기 -->
+    <div style="margin-top: 20px; text-align: center;">
+        <h2 style="margin: 0 auto 10px auto; font-size: 28px;">2025년 1학기</h2>
+        <hr style="border: none; border-top: 3px solid #800080; width: 100px; margin: 0 auto 20px auto; border-radius: 2px;">
+    </div>
+
+    <!-- 시간표 테이블 -->
+    <div th:if="${timetableMap != null}">
+        <table>
+            <thead>
+            <tr>
+                <th>교시</th>
+                <th>월</th>
+                <th>화</th>
+                <th>수</th>
+                <th>목</th>
+                <th>금</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="i : ${#numbers.sequence(1, 6)}" th:with="idx=${i}">
+                <td th:text="${idx}">1</td>
+                <td class="timetable-cell"
+                    th:utext="${timetableMap['월'][idx] != null ? timetableMap['월'][idx] : ''}"></td>
+                <td class="timetable-cell"
+                    th:utext="${timetableMap['화'][idx] != null ? timetableMap['화'][idx] : ''}"></td>
+                <td class="timetable-cell"
+                    th:utext="${timetableMap['수'][idx] != null ? timetableMap['수'][idx] : ''}"></td>
+                <td class="timetable-cell"
+                    th:utext="${timetableMap['목'][idx] != null ? timetableMap['목'][idx] : ''}"></td>
+                <td class="timetable-cell"
+                    th:utext="${timetableMap['금'][idx] != null ? timetableMap['금'][idx] : ''}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- 수강 과목 리스트 -->
+    <div class="course-section">
+        <div th:if="${courses != null and !#lists.isEmpty(courses)}">
+            <div class="course-row" th:each="course : ${courses}">
+                <span class="course-name" th:text="${course.courseName}">과목명</span>
+                <div class="btn-group">
+                    <!-- 공지사항 버튼: 역할에 따라 URL 분기 -->
+                    <a th:if="${userRole == 'student'}" th:href="@{/notice/student/course(courseId=${course.id})}">
+                        <button type="button">공지사항</button>
+                    </a>
+
+                    <a th:if="${userRole == 'professor'}" th:href="@{/notice/professor/course(courseId=${course.id})}">
+                        <button type="button">공지사항</button>
+                    </a>
+                    <a th:href="@{/courses/{id}/materials(id=${course.id})}">
+                        <button type="button">자료실</button>
+                    </a>
+                    <!-- ✅ 학습 톡톡 버튼 추가 -->
+                    <a th:href="@{/courses/{id}/learning-talk(id=${course.id})}">
+                        <button type="button">학습 톡톡</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div th:if="(${courses == null or #lists.isEmpty(courses)}) and ${userRole != 'admin'}" class="no-course">
+            수강 중인 과목이 없습니다.
+        </div>
+    </div>
+
+    <!-- 관리자 공지사항 -->
+    <div class="course-section">
+        <h3>광운대학교 공지사항</h3>
+
+        <div th:if="${adminNotices != null and !#lists.isEmpty(adminNotices)}">
+            <div class="course-row" th:each="notice : ${adminNotices}">
+            <span>
+                <a th:href="@{/notice/admin/view/{id}(id=${notice.id})}"
+                   th:text="${notice.title}"
+                   style="text-decoration: none; color: #3b003b;"></a>
+            </span>
+                <div class="btn-group">
+                <span th:text="${#temporals.format(notice.date, 'yyyy-MM-dd')}"
+                      style="font-size: 13px; color: #666;"></span>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${adminNotices == null or #lists.isEmpty(adminNotices)}" class="no-notice">
+            광운대학교 공지사항이 없습니다.
+        </div>
+    </div>
+
+
+</div>
+
+<!-- 공통 JavaScript 파일 로드 -->
+<script src="/js/common.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (typeof initializeSidebarEvents === 'function') {
+            initializeSidebarEvents();
+        }
+
+        // 과목명에 학정번호 붙이기
+        document.querySelectorAll('.course-name').forEach(el => {
+            const name = el.textContent.trim();
+            const code = generateCode();
+            el.textContent = `${name} (${code})`;
+        });
+
+        function generateCode() {
+            function rand(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+
+            return `I${rand(0, 999).toString().padStart(3, '0')}-${rand(1, 4)}-${rand(0, 9999).toString().padStart(4, '0')}-${rand(0, 99).toString().padStart(2, '0')}`;
+        }
+    });
+</script>
+</body>
+</html>
