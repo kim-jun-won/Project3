@@ -9,7 +9,10 @@ import Project3.LMS.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -66,5 +69,32 @@ public class AssignmentSubmissionService {
             submission.setGrade(grade);
             submission.setFeedback(feedback);
         }
+    }
+
+    public void updateSubmission(Long submissionId, String title, String content, MultipartFile file) throws IOException {
+        AssignmentSubmission submission = submissionRepository.findById(submissionId);
+
+        submission.setTitle(title);
+        submission.setContent(content);
+
+        if (file != null && !file.isEmpty()) {
+            String uploadDir = System.getProperty("user.dir") + "/uploads/submissions";
+            File dir = new File(uploadDir);
+            if (!dir.exists()) dir.mkdirs();
+
+            String fileName = file.getOriginalFilename();
+            String filePath = uploadDir + "/" + System.currentTimeMillis() + "_" + fileName;
+            file.transferTo(new File(filePath));
+
+            submission.setFile_name(fileName);
+            submission.setFile_path(filePath);
+            submission.setFile_type(file.getContentType());
+        }
+
+        submissionRepository.save(submission);
+    }
+
+    public AssignmentSubmission findByStudentAndAssignment(Student student, Assignment assignment) {
+        return submissionRepository.findByStudentAndAssignment(student, assignment);
     }
 }

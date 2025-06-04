@@ -40,4 +40,15 @@ public class AssignmentSubmissionRepository {
 
         return count > 0;
     }
+
+    public AssignmentSubmission findByStudentAndAssignment(Student student, Assignment assignment) {
+        return em.createQuery(
+                        "SELECT s FROM AssignmentSubmission s WHERE s.student = :student AND s.assignment = :assignment",
+                        AssignmentSubmission.class
+                )
+                .setParameter("student", student)
+                .setParameter("assignment", assignment)
+                .getSingleResult(); // 또는 getResultStream().findFirst().orElse(null); 로 예외 방지 가능
+    }
+
 }
