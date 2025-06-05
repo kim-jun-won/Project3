@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>강의자료 수정</title>
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input[type="text"],
+        input[type="file"] {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100px;
+            padding: 10px;
+            background-color: #61103e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4d0b2f;
+        }
+
+        .file-label {
+            font-size: 14px;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+<div th:replace="~{fragments/navbar :: topbar}"></div>
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<div class="container">
+    <h2>강의자료 수정</h2>
+
+    <form th:action="@{/courses/{courseId}/materials/{materialId}/edit(courseId=${courseId}, materialId=${material.id})}"
+          method="post" enctype="multipart/form-data">
+
+        <label>제목</label>
+        <input type="text" name="title" th:value="${material.title}" required />
+
+        <div class="file-label">
+            현재 파일: <span th:text="${material.filePath}"></span>
+        </div>
+
+        <label>새 파일 업로드 (선택)</label>
+        <input type="file" name="file" />
+
+        <button type="submit">수정</button>
+    </form>
+</div>
+
+</body>
+</html>

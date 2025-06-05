@@ -92,6 +92,19 @@
       content: "📎";
       font-size: 16px;
     }
+
+    .delete-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .delete-btn:hover {
+      background-color: #c0392b;
+    }
   </style>
 </head>
 
@@ -102,7 +115,7 @@
 <div th:replace="fragments/sidebar :: sidebar"></div>
 
 <div class="container">
-  <h2><span style="font-size: 22px;"></span> <span th:text="${course.courseName} + ' 강의자료실'"></span></h2>
+  <h2><span th:text="${course.courseName} + ' 강의자료실'"></span></h2>
 
   <!-- 업로드 버튼 (교수만) -->
   <div class="upload-btn" th:if="${userRole == 'professor'}">
@@ -121,6 +134,7 @@
       <th style="width: 15%;">작성자</th>
       <th style="width: 15%;">작성일</th>
       <th style="width: 8%;">조회수</th>
+      <th th:if="${userRole == 'professor'}" style="width: 8%;">삭제</th>
     </tr>
     </thead>
     <tbody>
@@ -131,9 +145,15 @@
            th:text="${material.title}"></a>
       </td>
       <td><span class="icon-file"></span></td>
-      <td th:text="${material.writer}">작성자</td>
-      <td th:text="${#temporals.format(material.createdDate, 'yyyy-MM-dd')}">작성일</td>
-      <td th:text="${material.viewCount}">조회수</td>
+      <td th:text="${material.writer}"></td>
+      <td th:text="${#temporals.format(material.createdDate, 'yyyy-MM-dd')}"></td>
+      <td th:text="${material.viewCount}"></td>
+      <td th:if="${userRole == 'professor'}">
+        <form th:action="@{/courses/{courseId}/materials/{materialId}/delete(courseId=${course.id}, materialId=${material.id})}"
+              method="post" onsubmit="return confirm('정말 삭제하시겠습니까?');">
+          <button type="submit" class="delete-btn">삭제</button>
+        </form>
+      </td>
     </tr>
     </tbody>
   </table>
