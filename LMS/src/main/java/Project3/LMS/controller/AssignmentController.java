@@ -226,4 +226,41 @@ public class AssignmentController {
                 .body(resource);
     }
 
+
+    @PostMapping("/update")
+    public String updateSubmission(@RequestParam("submissionId") Long submissionId,
+                                   @RequestParam("assignmentId") Long assignmentId,
+                                   @RequestParam("title") String title,
+                                   @RequestParam("content") String content,
+                                   @RequestParam("file") MultipartFile file,
+                                   HttpSession session) throws IOException {
+
+        Student student = (Student) session.getAttribute("loginMember");
+        submissionService.updateSubmission(submissionId, title, content, file);
+
+        Long courseId = assignmentService.findById(assignmentId).getCourse().getId();
+        return "redirect:/assignment/student/viewList?courseId=" + courseId;
+    }
+
+
+
+    @GetMapping("/student/editForm")
+    public String showEditForm(@RequestParam("assignmentId") Long assignmentId,
+                               HttpSession session,
+                               Model model) {
+        Student loginStudent = (Student) session.getAttribute("loginMember");
+        Assignment assignment = assignmentService.findById(assignmentId);
+        AssignmentSubmission submission = submissionService.findByStudentAndAssignment(loginStudent, assignment);
+
+        List<Course> courses = assignmentQueryService.getCoursesByStudentSid(loginStudent.getSid());
+        model.addAttribute("courses", courses);
+        model.addAttribute("selectedCourseName", assignment.getCourse().getCourseName());
+        model.addAttribute("assignments", assignmentQueryService.findByCourseId(assignment.getCourse().getId()));
+        model.addAttribute("selectedAssignment", assignment);
+
+        model.addAttribute("submission", submission);
+        model.addAttribute("isEdit", true);  // 수정 여부 플래그
+
+        return "assignment/listForStudent";  // 기존 뷰 재활용
+    }
 }

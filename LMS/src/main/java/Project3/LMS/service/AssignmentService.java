@@ -71,4 +71,10 @@ public class AssignmentService {
         Assignment assignment = optional.orElseThrow(() -> new IllegalArgumentException("과제를 찾을 수 없습니다."));
         assignmentRepository.delete(assignment);
     }
+
+    @Transactional(readOnly = true)
+    public Assignment findById(Long assignmentId) {
+        return assignmentRepository.findById(assignmentId);
+    }
+
 }

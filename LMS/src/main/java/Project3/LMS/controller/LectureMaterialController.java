@@ -96,19 +96,63 @@ public class LectureMaterialController {
         return "redirect:/courses/" + courseId + "/materials";
     }
 
-    // 자료 상세 보기 (조회수 증가 포함)
     @GetMapping("/{materialId}")
     public String viewMaterial(@PathVariable("courseId") Long courseId,
                                @PathVariable("materialId") Long materialId,
-                               Model model) {
+                               Model model,
+                               HttpSession session) {
         LectureMaterial material = materialService.getMaterial(materialId);
         if (material != null) {
-            materialService.incrementViewCount(material); // ✅ 조회수 증가 처리
+            materialService.incrementViewCount(material); // 조회수 증가
         }
+
+        Object loginUser = session.getAttribute("loginMember");
+        String userRole = (loginUser instanceof Professor) ? "professor" : "student";
+
         model.addAttribute("material", material);
+        model.addAttribute("userRole", userRole); //
 
         return "material/materialDetail";
     }
+
+    @PostMapping("/{materialId}/edit")
+    public String updateMaterial(@PathVariable("courseId") Long courseId,
+                                 @PathVariable("materialId") Long materialId,
+                                 @RequestParam("title") String title,
+                                 @RequestParam(value = "file", required = false) MultipartFile file,
+                                 HttpSession session) throws IOException {
+        Object loginMember = session.getAttribute("loginMember");
+        if (!(loginMember instanceof Professor)) {
+            return "accessDenied";
+        }
+
+        LectureMaterial material = materialService.getMaterial(materialId);
+        if (material == null) {
+            return "notFound";
+        }
+
+        // 제목 수정
+        material.setTitle(title);
+
+        // 파일이 업로드된 경우 파일 교체
+        if (file != null && !file.isEmpty()) {
+            String uploadDirPath = "C:/uploads";
+            File uploadDir = new File(uploadDirPath);
+            if (!uploadDir.exists()) uploadDir.mkdirs();
+
+            String filename = UUID.randomUUID() + "_" + file.getOriginalFilename();
+            File destination = new File(uploadDir, filename);
+            file.transferTo(destination);
+
+            material.setFilePath(filename);
+        }
+
+        materialService.saveMaterial(material); // 저장 (update 처리)
+
+        return "redirect:/courses/" + courseId + "/materials/" + materialId;
+    }
+
+
 
     // 삭제
     @PostMapping("/{materialId}/delete")
@@ -120,6 +164,26 @@ public class LectureMaterialController {
         materialService.deleteMaterial(materialId);
         return "redirect:/courses/" + courseId + "/materials";
     }
+    //수정
+    @GetMapping("/{materialId}/edit")
+    public String editMaterialForm(@PathVariable("courseId") Long courseId,
+                                   @PathVariable("materialId") Long materialId,
+                                   Model model,
+                                   HttpSession session) {
+        Object loginMember = session.getAttribute("loginMember");
+        if (!(loginMember instanceof Professor)) {
+            return "accessDenied";
+        }
 
+        LectureMaterial material = materialService.getMaterial(materialId);
+        if (material == null) {
+            return "notFound"; // 또는 에러 처리
+        }
+
+        model.addAttribute("courseId", courseId);
+        model.addAttribute("material", material);
+
+        return "material/editMaterialForm";
+    }
 
 }
