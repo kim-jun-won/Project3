@@ -83,7 +83,7 @@ public class EnrollmentService {
     }
 
     public List<Enrollment> findEByStudent(Long studentId) {
-        return enrollmentRepository.findByStudentId(studentId);
+        return enrollmentRepository.findWithCourseAndProfessorByStudentId(studentId);
     }
 
     @Transactional

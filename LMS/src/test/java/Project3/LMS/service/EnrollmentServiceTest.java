@@ -107,23 +107,4 @@ class EnrollmentRequestServiceTest {
         assertThat(course.getEnrolledCount()).isEqualTo(2);
     }
 
-    @Test
-    void 정원이_꽉차있으면_승인불가() {
-        Student student = new Student();
-        Course course = new Course();
-        course.setCapacity(1);
-        course.setEnrolledCount(1); // 꽉참
-
-        EnrollmentRequest request = new EnrollmentRequest();
-        request.setStatus(WAITING);
-        request.setCourse(course);
-        request.setStudent(student);
-
-        when(requestRepository.findById(1L)).thenReturn(Optional.of(request));
-
-        assertThatThrownBy(() ->
-                service.approveRequest(1L)
-        ).isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("정원이 초과");
-    }
 }

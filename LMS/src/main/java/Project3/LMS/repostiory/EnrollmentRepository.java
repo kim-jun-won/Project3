@@ -5,6 +5,8 @@ import Project3.LMS.domain.Enrollment;
 import Project3.LMS.domain.EnrollmentStatus;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -84,6 +86,17 @@ public class EnrollmentRepository {
     public List<Enrollment> findByCourse(Course course) {
         return em.createQuery("SELECT e FROM Enrollment e WHERE e.course = :course", Enrollment.class)
                 .setParameter("course", course)
+                .getResultList();
+    }
+
+    public List<Enrollment> findWithCourseAndProfessorByStudentId(Long studentId) {
+        return em.createQuery(
+                        "SELECT e FROM Enrollment e " +
+                                "JOIN FETCH e.course c " +
+                                "JOIN FETCH c.professor " +
+                                "LEFT JOIN FETCH c.syllabus " +
+                                "WHERE e.student.id = :studentId", Enrollment.class)
+                .setParameter("studentId", studentId)
                 .getResultList();
     }
 }

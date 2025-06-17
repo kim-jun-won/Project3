@@ -65,7 +65,9 @@ public class Course {
 
     public void setSyllabus(Syllabus syllabus) {
         this.syllabus = syllabus;
-        syllabus.setCourse(this);
+        if (syllabus != null) {  // null check 추가
+            syllabus.setCourse(this);
+        }
     }
 
     public void addTimetable(Timetable timetable) {
